@@ -1,3 +1,20 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Importação das fontes */
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@400;600;700&family=Roboto:wght@400;600&display=swap');
+
+html {
+  background-color: #FFFFFF;
+  color: #222222;
+}
+
+::selection {
+  background-color: #F6CFC7;
+}
+
+/* Exemplo de classes utilitárias adicionais (opcional) */
+.btn {
+  @apply text-button font-sans bg-primary text-background px-4 py-2 rounded-md hover:bg-secondary transition;
+}
