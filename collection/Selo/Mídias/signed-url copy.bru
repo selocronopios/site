@@ -1,0 +1,20 @@
+meta {
+  name: signed-url copy
+  type: http
+  seq: 6
+}
+
+get {
+  url: {{url}}/api/media/signed-url?path=cover/f6ef9d73-07f1-4ed4-b8ec-4cf4fad585f8-capa.png&bucket=publico
+  body: none
+  auth: none
+}
+
+params:query {
+  path: cover/f6ef9d73-07f1-4ed4-b8ec-4cf4fad585f8-capa.png
+  bucket: publico
+}
+
+headers {
+  User-Agent: insomnia/11.2.0
+}

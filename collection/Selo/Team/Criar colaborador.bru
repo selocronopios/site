@@ -1,0 +1,28 @@
+meta {
+  name: Criar colaborador
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{url}}/api/team
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "name": "Beatriz Caroline Rosa",
+    "function_group": null,
+    "function_imprint": "35f1fdc0-2238-469a-8d00-771ad963be79",
+    "function_association": "3c1ea952-0e22-4520-acf2-659c9c69d88b",
+    "institution": "UFOP",
+    "degree": "Engenharia de Controle e Automação",
+    "picture": "fb3679f7-611a-42a2-be13-6c7cb88cd425" ,
+    "lattes": "abc.com.br",
+    "is_team_group": true,
+    "is_team_imprint": true,
+    "is_team_association": true,
+    "is_active": true
+  }
+}

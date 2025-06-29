@@ -1,0 +1,23 @@
+meta {
+  name: Criar função
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{url}}/api/functions
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+  User-Agent: insomnia/11.2.0
+}
+
+body:json {
+  {
+    "description":"Função da Louca",
+    "group_type":1
+  }
+}

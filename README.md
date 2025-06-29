@@ -157,7 +157,7 @@ Crie um arquivo .env.local na raiz com as chaves do Supabase:
 NEXT_PUBLIC_SUPABASE_URL=https://<seu-projeto>.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=chave_anonima
 
-SUPABASE_SERVICE_ROLE_KEY=chave_service_role (opcional se usar backend privado)
+SUPABASE_SERVICE_ROLE_KEY=chave_service_role 
 ```
 
 ## ▶️ Rodando o projeto
@@ -183,7 +183,45 @@ Push no main ou branch configurada → deploy automático.
 ## 🛡️ Licença
 Este projeto está licenciado sob a MIT License.
 
+# 📦 Supabase Storage — Políticas de Acesso
+
+## 🎯 Cenário
+
+- **Usuário público (não logado)**  
+  → acessa somente os arquivos públicos ou via URL assinada gerada pelo backend
+
+- **Administrador (logado via Supabase Auth)**  
+  → acessa painel `/admin`, pode fazer upload, editar, deletar
+
+---
+
+## 🗃️ Buckets
+
+| Bucket     | Conteúdo                             | Público? |
+|------------|--------------------------------------|----------|
+| `privado`  | ebooks em PDF ou conteúdo restrito   | ❌       |
+| `publico`  | imagens (capas, avatares, etc)       | ✅       |
+
+---
+
+## 🔐 Políticas por Operação e Role
+
+### 🔄 Resumo Geral
+
+| Ação           | Bucket     | Quem pode?            | Policy                                 |
+|----------------|------------|------------------------|----------------------------------------|
+| Upload         | privado     | Admin autenticado      | `auth.role() = 'authenticated'`        |
+| Upload         | publico     | Admin autenticado      | `auth.role() = 'authenticated'`        |
+| Download       | privado     | Backend apenas         | `role = 'service_role'`                |
+| Download       | publico     | Qualquer um            | `role = 'public'`                      |
+| Delete         | privado     | Backend apenas         | `role = 'service_role'`                |
+| Delete         | publico     | Backend apenas         | `role = 'service_role'`                |
+| Update/Move    | Ambos       | Admin autenticado      | `auth.role() = 'authenticated'`        |
+
+---
+
 APAGAR:
 Gmail
 Login: infoselocronopios@gmail.com
 Senha: selocronopios25
+Teste das regras do bucket: npx ts-node tests/supabaseStorageTest.ts

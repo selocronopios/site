@@ -1,0 +1,24 @@
+meta {
+  name: Criar coleção
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{url}}/api/collections
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+  User-Agent: insomnia/11.2.0
+}
+
+body:json {
+  {
+    "id_pai":null,
+    "name":"Teste Final 4",
+    "description":"Teste Final"
+  }
+}

@@ -1,0 +1,27 @@
+meta {
+  name: Editar função
+  type: http
+  seq: 4
+}
+
+put {
+  url: {{url}}/api/functions/:id
+  body: json
+  auth: none
+}
+
+params:path {
+  id: 943673fd-44af-40bd-954a-17ffe4cdeb91
+}
+
+headers {
+  Content-Type: application/json
+  User-Agent: insomnia/11.2.0
+}
+
+body:json {
+  {
+    "description": "Teste de Update 2",
+    "group_type": 1
+  }
+}
