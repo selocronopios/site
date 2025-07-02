@@ -1,0 +1,23 @@
+meta {
+  name: Deletar função
+  type: http
+  seq: 3
+}
+
+delete {
+  url: {{url}}/functions/:id
+  body: none
+  auth: bearer
+}
+
+params:path {
+  id: {{function}}
+}
+
+headers {
+  User-Agent: insomnia/11.2.0
+}
+
+auth:bearer {
+  token: {{auth}}
+}

@@ -219,9 +219,3 @@ Este projeto está licenciado sob a MIT License.
 | Update/Move    | Ambos       | Admin autenticado      | `auth.role() = 'authenticated'`        |
 
 ---
-
-APAGAR:
-Gmail
-Login: infoselocronopios@gmail.com
-Senha: selocronopios25
-Teste das regras do bucket: npx ts-node tests/supabaseStorageTest.ts

@@ -1,0 +1,16 @@
+meta {
+  name: Listar midia
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{url}}/media
+  body: multipartForm
+  auth: none
+}
+
+headers {
+  Content-Type: multipart/form-data
+  User-Agent: insomnia/11.2.0
+}

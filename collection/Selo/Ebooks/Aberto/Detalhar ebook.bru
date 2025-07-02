@@ -1,0 +1,32 @@
+meta {
+  name: Detalhar ebook
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{url}}/ebooks/:id
+  body: none
+  auth: inherit
+}
+
+params:path {
+  id: 1d654172-e3a5-4197-afd6-87b0b599e6e2
+}
+
+body:json {
+  {
+    "name": "Beatriz Caroline Rosa",
+    "function_group": "eebc15fd-f644-4514-ae38-f60be5153309",
+    "function_imprint": "35f1fdc0-2238-469a-8d00-771ad963be79",
+    "function_association": "3c1ea952-0e22-4520-acf2-659c9c69d88b",
+    "institution": "UFOP",
+    "degree": "Engenharia de Controle e Automação",
+    "picture": "045813fd-fa89-4bfd-b0c2-a93b4d7e96dc" ,
+    "lattes": "abc.com.br",
+    "is_team_group": true,
+    "is_team_imprint": true,
+    "is_team_association": true,
+    "is_active": true
+  }
+}

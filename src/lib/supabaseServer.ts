@@ -1,28 +1,26 @@
-// src/lib/supabaseServer.ts
-import { createServerClient } from '@supabase/ssr';
-import { cookies } from 'next/headers';
+// lib/supabaseServer.ts - rotas protegidas
+import { createServerClient } from '@supabase/ssr'
+import { cookies } from 'next/headers'
 
 export async function createServerSupabaseClient() {
-  const cookieStore = await cookies();
+  const cookieStore = await cookies() 
 
   return createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
-        getAll() {
-          return cookieStore.getAll();
-        },
-        setAll(cookiesToSet) {
+        getAll: () => cookieStore.getAll(),
+        setAll: (cookiesToSet) => {
           try {
             cookiesToSet.forEach(({ name, value, options }) =>
               cookieStore.set(name, value, options)
-            );
+            )
           } catch {
-            // Pode ignorar erros aqui para Server Components
+            // ignora erro em Server Components
           }
-        },
-      },
+        }
+      }
     }
-  );
+  )
 }

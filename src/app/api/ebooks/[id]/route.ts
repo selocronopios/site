@@ -1,8 +1,7 @@
-export const dynamic = 'force-dynamic'
-
 import { NextRequest, NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabaseClient'
+import { supabaseAdmin } from '@/lib/supabaseAdmin'
 import { isValidUUID, validateUUID, handleSupabaseError, validateFieldType } from '@/lib/utils'
+import { validateUser } from '@/lib/auth/validadeUser'
 
 export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
   const id = params?.id?.trim()
@@ -10,7 +9,7 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
   if (idError) return NextResponse.json({ error: idError }, { status: 400 })
 
   try {
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from('ebooks')
       .select('*')
       .eq('id', id)
@@ -18,7 +17,7 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
 
     if (error) return handleSupabaseError(error)
 
-    return NextResponse.json({ data }, { status: 200 })
+    return NextResponse.json( data , { status: 200 })
 
   } catch (err) {
     console.error('Erro inesperado:', err)
@@ -43,6 +42,12 @@ interface UpdateBody {
 }
 
 export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
+  const user = await validateUser(req)
+
+  if (!user) {
+      return NextResponse.json({ error: 'Token inválido' }, { status: 401 })
+  }
+
   const id = params?.id?.trim()
   const idError = validateUUID(id)
   if (idError) return NextResponse.json({ error: idError }, { status: 400 })
@@ -135,7 +140,7 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
   }  
 
   try {
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from('ebooks')
       .update(updates)
       .eq('id', id)
@@ -151,13 +156,19 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
   }
 }
 
-export async function DELETE(_: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
+  const user = await validateUser(req)
+
+  if (!user) {
+      return NextResponse.json({ error: 'Token inválido' }, { status: 401 })
+  }
+
   const id = params?.id?.trim()
   const idError = validateUUID(id)
   if (idError) return NextResponse.json({ error: idError }, { status: 400 })
 
   try {
-    const { error } = await supabase
+    const { error } = await supabaseAdmin
       .from('ebooks')
       .select('id')
       .eq('id', id)
@@ -165,7 +176,7 @@ export async function DELETE(_: NextRequest, { params }: { params: { id: string 
 
     if (error) return handleSupabaseError(error)
 
-    const { error: deleteError  } = await supabase
+    const { error: deleteError  } = await supabaseAdmin
       .from('ebooks')
       .delete()
       .eq('id', id)

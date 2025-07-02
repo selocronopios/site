@@ -1,16 +1,23 @@
-export const dynamic = 'force-dynamic'
-
 import { NextRequest, NextResponse } from 'next/server'
 import { parseForm } from '@/lib/parseForm'
 import { supabaseAdmin } from '@/lib/supabaseAdmin'
+import { validateUser } from '@/lib/auth/validadeUser'
 import { randomUUID } from 'crypto'
 import fs from 'fs'
 
 export async function POST(req: NextRequest) {
+  const user = await validateUser(req)
+
+  if (!user) {
+      return NextResponse.json({ error: 'Token inválido' }, { status: 401 })
+  }
+
+
   let fields, files
   try {
     ({ fields, files } = await parseForm(req))
   } catch (err) {
+    console.log(err)
     return NextResponse.json({ error: 'Erro ao processar formulário' }, { status: 400 })
   }
 
@@ -46,5 +53,5 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: insertError.message }, { status: 500 })
   }
 
-  return NextResponse.json({ data }, { status: 201 })
+  return NextResponse.json(data, { status: 201 })
 }

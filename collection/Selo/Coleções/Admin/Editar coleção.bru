@@ -1,0 +1,32 @@
+meta {
+  name: Editar coleção
+  type: http
+  seq: 1
+}
+
+put {
+  url: {{url}}/collections/:id
+  body: json
+  auth: bearer
+}
+
+params:path {
+  id: {{collection}}
+}
+
+headers {
+  Content-Type: application/json
+  User-Agent: insomnia/11.2.0
+}
+
+auth:bearer {
+  token: {{auth}}
+}
+
+body:json {
+  {
+    "id_pai": null,
+    "name": "Realmete testes finais",
+    "description": "Nova descrição"
+  }
+}

@@ -1,9 +1,8 @@
 // src/app/api/media/[id]/route.ts
-export const dynamic = 'force-dynamic'
-
 import { NextRequest, NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabaseAdmin'
-import { isValidUUID, validateUUID, handleSupabaseError, validateFieldType } from '@/lib/utils'
+import { validateUser } from '@/lib/auth/validadeUser'
+import { validateUUID, handleSupabaseError } from '@/lib/utils'
 
 export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
   const id = params?.id?.trim()
@@ -27,7 +26,14 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
   }
 }
 
-export async function DELETE(_: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
+  const user = await validateUser(req)
+
+  if (!user) {
+      return NextResponse.json({ error: 'Token inválido' }, { status: 401 })
+  }
+
+
   const id = params?.id?.trim()
   const idError = validateUUID(id)
   if (idError) return NextResponse.json({ error: idError }, { status: 400 })

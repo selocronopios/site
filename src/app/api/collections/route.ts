@@ -1,7 +1,8 @@
 //src/app/api/collections/route.ts
-import { NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabaseClient'
+import { NextRequest, NextResponse } from 'next/server'
+import { supabaseAdmin } from '@/lib/supabaseAdmin'
 import { isValidUUID, handleSupabaseError, validateFieldType } from '@/lib/utils'
+import { validateUser } from '@/lib/auth/validadeUser'
 
 interface UpdateBody {
   id_pai?: string | null
@@ -9,7 +10,13 @@ interface UpdateBody {
   description?: string
 }
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
+  const user = await validateUser(req)
+
+  if (!user) {
+      return NextResponse.json({ error: 'Token inválido' }, { status: 401 })
+  }
+
   let body: UpdateBody
   try {
     body = await req.json()
@@ -39,7 +46,7 @@ export async function POST(req: Request) {
   }
 
   try {
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from('collections')
       .insert([{ id_pai, name, description }])
       .select()
@@ -55,9 +62,12 @@ export async function POST(req: Request) {
 
 export async function GET(req: Request) {
   try {
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from('collections')
-      .select()
+      .select(`
+        *,
+        pai:collections!id_pai(name)
+      `)
 
     if (error) {
       console.error('Erro do Supabase:', error)

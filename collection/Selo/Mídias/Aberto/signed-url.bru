@@ -1,0 +1,19 @@
+meta {
+  name: signed-url
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{url}}/media/signed-url/:id
+  body: none
+  auth: none
+}
+
+params:path {
+  id: {{media}}
+}
+
+headers {
+  User-Agent: insomnia/11.2.0
+}

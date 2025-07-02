@@ -1,0 +1,23 @@
+meta {
+  name: Deletar coleção
+  type: http
+  seq: 1
+}
+
+delete {
+  url: {{url}}/collections/:id
+  body: none
+  auth: bearer
+}
+
+params:path {
+  id: {{collection}}
+}
+
+headers {
+  User-Agent: insomnia/11.2.0
+}
+
+auth:bearer {
+  token: {{auth}}
+}

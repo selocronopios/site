@@ -1,7 +1,7 @@
 // app/api/media/signed-url/route.ts
 import { supabaseAdmin } from '@/lib/supabaseAdmin'
 import { NextRequest, NextResponse } from 'next/server'
-import { validateUUID } from '@/lib/utils'
+import { handleSupabaseError, validateUUID } from '@/lib/utils'
 
 export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
   const id = params?.id?.trim()
@@ -15,10 +15,7 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
       .eq('id', id)
       .single()
 
-    if (error) {
-    console.error('Erro do Supabase:', error)
-    return NextResponse.json({ error: error.message }, { status: 500 })
-    }
+    if (error) return handleSupabaseError(error)
 
     const { bucket, path } = data
     
@@ -28,7 +25,11 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
       .createSignedUrl(path, 60 * 10)
 
     if (selectError) {
-    return NextResponse.json({ error: selectError.message }, { status: 500 })
+      if (selectError.message === "Object not found") {
+        return NextResponse.json({ error: "não encontrada" }, { status: 404 })
+      } else {
+        return NextResponse.json({ error: selectError.message }, { status: 400 })
+      }
     }
 
     return NextResponse.json({ url: selectData.signedUrl })

@@ -1,0 +1,20 @@
+meta {
+  name: Selecionar midia
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{url}}/media/:id
+  body: multipartForm
+  auth: none
+}
+
+params:path {
+  id: fb3679f7-611a-42a2-be13-6c7cb88cd425
+}
+
+headers {
+  Content-Type: multipart/form-data
+  User-Agent: insomnia/11.2.0
+}

@@ -1,0 +1,36 @@
+meta {
+  name: Editar colaborador
+  type: http
+  seq: 1
+}
+
+put {
+  url: {{url}}/team/:id
+  body: json
+  auth: bearer
+}
+
+params:path {
+  id: {{team}}
+}
+
+auth:bearer {
+  token: {{auth}}
+}
+
+body:json {
+  {
+    "name": "Beatriz P Rosa",
+    "function_group": null,
+    "function_imprint": null,
+    "function_association": "3c1ea952-0e22-4520-acf2-659c9c69d88b",
+    "institution": "UFOP",
+    "degree": "Engenharia de Controle e Automação",
+    "picture": "fb3679f7-611a-42a2-be13-6c7cb88cd425" ,
+    "lattes": "abc.com.br",
+    "is_team_group": false,
+    "is_team_imprint": false,
+    "is_team_association": true,
+    "is_active": true
+  }
+}

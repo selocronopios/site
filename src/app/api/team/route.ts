@@ -1,8 +1,7 @@
-import { NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabaseClient'
+import { NextRequest, NextResponse } from 'next/server'
+import { supabaseAdmin } from '@/lib/supabaseAdmin'
+import { validateUser } from '@/lib/auth/validadeUser'
 import { handleSupabaseError, validateFieldType } from '@/lib/utils'
-
-//BIA: Adicionar validação onde se tiver ativo em uma das funções precisa ter a função diferente de null, e se tiver ativo pelo menos uma função tem que estar ativa
 
 interface UpdateBody {
   name?: string
@@ -19,7 +18,13 @@ interface UpdateBody {
   is_active?: boolean
 }
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
+  const user = await validateUser(req)
+
+  if (!user) {
+      return NextResponse.json({ error: 'Token inválido' }, { status: 401 })
+  }
+
   let body: UpdateBody
   try {
     body = await req.json()
@@ -88,7 +93,7 @@ export async function POST(req: Request) {
   }  
 
   try {
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from('team')
       .insert([{ name, function_group, function_imprint, function_association, institution, degree, picture, lattes, is_team_group, is_team_imprint, is_team_association, is_active }])
       .select()
@@ -104,7 +109,7 @@ export async function POST(req: Request) {
 
 export async function GET(req: Request) {
   try {
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from('team')
       .select()
 

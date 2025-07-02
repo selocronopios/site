@@ -1,6 +1,7 @@
-import { NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabaseClient'
+import { NextRequest, NextResponse } from 'next/server'
+import { supabaseAdmin } from '@/lib/supabaseAdmin'
 import { isValidUUID, handleSupabaseError, validateFieldType } from '@/lib/utils'
+import { validateUser } from '@/lib/auth/validadeUser'
 
 interface UpdateBody {
   title?: string
@@ -18,7 +19,13 @@ interface UpdateBody {
   keywords?: string
 }
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
+  const user = await validateUser(req)
+
+  if (!user) {
+      return NextResponse.json({ error: 'Token inválido' }, { status: 401 })
+  }
+
   let body: UpdateBody
   try {
     body = await req.json()
@@ -86,7 +93,7 @@ export async function POST(req: Request) {
   } 
   
   try {
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from('ebooks')
       .insert([{ title, subtitle, authors, authorship, summary, details, year, description, file_id, cover_id, link, collection_id, keywords }])
       .select()
@@ -102,7 +109,7 @@ export async function POST(req: Request) {
 
 export async function GET(req: Request) {
   try {
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from('ebooks')
       .select()
 

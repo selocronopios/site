@@ -1,0 +1,37 @@
+meta {
+  name: Criar ebook
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{url}}/ebooks
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{auth}}
+}
+
+body:json {
+  {
+    "title":"title 2",
+    "subtitle":"subtitle 2",
+    "authors":"authors 2",
+    "authorship":"authorship 2",
+    "summary":"summary 2",
+    "details":"details 2",
+    "year":2024,
+    "description":"description 2",
+    "file_id":"fb3679f7-611a-42a2-be13-6c7cb88cd425",
+    "cover_id":"fb3679f7-611a-42a2-be13-6c7cb88cd425",
+    "link":null,
+    "collection_id":"1f4b7415-3127-4fab-8aaf-1ef88e4de8bf",
+    "keywords":"keywords 2"
+  }
+}
+
+script:post-response {
+  bru.setEnvVar("ebook", res.body[0].id)
+}

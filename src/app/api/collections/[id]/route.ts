@@ -1,8 +1,7 @@
 //src/app/api/collections/[id]/route.ts
-export const dynamic = 'force-dynamic'
-
 import { NextRequest, NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabaseClient'
+import { supabaseAdmin } from '@/lib/supabaseAdmin'
+import { validateUser } from '@/lib/auth/validadeUser'
 import { isValidUUID, validateUUID, handleSupabaseError, validateFieldType } from '@/lib/utils'
 
 export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
@@ -11,7 +10,7 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
   if (idError) return NextResponse.json({ error: idError }, { status: 400 })
 
   try {
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from('collections')
       .select('*')
       .eq('id', id)
@@ -34,6 +33,12 @@ interface UpdateBody {
 }
 
 export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
+  const user = await validateUser(req)
+
+  if (!user) {
+      return NextResponse.json({ error: 'Token inválido' }, { status: 401 })
+  }
+
   const id = params?.id?.trim()
   const idError = validateUUID(id)
   if (idError) return NextResponse.json({ error: idError }, { status: 400 })
@@ -78,7 +83,7 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
   }
 
   try {
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from('collections')
       .update(updates)
       .eq('id', id)
@@ -94,13 +99,19 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
   }
 }
 
-export async function DELETE(_: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
+  const user = await validateUser(req)
+
+  if (!user) {
+      return NextResponse.json({ error: 'Token inválido' }, { status: 401 })
+  }
+
   const id = params?.id?.trim()
   const idError = validateUUID(id)
   if (idError) return NextResponse.json({ error: idError }, { status: 400 })
 
   try {
-    const { error } = await supabase
+    const { error } = await supabaseAdmin
       .from('collections')
       .select('id')
       .eq('id', id)
@@ -108,7 +119,7 @@ export async function DELETE(_: NextRequest, { params }: { params: { id: string 
 
     if (error) return handleSupabaseError(error)
 
-    const { error: deleteError } = await supabase
+    const { error: deleteError } = await supabaseAdmin
       .from('collections')
       .delete()
       .eq('id', id)

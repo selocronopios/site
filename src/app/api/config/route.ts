@@ -1,7 +1,14 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabaseAdmin'
+import { validateUser } from '@/lib/auth/validadeUser'
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
+  const user = await validateUser(req)
+
+  if (!user) {
+      return NextResponse.json({ error: 'Token inválido' }, { status: 401 })
+  }  
+  
   try {
     const body = await req.json()
     const { email, oldPassword, newPassword } = body
