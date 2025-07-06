@@ -12,6 +12,11 @@ interface Props {
   onSuccess: () => void;
 }
 
+interface Collection {
+  id: string;
+  name: string;
+}
+
 export default function ModalForm({ item, fields, apiPath, onClose, onSuccess }: Props) {
   const [form, setForm] = useState<DataItem>({});
   const [collections, setCollections] = useState<{ id: string; name: string }[]>([]);
@@ -19,7 +24,7 @@ export default function ModalForm({ item, fields, apiPath, onClose, onSuccess }:
   // Ignora parent_name no form e mantém id_pai como ID
   useEffect(() => {
     if (item) {
-      const { parent_name, ...cleanItem } = item;
+      const cleanItem = item;
       setForm(cleanItem);
     } else {
       const empty = fields.reduce((acc, field) => {
@@ -37,7 +42,7 @@ export default function ModalForm({ item, fields, apiPath, onClose, onSuccess }:
       const data = await res.json();
 
       const filtered = item?.id
-        ? data.filter((col: any) => col.id !== item.id)
+        ? data.filter((col: Collection) => col.id !== item.id)
         : data;
 
       setCollections(filtered);
@@ -46,20 +51,6 @@ export default function ModalForm({ item, fields, apiPath, onClose, onSuccess }:
     fetchCollections();
   }, [item]);
     
-    // useEffect(() => {
-    // console.log('fields:', fields);
-    // }, [fields]);
-
-    // useEffect(() => {
-    // console.log('form:', form);
-    // }, [form]);
-
-    // useEffect(() => {
-    // console.log('collections:', collections);
-    // }, [collections]);
-
-
-
   function handleChange(key: string, value: string) {
     setForm((prev: DataItem) => ({ ...prev, [key]: value }));
   }
@@ -88,7 +79,6 @@ export default function ModalForm({ item, fields, apiPath, onClose, onSuccess }:
     }
   }
 
-  // Ignora campos que são apenas de exibição
   const editableFields = fields.filter(f => f.key !== 'parent_name');
 
   return (
@@ -140,39 +130,6 @@ export default function ModalForm({ item, fields, apiPath, onClose, onSuccess }:
             </button>
           </div>
         </form>
-
-        {/* <form onSubmit={handleSubmit} className="space-y-4">
-            <label className="block mb-1 text-sm">Coleção Pai (teste)</label>
-            <select
-                value={form.id_pai ?? ''}
-                onChange={e => handleChange('id_pai', e.target.value)}
-                className="w-full border px-3 py-2 rounded"
-            >
-                <option value="">Nenhum</option>
-                {collections.map(col => (
-                <option key={col.id} value={col.id}>
-                    {col.name}
-                </option>
-                ))}
-            </select>
-
-            <div className="flex justify-end gap-2 pt-4">
-                <button
-                type="button"
-                onClick={onClose}
-                className="px-4 py-2 border rounded"
-                >
-                Cancelar
-                </button>
-                <button
-                type="submit"
-                className="px-4 py-2 bg-blue-600 text-white rounded"
-                >
-                Salvar
-                </button>
-            </div>
-            </form> */}
-
       </div>
     </div>
   );

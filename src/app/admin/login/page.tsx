@@ -4,6 +4,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabaseClient } from '@/lib/supabaseClient';
+import Image from 'next/image'; 
 
 export default function AdminLogin() {
   const router = useRouter();
@@ -85,9 +86,11 @@ export default function AdminLogin() {
 
         {/* Imagem lado direito */}
         <div className="flex items-center justify-center w-full md:w-auto">
-          <img
+          <Image
             src="/logo-selo.png"
             alt="Selo Editorial Cronópios"
+            width={240} // define largura
+            height={240} // define altura
             className="w-40 md:w-60"
           />
         </div>

@@ -1,7 +1,7 @@
-type Props = {
+interface Props {
   children: React.ReactNode;
   className?: string;
-};
+}
 
 export const H1 = ({ children, className }: Props) => (
   <h1 className={`text-h1 font-serif ${className}`}>{children}</h1>

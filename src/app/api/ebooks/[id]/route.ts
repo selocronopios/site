@@ -2,11 +2,15 @@ import { NextRequest, NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabaseAdmin'
 import { isValidUUID, validateUUID, handleSupabaseError, validateFieldType } from '@/lib/utils'
 import { validateUser } from '@/lib/auth/validadeUser'
+import { logError } from '@/lib/logger';
 
-export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
-  const id = params?.id?.trim()
+export async function GET(req: NextRequest) {
+  const url = new URL(req.url)
+  const parts = url.pathname.split('/')
+  const id = parts[parts.indexOf('ebooks') + 1]?.trim()
+
   const idError = validateUUID(id)
-  if (idError) return NextResponse.json({ error: idError }, { status: 400 })
+  if (idError) {return NextResponse.json({ error: idError }, { status: 400 })}
 
   try {
     const { data, error } = await supabaseAdmin
@@ -15,12 +19,12 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
       .eq('id', id)
       .single()
 
-    if (error) return handleSupabaseError(error)
+    if (error) {return handleSupabaseError(error)}
 
     return NextResponse.json( data , { status: 200 })
 
   } catch (err) {
-    console.error('Erro inesperado:', err)
+    logError('Erro inesperado:', err)
     return NextResponse.json({ error: 'Erro no servidor' }, { status: 500 })
   }
 }
@@ -41,16 +45,18 @@ interface UpdateBody {
   keywords?: string
 }
 
-export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(req: NextRequest) {
   const user = await validateUser(req)
 
   if (!user) {
       return NextResponse.json({ error: 'Token inválido' }, { status: 401 })
   }
 
-  const id = params?.id?.trim()
+  const url = new URL(req.url)
+  const parts = url.pathname.split('/')
+  const id = parts[parts.indexOf('ebooks') + 1]?.trim()
   const idError = validateUUID(id)
-  if (idError) return NextResponse.json({ error: idError }, { status: 400 })
+  if (idError) {return NextResponse.json({ error: idError }, { status: 400 })}
 
   let body: UpdateBody
   try {
@@ -68,28 +74,28 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
   const errors: Record<string, string> = {}
 
   const titleError = validateFieldType(title, 'string', 'title', { required: false, nullable: false })
-  if (titleError) errors.title = titleError
+  if (titleError) {errors.title = titleError}
 
   const subtitleError = validateFieldType(subtitle, 'string', 'subtitle', { required: false, nullable: true })
-  if (subtitleError) errors.subtitle = subtitleError  
+  if (subtitleError) {errors.subtitle = subtitleError}  
 
   const authorsError = validateFieldType(authors, 'string', 'authors', { required: false, nullable: false })
-  if (authorsError) errors.authors = authorsError    
+  if (authorsError) {errors.authors = authorsError}    
 
   const authorshipError = validateFieldType(authorship, 'string', 'authorship', { required: false, nullable: false })
-  if (authorshipError) errors.authorship = authorshipError   
+  if (authorshipError) {errors.authorship = authorshipError}   
 
   const summaryError = validateFieldType(summary, 'string', 'summary', { required: false, nullable: false })
-  if (summaryError) errors.summary = summaryError
+  if (summaryError) {errors.summary = summaryError}
 
   const detailsError = validateFieldType(details, 'string', 'details', { required: false, nullable: false })
-  if (detailsError) errors.summary = detailsError  
+  if (detailsError) {errors.summary = detailsError}  
 
   const yearError = validateFieldType(year, 'number', 'year', { required: false, nullable: false })
-  if (yearError) errors.year = yearError  
+  if (yearError) {errors.year = yearError}  
 
   const descriptionError = validateFieldType(description, 'string', 'description', { required: false, nullable: false })
-  if (descriptionError) errors.description = descriptionError  
+  if (descriptionError) {errors.description = descriptionError}  
 
   const file_idError = validateFieldType(file_id, 'string', 'file_id', { required: false, nullable: false })
   if (file_idError) {
@@ -106,7 +112,7 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
   }  
 
   const linkError = validateFieldType(link, 'string', 'link', { required: false, nullable: true })
-  if (linkError) errors.link = linkError  
+  if (linkError) {errors.link = linkError}  
 
   const collection_idError = validateFieldType(collection_id, 'string', 'collection_id', { required: false, nullable: false })
   if (collection_idError) {
@@ -116,13 +122,13 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
   }  
 
   const keywordsError = validateFieldType(keywords, 'string', 'keywords', { required: false, nullable: false })
-  if (keywordsError) errors.keywords = keywordsError 
+  if (keywordsError) {errors.keywords = keywordsError} 
 
   if (Object.keys(errors).length > 0) {
     return NextResponse.json({ error: errors }, { status: 400 })
   }
 
-  const updates: Record<string, any> = {
+  const updates: UpdateBody & { updated_at: string } = {
     updated_at: new Date().toISOString(),
     ...(title !== undefined ? { title } : {}),
     ...(subtitle !== undefined ? { subtitle } : {}),
@@ -147,25 +153,27 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
       .select()
       .single()
 
-    if (error) return handleSupabaseError(error)
+    if (error) {return handleSupabaseError(error)}
 
     return NextResponse.json(data, { status: 200 })
   } catch (err) {
-    console.error(err)
+    logError(err)
     return NextResponse.json({ error: 'Erro no servidor' }, { status: 500 })
   }
 }
 
-export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(req: NextRequest) {
   const user = await validateUser(req)
 
   if (!user) {
       return NextResponse.json({ error: 'Token inválido' }, { status: 401 })
   }
 
-  const id = params?.id?.trim()
+  const url = new URL(req.url)
+  const parts = url.pathname.split('/')
+  const id = parts[parts.indexOf('ebooks') + 1]?.trim()
   const idError = validateUUID(id)
-  if (idError) return NextResponse.json({ error: idError }, { status: 400 })
+  if (idError) {return NextResponse.json({ error: idError }, { status: 400 })}
 
   try {
     const { error } = await supabaseAdmin
@@ -174,17 +182,18 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
       .eq('id', id)
       .single()
 
-    if (error) return handleSupabaseError(error)
+    if (error) {return handleSupabaseError(error)}
 
     const { error: deleteError  } = await supabaseAdmin
       .from('ebooks')
       .delete()
       .eq('id', id)
 
-    if (deleteError) return NextResponse.json({ error: deleteError.message }, { status: 500 })
+    if (deleteError) {return NextResponse.json({ error: deleteError.message }, { status: 500 })}
     return NextResponse.json({ message: 'Deletado com sucesso' }, { status: 200 })
   
   } catch (err) {
+    logError(err);
     return NextResponse.json({ error: 'Erro no servidor' }, { status: 500 })
   }
 }

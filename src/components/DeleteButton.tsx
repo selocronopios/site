@@ -7,15 +7,25 @@ interface Props {
   apiPath: string;
 }
 
+interface Ebook {
+  id: string;
+  title: string;
+}
+
+interface Collection {
+  id: string;
+  name: string;
+}
+
 export default function DeleteButton({ id, apiPath }: Props) {
-  const [ebooksUsingCollection, setEbooksUsingCollection] = useState<any[]>([]);
-  const [collections, setCollections] = useState<any[]>([]);
+  const [ebooksUsingCollection, setEbooksUsingCollection] = useState<Ebook[]>([]);
+  const [collections, setCollections] = useState<Collection[]>([]);
   const [selectedCollection, setSelectedCollection] = useState('');
   const [showModal, setShowModal] = useState(false);
 
   async function handleDelete() {
     const confirmDelete = confirm('Deseja deletar esta coleção?');
-    if (!confirmDelete) return;
+    if (!confirmDelete) {return;}
 
     // Verifica se algum ebook usa esta coleção
     const ebooksRes = await fetch(`/api/collections/${id}/ebooks`);
@@ -28,7 +38,7 @@ export default function DeleteButton({ id, apiPath }: Props) {
       // Pega outras coleções disponíveis
       const allCollectionsRes = await fetch('/api/collections');
       const allCollections = await allCollectionsRes.json();
-      const filtered = allCollections.filter((col: any) => col.id !== id);
+      const filtered = allCollections.filter((col: Collection) => col.id !== id);
       setCollections(filtered);
       setEbooksUsingCollection(ebooks);
       setShowModal(true);
@@ -39,7 +49,7 @@ export default function DeleteButton({ id, apiPath }: Props) {
     if (newCollectionId) {
       // Atualiza todos os ebooks para nova coleção
       await Promise.all(
-        ebooksUsingCollection.map((ebook: any) =>
+        ebooksUsingCollection.map((ebook: Ebook) =>
           fetch(`/api/ebooks/${ebook.id}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },

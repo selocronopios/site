@@ -2,6 +2,7 @@
 import { NextRequest } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabaseAdmin'
 import { createServerSupabaseClient } from '@/lib/supabaseServer'
+import { logError } from '@/lib/logger';
 
 export async function validateUser(req: NextRequest) {
   const token = req.headers.get('Authorization')?.replace('Bearer ', '')
@@ -9,7 +10,7 @@ export async function validateUser(req: NextRequest) {
   // 1. Tenta autenticar via token (ex: Insomnia)
   if (token) {
     const { data, error } = await supabaseAdmin.auth.getUser(token)
-    if (error || !data?.user) return null
+    if (error || !data?.user) {return null}
     return data.user
   }
 
@@ -17,7 +18,7 @@ export async function validateUser(req: NextRequest) {
   const supabase = await createServerSupabaseClient()
   const { data, error } = await supabase.auth.getUser()
   if (error || !data?.user) {
-    console.log(error)
+    logError(error)
     return null
   }
 

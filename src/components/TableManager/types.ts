@@ -3,8 +3,8 @@ export interface Field {
   label: string;
 }
 
-export type DataItem = {
-  [key: string]: any;
+export interface DataItem {
+  [key: string]: string | number | null | undefined;
   id?: string;
   id_pai?: string | null;
-};
+}

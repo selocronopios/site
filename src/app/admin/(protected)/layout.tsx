@@ -7,7 +7,7 @@ export default async function ProtectedLayout({ children }: { children: React.Re
   const supabase = await createServerSupabaseClient();
   const { data: { user } } = await supabase.auth.getUser();
 
-  if (!user) redirect('/admin/login');
+  if (!user) {redirect('/admin/login');}
 
   return <AdminLayout>{children}</AdminLayout>;
 }

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabaseAdmin'
 import { validateUser } from '@/lib/auth/validadeUser'
 import { handleSupabaseError, validateFieldType } from '@/lib/utils'
+import { logError } from '@/lib/logger';
 
 interface UpdateBody {
   name?: string
@@ -37,7 +38,7 @@ export async function POST(req: NextRequest) {
   const errors: Record<string, string> = {}
 
   const nameError = validateFieldType(name, 'string', 'name', { required: false, nullable: false })
-  if (nameError) errors.name = nameError
+  if (nameError) {errors.name = nameError}
 
   const function_groupError = validateFieldType(function_group, 'string', 'function_group', { required: false, nullable: true })
   if (function_groupError) { 
@@ -61,25 +62,25 @@ export async function POST(req: NextRequest) {
   } 
        
   const institutionError = validateFieldType(institution, 'string', 'institution', { required: false, nullable: false })
-  if (institutionError) errors.institution = institutionError  
+  if (institutionError) {errors.institution = institutionError}  
   
   const degreeError = validateFieldType(degree, 'string', 'degree', { required: false, nullable: false })
-  if (degreeError) errors.degree = degreeError
+  if (degreeError) {errors.degree = degreeError}
   
   const pictureError = validateFieldType(picture, 'string', 'picture', { required: false, nullable: false })
-  if (pictureError) errors.picture = pictureError
+  if (pictureError) {errors.picture = pictureError}
 
   const lattesError = validateFieldType(lattes, 'string', 'lattes', { required: false, nullable: false })
-  if (lattesError) errors.lattes = lattesError  
+  if (lattesError) {errors.lattes = lattesError}  
 
   const is_team_groupError = validateFieldType(is_team_group, 'boolean', 'is_team_group', { required: false, nullable: false })
-  if (is_team_groupError) errors.is_team_group = is_team_groupError    
+  if (is_team_groupError) {errors.is_team_group = is_team_groupError}    
 
   const is_team_imprintError = validateFieldType(is_team_imprint, 'boolean', 'is_team_imprint', { required: false, nullable: false })
-  if (is_team_imprintError) errors.is_team_imprint = is_team_imprintError     
+  if (is_team_imprintError) {errors.is_team_imprint = is_team_imprintError}     
 
   const is_team_associationError = validateFieldType(is_team_association, 'boolean', 'is_team_association', { required: false, nullable: false })
-  if (is_team_associationError) errors.is_team_association = is_team_associationError       
+  if (is_team_associationError) {errors.is_team_association = is_team_associationError}       
 
   const is_activeError = validateFieldType(is_active, 'boolean', 'is_active', { required: false, nullable: false })
   if (is_activeError) {
@@ -98,29 +99,29 @@ export async function POST(req: NextRequest) {
       .insert([{ name, function_group, function_imprint, function_association, institution, degree, picture, lattes, is_team_group, is_team_imprint, is_team_association, is_active }])
       .select()
 
-    if (error) return handleSupabaseError(error)
+    if (error) {return handleSupabaseError(error)}
 
     return NextResponse.json( data, { status: 201 })
   } catch (err) {
-    console.error(err)
+    logError(err)
     return NextResponse.json({ error: 'Erro no servidor' }, { status: 500 })
   }
 }
 
-export async function GET(req: Request) {
+export async function GET() {
   try {
     const { data, error } = await supabaseAdmin
       .from('team')
       .select()
 
     if (error) {
-      console.error('Erro do Supabase:', error)
+      logError('Erro do Supabase:', error)
       return NextResponse.json({ error: error.message }, { status: 500 })
     }
 
     return NextResponse.json(data, { status: 200 })
   } catch (err) {
-    console.error(err)
+    logError(err)
     return NextResponse.json({ error: 'Erro no servidor' }, { status: 500 })
   }
 }

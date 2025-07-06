@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabaseAdmin'
 import { isValidUUID, handleSupabaseError, validateFieldType } from '@/lib/utils'
 import { validateUser } from '@/lib/auth/validadeUser'
+import { logError } from '@/lib/logger';
 
 interface UpdateBody {
   title?: string
@@ -38,28 +39,28 @@ export async function POST(req: NextRequest) {
   const errors: Record<string, string> = {}
 
   const titleError = validateFieldType(title, 'string', 'title', { required: true, nullable: false })
-  if (titleError) errors.title = titleError
+  if (titleError) {errors.title = titleError}
 
   const subtitleError = validateFieldType(subtitle, 'string', 'subtitle', { required: true, nullable: true })
-  if (subtitleError) errors.subtitle = subtitleError  
+  if (subtitleError) {errors.subtitle = subtitleError}  
 
   const authorsError = validateFieldType(authors, 'string', 'authors', { required: true, nullable: false })
-  if (authorsError) errors.authors = authorsError    
+  if (authorsError) {errors.authors = authorsError}    
 
   const authorshipError = validateFieldType(authorship, 'string', 'authorship', { required: true, nullable: false })
-  if (authorshipError) errors.authorship = authorshipError   
+  if (authorshipError) {errors.authorship = authorshipError}   
 
   const summaryError = validateFieldType(summary, 'string', 'summary', { required: true, nullable: false })
-  if (summaryError) errors.summary = summaryError
+  if (summaryError) {errors.summary = summaryError}
 
   const detailsError = validateFieldType(details, 'string', 'details', { required: true, nullable: false })
-  if (detailsError) errors.summary = detailsError  
+  if (detailsError) {errors.summary = detailsError}  
 
   const yearError = validateFieldType(year, 'number', 'year', { required: true, nullable: false })
-  if (yearError) errors.year = yearError  
+  if (yearError) {errors.year = yearError}  
 
   const descriptionError = validateFieldType(description, 'string', 'description', { required: true, nullable: false })
-  if (descriptionError) errors.description = descriptionError  
+  if (descriptionError) {errors.description = descriptionError}  
 
   const file_idError = validateFieldType(file_id, 'string', 'file_id', { required: true, nullable: false })
   if (file_idError) {
@@ -76,7 +77,7 @@ export async function POST(req: NextRequest) {
   }  
 
   const linkError = validateFieldType(link, 'string', 'link', { required: true, nullable: true })
-  if (linkError) errors.link = linkError  
+  if (linkError) {errors.link = linkError}  
 
   const collection_idError = validateFieldType(collection_id, 'string', 'collection_id', { required: true, nullable: false })
   if (collection_idError) {
@@ -86,7 +87,7 @@ export async function POST(req: NextRequest) {
   }  
 
   const keywordsError = validateFieldType(keywords, 'string', 'keywords', { required: true, nullable: false })
-  if (keywordsError) errors.keywords = keywordsError 
+  if (keywordsError) {errors.keywords = keywordsError} 
 
   if (Object.keys(errors).length > 0) {
     return NextResponse.json({ error: errors }, { status: 400 })
@@ -98,29 +99,29 @@ export async function POST(req: NextRequest) {
       .insert([{ title, subtitle, authors, authorship, summary, details, year, description, file_id, cover_id, link, collection_id, keywords }])
       .select()
 
-    if (error) return handleSupabaseError(error)
+    if (error) {return handleSupabaseError(error)}
 
     return NextResponse.json( data, { status: 201 })
   } catch (err) {
-    console.error(err)
+    logError(err)
     return NextResponse.json({ error: 'Erro no servidor' }, { status: 500 })
   }
 }
 
-export async function GET(req: Request) {
+export async function GET() {
   try {
     const { data, error } = await supabaseAdmin
       .from('ebooks')
       .select()
 
     if (error) {
-      console.error('Erro do Supabase:', error)
+      logError('Erro do Supabase:', error)
       return NextResponse.json({ error: error.message }, { status: 500 })
     }
 
     return NextResponse.json(data, { status: 200 })
   } catch (err) {
-    console.error(err)
+    logError(err)
     return NextResponse.json({ error: 'Erro no servidor' }, { status: 500 })
   }
 }

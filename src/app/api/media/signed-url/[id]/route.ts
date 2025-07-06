@@ -2,11 +2,14 @@
 import { supabaseAdmin } from '@/lib/supabaseAdmin'
 import { NextRequest, NextResponse } from 'next/server'
 import { handleSupabaseError, validateUUID } from '@/lib/utils'
+import { logError } from '@/lib/logger';
 
-export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
-  const id = params?.id?.trim()
+export async function GET(req: NextRequest) {
+  const url = new URL(req.url)
+  const parts = url.pathname.split('/')
+  const id = parts[parts.indexOf('signed-url') + 1]?.trim()
   const idError = validateUUID(id)
-  if (idError) return NextResponse.json({ error: idError }, { status: 400 })
+  if (idError) {return NextResponse.json({ error: idError }, { status: 400 })}
 
   try {
     const { data, error } = await supabaseAdmin
@@ -15,7 +18,7 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
       .eq('id', id)
       .single()
 
-    if (error) return handleSupabaseError(error)
+    if (error) {return handleSupabaseError(error)}
 
     const { bucket, path } = data
     
@@ -34,7 +37,7 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
 
     return NextResponse.json({ url: selectData.signedUrl })
   } catch (err) {
-    console.error(err)
+    logError(err)
     return NextResponse.json({ error: 'Erro no servidor' }, { status: 500 })
   }
 

@@ -1,21 +1,22 @@
 //src/pages/api/media/index.ts
 import { supabaseAdmin } from '@/lib/supabaseAdmin'
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
+import { logError } from '@/lib/logger';
 
-export async function GET(req: NextRequest) {
+export async function GET() {
     try {
         const { data, error } = await supabaseAdmin
         .from('media_files')
         .select('*')
 
         if (error) {
-        console.error('Erro do Supabase:', error)
+        logError('Erro do Supabase:', error)
         return NextResponse.json({ error: error.message }, { status: 500 })
         }
 
         return NextResponse.json(data, { status: 200 })
     } catch (err) {
-    console.error(err)
+    logError(err)
     return NextResponse.json({ error: 'Erro no servidor' }, { status: 500 })
     }
 }

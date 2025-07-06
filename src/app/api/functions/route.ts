@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabaseAdmin'
 import { validateUser } from '@/lib/auth/validadeUser'
 import { validateFieldType } from '@/lib/utils'
+import { logError } from '@/lib/logger';
 
 interface UpdateBody {
   description?: string
@@ -30,7 +31,7 @@ export async function POST(req: NextRequest) {
     required: true,
     nullable: false,
   })
-  if (descriptionError) errors.description = descriptionError
+  if (descriptionError) {errors.description = descriptionError}
 
   const group_typeError = validateFieldType(group_type, 'number', 'group_type', {
     required: true,
@@ -63,7 +64,7 @@ export async function POST(req: NextRequest) {
 }
 
 
-export async function GET(req: Request) {
+export async function GET() {
   try {
     const { data, error } = await supabaseAdmin
       .from('functions')
@@ -75,6 +76,7 @@ export async function GET(req: Request) {
 
     return NextResponse.json( data, { status: 200 })
   } catch (err) {
+    logError(err);
     return NextResponse.json({ error: 'Erro no servidor' }, { status: 500 })
   }
 }

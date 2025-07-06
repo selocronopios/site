@@ -1,14 +1,22 @@
 //src/app/admin/(protected)/collections/page.tsx
 import TableManager from '@/components/TableManager/TableManager';
 
+interface Collection {
+  id: number;
+  name: string;
+  description: string;
+  id_pai?: number | null;
+  parent_name?: string;
+}
+
 export default async function CollectionsPage() {
   const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/collections`, {
     cache: 'no-store',
   });
   const data = await res.json();
 
-  const dataWithParentName = data.map((item: any) => {
-    const parent = data.find((col: any) => col.id === item.id_pai);
+  const dataWithParentName = data.map((item: Collection) => {
+    const parent = data.find((col: Collection) => col.id === item.id_pai);
     return {
       ...item,
       parent_name: parent ? parent.name : '',

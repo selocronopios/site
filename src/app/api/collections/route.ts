@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabaseAdmin'
 import { isValidUUID, handleSupabaseError, validateFieldType } from '@/lib/utils'
 import { validateUser } from '@/lib/auth/validadeUser'
+import { logError } from '@/lib/logger';
 
 interface UpdateBody {
   id_pai?: string | null
@@ -36,10 +37,10 @@ export async function POST(req: NextRequest) {
   }
 
   const nameError = validateFieldType(name, 'string', 'name', { required: true, nullable: false })
-  if (nameError) errors.name = nameError
+  if (nameError) {errors.name = nameError}
 
   const descriptionError = validateFieldType(description, 'string', 'description', { required: true, nullable: false })
-  if (descriptionError) errors.description = descriptionError
+  if (descriptionError) {errors.description = descriptionError}
 
   if (Object.keys(errors).length > 0) {
     return NextResponse.json({ error: errors }, { status: 400 })
@@ -51,11 +52,11 @@ export async function POST(req: NextRequest) {
       .insert([{ id_pai, name, description }])
       .select()
 
-    if (error) return handleSupabaseError(error)
+    if (error) {return handleSupabaseError(error)}
 
     return NextResponse.json( data, { status: 201 })
   } catch (err) {
-    console.error(err)
+    logError(err);
     return NextResponse.json({ error: 'Erro no servidor' }, { status: 500 })
   }
 }
@@ -73,13 +74,13 @@ export async function GET(req: NextRequest) {
     const { data, error } = await query;
 
     if (error) {
-      console.error('Erro do Supabase:', error);
+      logError('Erro do Supabase:', error);
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
     return NextResponse.json(data, { status: 200 });
   } catch (err) {
-    console.error(err);
+    logError(err);
     return NextResponse.json({ error: 'Erro no servidor' }, { status: 500 });
   }
 }
