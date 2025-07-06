@@ -1,20 +1,42 @@
+/* src/app/globals.css */
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Importação das fontes */
 @import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@400;600;700&family=Roboto:wght@400;600&display=swap');
 
+@layer components {
+  .heading-h1 {
+    @apply text-h1 font-merriweather;
+  }
+  .heading-h2 {
+    @apply text-h2 font-merriweather;
+  }
+  .heading-h3 {
+    @apply text-h3 font-merriweather;
+  }
+  .body {
+    @apply text-body font-roboto;
+  }
+  .small {
+    @apply text-small font-roboto;
+  }  
+  .button {
+    @apply text-button font-roboto;
+  }  
+}
+
 html {
-  background-color: #FFFFFF;
-  color: #222222;
+  background-color: theme('colors.background');
+  color: theme('colors.text');
 }
 
 ::selection {
-  background-color: #F6CFC7;
+  background-color: theme('colors.selectionLight');
 }
 
-/* Exemplo de classes utilitárias adicionais (opcional) */
+/* Exemplo botão */
 .btn {
-  @apply text-button font-sans bg-primary text-background px-4 py-2 rounded-md hover:bg-secondary transition;
+  @apply font-roboto font-semibold text-button bg-primary text-background px-4 py-2 rounded-md hover:bg-secondary transition;
 }

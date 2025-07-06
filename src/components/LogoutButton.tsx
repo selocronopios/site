@@ -12,7 +12,7 @@ export default function LogoutButton() {
   }
 
   return (
-    <button onClick={handleLogout} className="w-full">
+    <button onClick={handleLogout}>
       Sair
     </button>
   );

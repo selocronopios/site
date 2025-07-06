@@ -16,6 +16,7 @@ export default async function EbooksPage() {
             <h2 className="font-semibold">{ebook.title}</h2>
             <p className="text-sm text-gray-600">{ebook.authors}</p>
             <p className="text-xs">{ebook.year}</p>
+            <p className="text-xs">{ebook.collection_id}</p>
           </li>
         ))}
       </ul>

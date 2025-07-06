@@ -1,3 +1,4 @@
+//src/app/admin/(protected)/layout.tsx
 import { createServerSupabaseClient } from '@/lib/supabaseServer';
 import { redirect } from 'next/navigation';
 import AdminLayout from '@/components/AdminLayout';

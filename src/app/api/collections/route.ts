@@ -60,23 +60,26 @@ export async function POST(req: NextRequest) {
   }
 }
 
-export async function GET(req: Request) {
+export async function GET(req: NextRequest) {
   try {
-    const { data, error } = await supabaseAdmin
-      .from('collections')
-      .select(`
-        *,
-        pai:collections!id_pai(name)
-      `)
+    const url = new URL(req.url);
+    const id_pai = url.searchParams.get('id_pai');
 
-    if (error) {
-      console.error('Erro do Supabase:', error)
-      return NextResponse.json({ error: error.message }, { status: 500 })
+    let query = supabaseAdmin.from('collections').select('*');
+    if (id_pai) {
+      query = query.eq('id_pai', id_pai);
     }
 
-    return NextResponse.json(data, { status: 200 })
+    const { data, error } = await query;
+
+    if (error) {
+      console.error('Erro do Supabase:', error);
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+
+    return NextResponse.json(data, { status: 200 });
   } catch (err) {
-    console.error(err)
-    return NextResponse.json({ error: 'Erro no servidor' }, { status: 500 })
+    console.error(err);
+    return NextResponse.json({ error: 'Erro no servidor' }, { status: 500 });
   }
 }

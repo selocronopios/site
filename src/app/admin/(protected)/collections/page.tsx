@@ -1,24 +1,38 @@
-// app/admin/collections/page.tsx
+//src/app/admin/(protected)/collections/page.tsx
+import TableManager from '@/components/TableManager/TableManager';
 
 export default async function CollectionsPage() {
   const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/collections`, {
-    cache: 'no-store'
-  })
-  const collections = await res.json()
+    cache: 'no-store',
+  });
+  const data = await res.json();
+
+  const dataWithParentName = data.map((item: any) => {
+    const parent = data.find((col: any) => col.id === item.id_pai);
+    return {
+      ...item,
+      parent_name: parent ? parent.name : '',
+    };
+  });
+
+  const tableFields = [
+    { key: 'name', label: 'Nome' },
+    { key: 'description', label: 'Descrição' },
+    { key: 'parent_name', label: 'Coleção Pai' }, 
+  ];
+
+  const modalFields = [
+    ...tableFields,
+    { key: 'id_pai', label: 'Coleção Pai' }, 
+  ];
 
   return (
-    <div className="space-y-4">
-      <h1 className="text-2xl font-bold">Coleções</h1>
-      {collections.length === 0 && <p>Nenhuma coleção cadastrada.</p>}
-      <ul className="grid gap-4">
-        {collections.map((collection: any) => (
-          <li key={collection.id} className="border p-4 rounded">
-            <h2 className="font-semibold">{collection.name}</h2>
-            <p className="text-sm text-gray-600">{collection.description}</p>
-            <p className="text-xs">{collection.id_pai}</p>
-          </li>
-        ))}
-      </ul>
-    </div>
-  )
+    <TableManager
+      title="Gerenciar Coleções"
+      data={dataWithParentName}
+      fields={tableFields}
+      modalFields={modalFields}
+      apiPath="/api/collections"
+    />
+  );
 }

@@ -100,35 +100,50 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
 }
 
 export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
-  const user = await validateUser(req)
-
+  const user = await validateUser(req);
   if (!user) {
-      return NextResponse.json({ error: 'Token inválido' }, { status: 401 })
+    return NextResponse.json({ error: 'Token inválido' }, { status: 401 });
   }
 
-  const id = params?.id?.trim()
-  const idError = validateUUID(id)
-  if (idError) return NextResponse.json({ error: idError }, { status: 400 })
+  const id = params?.id?.trim();
+  const idError = validateUUID(id);
+  if (idError) return NextResponse.json({ error: idError }, { status: 400 });
 
+  // Checar se há coleções-filho com id_pai = id
+  const { data: children, error: childrenError } = await supabaseAdmin
+    .from('collections')
+    .select('id')
+    .eq('id_pai', id);
+
+  if (childrenError) {
+    return NextResponse.json({ error: childrenError.message }, { status: 500 });
+  }
+
+  if (children && children.length > 0) {
+    // Aqui você não consegue fazer prompt, então o frontend deve pedir confirmação.
+    // Mas pode retornar erro ou mensagem especial dizendo que tem filhos.
+    return NextResponse.json(
+      {
+        error: `Essa coleção é pai de ${children.length} outras. Confirme a remoção das referências antes de excluir.`,
+        hasChildren: true,
+      },
+      { status: 409 } // conflito
+    );
+  }
+
+  // Se não tiver filhos, pode deletar direto
   try {
-    const { error } = await supabaseAdmin
-      .from('collections')
-      .select('id')
-      .eq('id', id)
-      .single()
-
-    if (error) return handleSupabaseError(error)
-
     const { error: deleteError } = await supabaseAdmin
       .from('collections')
       .delete()
-      .eq('id', id)
+      .eq('id', id);
 
-    if (deleteError) return NextResponse.json({ error: deleteError.message }, { status: 500 })
-    return NextResponse.json({ message: 'Deletado com sucesso' }, { status: 200 })
+    if (deleteError)
+      return NextResponse.json({ error: deleteError.message }, { status: 500 });
 
+    return NextResponse.json({ message: 'Deletado com sucesso' }, { status: 200 });
   } catch (err) {
-    console.error(err)
-    return NextResponse.json({ error: 'Erro no servidor' }, { status: 500 })
+    console.error(err);
+    return NextResponse.json({ error: 'Erro no servidor' }, { status: 500 });
   }
 }
