@@ -7,9 +7,8 @@
     "npm": ">=9"
   },
   "scripts": {
-    "vercel-build": "npm install && next build",
     "dev": "next dev",
-    "build": "npx next build",
+    "build": "next build",
     "start": "next start",
     "lint": "eslint . --ext .ts,.tsx",
     "lint:fix": "eslint . --ext .ts,.tsx --fix"
