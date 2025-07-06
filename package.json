@@ -2,7 +2,12 @@
   "name": "site",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=18",
+    "npm": ">=9"
+  },
   "scripts": {
+    "vercel-build": "npm install && next build",
     "dev": "next dev",
     "build": "npx next build",
     "start": "next start",
