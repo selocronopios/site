@@ -3,12 +3,18 @@
 import { useState, useEffect } from 'react';
 import LogoutButton from './LogoutButton';
 
-export default function AdminLayout({ children }: { children: React.ReactNode }) {
+export default function AdminLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {setMenuOpen(false);}
+      if (e.key === 'Escape') {
+        setMenuOpen(false);
+      }
     };
     window.addEventListener('keydown', handleEsc);
     return () => window.removeEventListener('keydown', handleEsc);
@@ -63,11 +69,21 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <div className="p-4">
             <h2 className="heading-h1 mb-6">Admin Painel</h2>
             <nav className="flex flex-col gap-2">
-              <a href="/admin" className="body">Dashboard</a>
-              <a href="/admin/collections" className="body">Coleções</a>
-              <a href="/admin/ebooks" className="body">Ebooks</a>
-              <a href="/admin/team" className="body">Equipe</a>
-              <a href="/admin/config" className="body">Configurações</a>
+              <a href="/admin" className="body">
+                Dashboard
+              </a>
+              <a href="/admin/collections" className="body">
+                Coleções
+              </a>
+              <a href="/admin/ebooks" className="body">
+                Ebooks
+              </a>
+              <a href="/admin/team" className="body">
+                Equipe
+              </a>
+              <a href="/admin/config" className="body">
+                Configurações
+              </a>
             </nav>
           </div>
 

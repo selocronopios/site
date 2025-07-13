@@ -4,7 +4,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabaseClient } from '@/lib/supabaseClient';
-import Image from 'next/image'; 
+import Image from 'next/image';
 
 export default function AdminLogin() {
   const router = useRouter();
@@ -38,7 +38,6 @@ export default function AdminLogin() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-backgroundExtra px-4 sm:px-6 md:px-8">
       <div className="max-w-4xl w-full bg-white rounded-lg shadow-lg p-6 flex flex-col md:flex-row gap-8 md:gap-24">
-        
         {/* Texto e formulário */}
         <div className="w-full md:max-w-md">
           <h1 className="heading-h1 text-primary mb-12 text-center md:text-left break-words">
@@ -47,7 +46,7 @@ export default function AdminLogin() {
 
           <form onSubmit={handleLogin} className="flex flex-col gap-6">
             <label className="heading-h3 text-text flex flex-col gap-1">
-              Login 
+              Login
               <input
                 type="email"
                 value={email}
@@ -79,7 +78,7 @@ export default function AdminLogin() {
                 loading ? 'opacity-50 cursor-not-allowed' : ''
               }`}
             >
-              {loading ? 'Entrando...' : 'Login'} 
+              {loading ? 'Entrando...' : 'Login'}
             </button>
           </form>
         </div>

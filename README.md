@@ -13,21 +13,22 @@ Site oficial do Grupo de História Intelectual da UFMG. Este projeto tem como ob
 
 ## 🏗️ Arquitetura do Projeto
 
-| Camada        | Tecnologia                                        |
-|----------------|---------------------------------------------------|
-| **Frontend**   | Next.js (React) + Tailwind CSS                   |
-| **Backend**    | Next.js API Routes (Serverless Functions)        |
-| **Banco de Dados** | Supabase (PostgreSQL + Storage)              |
-| **Armazenamento** | Supabase Storage (Arquivos, PDFs, imagens)    |
-| **Hospedagem** | Vercel (com integração contínua via GitHub)      |
-| **Design**     | Figma                                            |
-| **Documentação** | Google Docs + Markdown no repositório          |
+| Camada             | Tecnologia                                  |
+| ------------------ | ------------------------------------------- |
+| **Frontend**       | Next.js (React) + Tailwind CSS              |
+| **Backend**        | Next.js API Routes (Serverless Functions)   |
+| **Banco de Dados** | Supabase (PostgreSQL + Storage)             |
+| **Armazenamento**  | Supabase Storage (Arquivos, PDFs, imagens)  |
+| **Hospedagem**     | Vercel (com integração contínua via GitHub) |
+| **Design**         | Figma                                       |
+| **Documentação**   | Google Docs + Markdown no repositório       |
 
 ---
 
 ## 🗄️ Modelagem de Dados
 
 ### 🔐 Configuração Administrativa (`config`)
+
 - id (UUID, PK)
 - email (string)
 - password_hash (string)
@@ -35,6 +36,7 @@ Site oficial do Grupo de História Intelectual da UFMG. Este projeto tem como ob
 - updated_at (timestamp)
 
 ### 👥 Membros da Equipe (`team`)
+
 - id (UUID, PK)
 - name (string)
 - function_group (UUID, FK → functions.id)
@@ -52,6 +54,7 @@ Site oficial do Grupo de História Intelectual da UFMG. Este projeto tem como ob
 - updated_at (timestamp)
 
 ### 📚 Ebooks (`ebooks`)
+
 - id (UUID, PK)
 - title (string)
 - subtitle (string, opcional)
@@ -69,6 +72,7 @@ Site oficial do Grupo de História Intelectual da UFMG. Este projeto tem como ob
 - created_at (timestamp)
 
 ### 📁 Arquivos e Mídias (`media_files`)
+
 - id (UUID, PK)
 - name (string)
 - url (string)
@@ -77,6 +81,7 @@ Site oficial do Grupo de História Intelectual da UFMG. Este projeto tem como ob
 - uploaded_at (timestamp)
 
 ### 🗂️ Coleções (`collections`)
+
 - id (UUID, PK)
 - id_pai (UUID, FK → collections.id, opcional)
 - name (string)
@@ -85,6 +90,7 @@ Site oficial do Grupo de História Intelectual da UFMG. Este projeto tem como ob
 - uploaded_at (timestamp)
 
 ### 🏷️ Cargos (`functions`)
+
 - id (UUID, PK)
 - description (string)
 - group (int) → (1 = Grupo | 2 = Selo | 3 = Associação)
@@ -103,34 +109,35 @@ Site oficial do Grupo de História Intelectual da UFMG. Este projeto tem como ob
 
 ### 🎨 Paleta de Cores
 
-| Nome            | HEX     |
-|-----------------|---------|
-| **Primária**    | `#E2A249` |
-| **Secundária**  | `#E5848D` |
-| **Seleção leve**| `#F6CFC7` |
-| **Sucesso**     | `#9EC5AE` |
-| **Fundo**       | `#FFFFFF` |
-| **Fundo extra** | `#E1D5BF` |
-| **Texto**       | `#222222` |
+| Nome             | HEX       |
+| ---------------- | --------- |
+| **Primária**     | `#E2A249` |
+| **Secundária**   | `#E5848D` |
+| **Seleção leve** | `#F6CFC7` |
+| **Sucesso**      | `#9EC5AE` |
+| **Fundo**        | `#FFFFFF` |
+| **Fundo extra**  | `#E1D5BF` |
+| **Texto**        | `#222222` |
 
 ---
 
 ### ✍️ Tipografia
 
-| Uso              | Fonte          | Peso      | Tamanho | Line-height |
-|------------------|----------------|-----------|---------|-------------|
-| **H1**           | Merriweather   | Bold      | 36px    | 47px        |
-| **H2**           | Merriweather   | Semibold  | 28px    | 39px        |
-| **H3**           | Merriweather   | Semibold  | 20px    | 28px        |
-| **Corpo**        | Roboto         | Regular   | 20px    | 30px        |
-| **Texto Menor**  | Roboto         | Regular   | 12px    | 17px        |
-| **Botões/Links** | Roboto         | Semibold  | 14px    | 18px        |
+| Uso              | Fonte        | Peso     | Tamanho | Line-height |
+| ---------------- | ------------ | -------- | ------- | ----------- |
+| **H1**           | Merriweather | Bold     | 36px    | 47px        |
+| **H2**           | Merriweather | Semibold | 28px    | 39px        |
+| **H3**           | Merriweather | Semibold | 20px    | 28px        |
+| **Corpo**        | Roboto       | Regular  | 20px    | 30px        |
+| **Texto Menor**  | Roboto       | Regular  | 12px    | 17px        |
+| **Botões/Links** | Roboto       | Semibold | 14px    | 18px        |
 
 ---
 
 ## 🚀 Instruções para Desenvolvimento Local
 
 ### 🛠️ Requisitos
+
 - Node.js (versão LTS recomendada)
 - Acesso a conta no Supabase
 - Acesso a conta na Vercel
@@ -150,23 +157,26 @@ npm install
 yarn install
 ```
 
-## 🔑 Configuração das Variáveis de Ambiente 
+## 🔑 Configuração das Variáveis de Ambiente
+
 Crie um arquivo .env.local na raiz com as chaves do Supabase:
 
 ```
 NEXT_PUBLIC_SUPABASE_URL=https://<seu-projeto>.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=chave_anonima
 
-SUPABASE_SERVICE_ROLE_KEY=chave_service_role 
+SUPABASE_SERVICE_ROLE_KEY=chave_service_role
 ```
 
 ## ▶️ Rodando o projeto
+
 ```
 npm run dev
 # ou
 yarn dev
 
 ```
+
 Acesse em `http://localhost:3000`
 
 ## 📦 Deploy
@@ -175,12 +185,14 @@ Deploy automático via Vercel:
 Push no main ou branch configurada → deploy automático.
 
 ## 🧠 Convenções
- - Pasta /app para rotas Next.js (App Router).
- - Pasta /app/admin para painel administrativo.
- - API routes em /app/api.
- - Biblioteca Supabase configurada em /lib/supabaseClient.ts.
+
+- Pasta /app para rotas Next.js (App Router).
+- Pasta /app/admin para painel administrativo.
+- API routes em /app/api.
+- Biblioteca Supabase configurada em /lib/supabaseClient.ts.
 
 ## 🛡️ Licença
+
 Este projeto está licenciado sob a MIT License.
 
 # 📦 Supabase Storage — Políticas de Acesso
@@ -197,10 +209,10 @@ Este projeto está licenciado sob a MIT License.
 
 ## 🗃️ Buckets
 
-| Bucket     | Conteúdo                             | Público? |
-|------------|--------------------------------------|----------|
-| `privado`  | ebooks em PDF ou conteúdo restrito   | ❌       |
-| `publico`  | imagens (capas, avatares, etc)       | ✅       |
+| Bucket    | Conteúdo                           | Público? |
+| --------- | ---------------------------------- | -------- |
+| `privado` | ebooks em PDF ou conteúdo restrito | ❌       |
+| `publico` | imagens (capas, avatares, etc)     | ✅       |
 
 ---
 
@@ -208,14 +220,14 @@ Este projeto está licenciado sob a MIT License.
 
 ### 🔄 Resumo Geral
 
-| Ação           | Bucket     | Quem pode?            | Policy                                 |
-|----------------|------------|------------------------|----------------------------------------|
-| Upload         | privado     | Admin autenticado      | `auth.role() = 'authenticated'`        |
-| Upload         | publico     | Admin autenticado      | `auth.role() = 'authenticated'`        |
-| Download       | privado     | Backend apenas         | `role = 'service_role'`                |
-| Download       | publico     | Qualquer um            | `role = 'public'`                      |
-| Delete         | privado     | Backend apenas         | `role = 'service_role'`                |
-| Delete         | publico     | Backend apenas         | `role = 'service_role'`                |
-| Update/Move    | Ambos       | Admin autenticado      | `auth.role() = 'authenticated'`        |
+| Ação        | Bucket  | Quem pode?        | Policy                          |
+| ----------- | ------- | ----------------- | ------------------------------- |
+| Upload      | privado | Admin autenticado | `auth.role() = 'authenticated'` |
+| Upload      | publico | Admin autenticado | `auth.role() = 'authenticated'` |
+| Download    | privado | Backend apenas    | `role = 'service_role'`         |
+| Download    | publico | Qualquer um       | `role = 'public'`               |
+| Delete      | privado | Backend apenas    | `role = 'service_role'`         |
+| Delete      | publico | Backend apenas    | `role = 'service_role'`         |
+| Update/Move | Ambos   | Admin autenticado | `auth.role() = 'authenticated'` |
 
 ---

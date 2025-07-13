@@ -7,9 +7,9 @@ interface TeamMember {
 
 export default async function TeamPage() {
   const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/team`, {
-    cache: 'no-store'
-  })
-  const team = await res.json()
+    cache: 'no-store',
+  });
+  const team = await res.json();
 
   return (
     <div className="space-y-4">
@@ -25,5 +25,5 @@ export default async function TeamPage() {
         ))}
       </ul>
     </div>
-  )
+  );
 }

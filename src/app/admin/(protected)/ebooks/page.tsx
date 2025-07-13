@@ -1,33 +1,47 @@
 // app/admin/ebooks/page.tsx
+import TableManager from '@/components/TableManager/TableManager';
 
 interface Ebook {
-  id: number;
+  id: string;
   title: string;
   authors: string;
   year: number | string;
-  collection_id: number | null;
+  collection_id: string | null;
+  collections: {
+    name: string;
+  } | null;
 }
 
 export default async function EbooksPage() {
   const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/ebooks`, {
-    cache: 'no-store'
-  })
-  const ebooks = await res.json()
+    cache: 'no-store',
+  });
+  const data: Ebook[] = await res.json();
+
+  const ebooksWithCollectionName = data.map((item) => ({
+    id: item.id,
+    title: item.title,
+    authors: item.authors,
+    year: item.year,
+    collection_id: item.collection_id,
+    collection_name: item.collections?.name || '—',
+  }));
+
+  const tableFields = [
+    { key: 'title', label: 'Título' },
+    { key: 'authors', label: 'Autores' },
+    { key: 'year', label: 'Ano' },
+    { key: 'collection_name', label: 'Coleção' },
+  ];
 
   return (
-    <div className="space-y-4">
-      <h1 className="text-2xl font-bold">eBooks</h1>
-      {ebooks.length === 0 && <p>Nenhum eBook cadastrado.</p>}
-      <ul className="grid gap-4">
-        {ebooks.map((ebook: Ebook) => (
-          <li key={ebook.id} className="border p-4 rounded">
-            <h2 className="font-semibold">{ebook.title}</h2>
-            <p className="text-sm text-gray-600">{ebook.authors}</p>
-            <p className="text-xs">{ebook.year}</p>
-            <p className="text-xs">{ebook.collection_id}</p>
-          </li>
-        ))}
-      </ul>
-    </div>
-  )
+    <TableManager
+      title="Gerenciar Ebooks"
+      data={ebooksWithCollectionName}
+      fields={tableFields}
+      apiPath="/api/ebooks"
+      onAddClick="/admin/ebooks/novo"
+      resourceType="ebook"
+    />
+  );
 }

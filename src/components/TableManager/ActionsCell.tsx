@@ -1,24 +1,45 @@
+// src/components/TableManager/ActionsCell.tsx
 'use client';
 
+import { useRouter } from 'next/navigation';
 import DeleteButton from '../DeleteButton';
 import { DataItem } from './types';
 
 interface Props {
   item: DataItem;
-  onEdit: (item: DataItem) => void;
   apiPath: string;
+  resourceType: 'ebook' | 'collection';
+  onEdit: (item: DataItem) => void;
 }
 
-export default function ActionsCell({ item, onEdit, apiPath }: Props) {
+export default function ActionsCell({
+  item,
+  apiPath,
+  resourceType,
+  onEdit,
+}: Props) {
+  const router = useRouter();
+
+  const handleEdit = () => {
+    if (resourceType === 'ebook') {
+      router.push(`/admin/ebooks/${item.id}`);
+    } else {
+      onEdit(item);
+    }
+  };
+
   return (
     <div className="flex gap-2 justify-center">
-      <button
-        onClick={() => onEdit(item)}
-        className="text-blue-600 hover:underline"
-      >
+      <button onClick={handleEdit} className="text-blue-600 hover:underline">
         Editar
       </button>
-      {item.id && <DeleteButton id={item.id} apiPath={apiPath} />}
+      {item.id && (
+        <DeleteButton
+          id={item.id.toString()}
+          apiPath={apiPath}
+          resourceType={resourceType}
+        />
+      )}
     </div>
   );
 }

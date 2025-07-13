@@ -21,10 +21,10 @@
   }
   .small {
     @apply text-small font-roboto;
-  }  
+  }
   .button {
     @apply text-button font-roboto;
-  }  
+  }
 }
 
 html {

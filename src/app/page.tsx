@@ -1,11 +1,11 @@
-import Maintenance from '@/components/Maintenance'
-import { H1, H2, Body, ButtonText } from "@/components/Typography";
+import Maintenance from '@/components/Maintenance';
+import { H1, H2, Body, ButtonText } from '@/components/Typography';
 
 export default function Home() {
-  const isMaintenance = process.env.NEXT_PUBLIC_MAINTENANCE_MODE === 'true'
+  const isMaintenance = process.env.NEXT_PUBLIC_MAINTENANCE_MODE === 'true';
 
   if (isMaintenance) {
-    return <Maintenance />
+    return <Maintenance />;
   }
 
   return (

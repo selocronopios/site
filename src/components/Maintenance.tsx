@@ -1,4 +1,4 @@
-import Image from 'next/image'
+import Image from 'next/image';
 
 export default function Maintenance() {
   return (
@@ -14,8 +14,9 @@ export default function Maintenance() {
         🚧 Em construção...
       </h1>
       <p className="text-md md:text-lg text-gray-600 dark:text-gray-300 text-center max-w-md">
-        Estamos trabalhando para trazer uma plataforma incrível. <br /> Volte em breve!
+        Estamos trabalhando para trazer uma plataforma incrível. <br /> Volte em
+        breve!
       </p>
     </main>
-  )
+  );
 }

@@ -10,9 +10,12 @@ interface Collection {
 }
 
 export default async function CollectionsPage() {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/collections`, {
-    cache: 'no-store',
-  });
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_SITE_URL}/api/collections`,
+    {
+      cache: 'no-store',
+    }
+  );
   const data = await res.json();
 
   const dataWithParentName = data.map((item: Collection) => {
@@ -26,12 +29,22 @@ export default async function CollectionsPage() {
   const tableFields = [
     { key: 'name', label: 'Nome' },
     { key: 'description', label: 'Descrição' },
-    { key: 'parent_name', label: 'Coleção Pai' }, 
+    { key: 'parent_name', label: 'Coleção Pai' },
   ];
 
   const modalFields = [
-    ...tableFields,
-    { key: 'id_pai', label: 'Coleção Pai' }, 
+    { key: 'name', label: 'Nome' },
+    { key: 'description', label: 'Descrição' },
+    {
+      key: 'id_pai',
+      label: 'Coleção Pai',
+      type: 'select' as const,
+      options: data.map((col: Collection) => ({
+        label: col.name,
+        value: col.id,
+      })),
+      allowEmpty: true,
+    },
   ];
 
   return (
@@ -41,6 +54,7 @@ export default async function CollectionsPage() {
       fields={tableFields}
       modalFields={modalFields}
       apiPath="/api/collections"
+      resourceType="collection"
     />
   );
 }

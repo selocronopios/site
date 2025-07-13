@@ -10,11 +10,21 @@ interface Props {
   title: string;
   data: DataItem[];
   fields: Field[];
-  modalFields: Field[];
+  modalFields?: Field[];
   apiPath: string;
+  onAddClick?: string;
+  resourceType: 'collection' | 'ebook';
 }
 
-export default function TableManager({ title, data, fields, modalFields, apiPath }: Props) {
+export default function TableManager({
+  title,
+  data,
+  fields,
+  modalFields,
+  apiPath,
+  onAddClick,
+  resourceType,
+}: Props) {
   const [modalOpen, setModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<DataItem | null>(null);
 
@@ -34,17 +44,32 @@ export default function TableManager({ title, data, fields, modalFields, apiPath
     <div className="px-0 py-4">
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-xl font-bold">{title}</h1>
-        <button
-          onClick={openCreate}
-          className="px-4 py-2 bg-[#9EC5AE] hover:bg-[#85a790] text-white rounded"
-        >
-          Adicionar
-        </button>
+        {onAddClick ? (
+          <a
+            href={onAddClick}
+            className="px-4 py-2 bg-[#9EC5AE] hover:bg-[#85a790] text-white rounded"
+          >
+            Adicionar
+          </a>
+        ) : (
+          <button
+            onClick={openCreate}
+            className="px-4 py-2 bg-[#9EC5AE] hover:bg-[#85a790] text-white rounded"
+          >
+            Adicionar
+          </button>
+        )}
       </div>
 
-      <Table data={data} fields={fields} onEdit={openEdit} apiPath={apiPath} />
+      <Table
+        data={data}
+        fields={fields}
+        onEdit={openEdit}
+        apiPath={apiPath}
+        resourceType={resourceType}
+      />
 
-      {modalOpen && (
+      {modalOpen && modalFields && (
         <ModalForm
           item={editingItem}
           fields={modalFields}

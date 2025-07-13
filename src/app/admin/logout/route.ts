@@ -9,5 +9,7 @@ export async function GET() {
   cookieStore.delete('sb-access-token');
   cookieStore.delete('sb-refresh-token');
 
-  return NextResponse.redirect(new URL('/admin/login', process.env.NEXT_PUBLIC_SITE_URL));
+  return NextResponse.redirect(
+    new URL('/admin/login', process.env.NEXT_PUBLIC_SITE_URL)
+  );
 }

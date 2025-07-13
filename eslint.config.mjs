@@ -1,19 +1,19 @@
 // eslint.config.mjs
-import globals from "globals";
-import tseslint from "typescript-eslint";
-import react from "eslint-plugin-react";
+import globals from 'globals';
+import tseslint from 'typescript-eslint';
+import react from 'eslint-plugin-react';
 
 export default [
-    {
-        ignores: [".next/**", "node_modules/**", "dist/**", "build/**"],
-    },
-    {
-    files: ["**/*.{js,ts,jsx,tsx}"],
+  {
+    ignores: ['.next/**', 'node_modules/**', 'dist/**', 'build/**'],
+  },
+  {
+    files: ['**/*.{js,ts,jsx,tsx}'],
     languageOptions: {
       parser: tseslint.parser,
       parserOptions: {
         ecmaVersion: 2022,
-        sourceType: "module",
+        sourceType: 'module',
         ecmaFeatures: { jsx: true },
       },
       globals: {
@@ -22,31 +22,47 @@ export default [
       },
     },
     plugins: {
-      "@typescript-eslint": tseslint.plugin,
+      '@typescript-eslint': tseslint.plugin,
       react,
+      prettier,
     },
     rules: {
       // React
-      "react/react-in-jsx-scope": "off",
-      "react/prop-types": "off",
+      'react/react-in-jsx-scope': 'off',
+      'react/prop-types': 'off',
 
       // TypeScript
-      "no-unused-vars": "off",
-      "@typescript-eslint/no-unused-vars": ["warn", { argsIgnorePattern: "^_" }],
-      "@typescript-eslint/no-explicit-any": "warn",
-      "@typescript-eslint/consistent-type-definitions": ["error", "interface"],
-      "@typescript-eslint/explicit-function-return-type": "off",
+      'no-unused-vars': 'off',
+      '@typescript-eslint/no-unused-vars': [
+        'warn',
+        { argsIgnorePattern: '^_' },
+      ],
+      '@typescript-eslint/no-explicit-any': 'warn',
+      '@typescript-eslint/consistent-type-definitions': ['error', 'interface'],
+      '@typescript-eslint/explicit-function-return-type': 'off',
 
       // Code style
-      "no-console": "warn",
-      "prefer-const": "error",
-      "eqeqeq": ["error", "always"],
-      "curly": "error",
+      'no-console': 'warn',
+      'prefer-const': 'error',
+      eqeqeq: ['error', 'always'],
+      curly: 'error',
+
+      // Prettier
+      'prettier/prettier': 'error',
     },
     settings: {
       react: {
-        version: "detect",
+        version: 'detect',
       },
     },
+  },
+  {
+    rules: {},
+    plugins: {},
+    languageOptions: {},
+    settings: {},
+    linterOptions: {},
+    processor: undefined,
+    extends: ['plugin:prettier/recommended'],
   },
 ];

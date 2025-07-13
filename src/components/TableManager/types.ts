@@ -1,10 +1,12 @@
+// src/components/TableManager/types.ts
 export interface Field {
   key: string;
   label: string;
+  type?: 'text' | 'select';
+  options?: { label: string; value: string }[];
+  allowEmpty?: boolean;
 }
 
-export interface DataItem {
-  [key: string]: string | number | null | undefined;
-  id?: string;
-  id_pai?: string | null;
-}
+export type DataItem = {
+  id: string;
+} & Record<string, string | number | null | undefined>;

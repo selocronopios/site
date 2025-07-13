@@ -1,93 +1,121 @@
 //src/app/api/collections/[id]/route.ts
-import { NextRequest, NextResponse } from 'next/server'
-import { supabaseAdmin } from '@/lib/supabaseAdmin'
-import { validateUser } from '@/lib/auth/validadeUser'
-import { isValidUUID, validateUUID, handleSupabaseError, validateFieldType } from '@/lib/utils'
+import { NextRequest, NextResponse } from 'next/server';
+import { supabaseAdmin } from '@/lib/supabaseAdmin';
+import { validateUser } from '@/lib/auth/validadeUser';
+import {
+  isValidUUID,
+  validateUUID,
+  handleSupabaseError,
+  validateFieldType,
+} from '@/lib/utils';
 import { logError } from '@/lib/logger';
 
 export async function GET(req: NextRequest) {
-  const url = new URL(req.url)
-  const parts = url.pathname.split('/')
-  const id = parts[parts.indexOf('collections') + 1]?.trim()
-  
-  const idError = validateUUID(id)
-  if (idError) {return NextResponse.json({ error: idError }, { status: 400 })}
+  const url = new URL(req.url);
+  const parts = url.pathname.split('/');
+  const id = parts[parts.indexOf('collections') + 1]?.trim();
+
+  const idError = validateUUID(id);
+  if (idError) {
+    return NextResponse.json({ error: idError }, { status: 400 });
+  }
 
   try {
     const { data, error } = await supabaseAdmin
       .from('collections')
       .select('*')
       .eq('id', id)
-      .single()
+      .single();
 
-    if (error) {return handleSupabaseError(error)}
+    if (error) {
+      return handleSupabaseError(error);
+    }
 
-    return NextResponse.json( data, { status: 200 })
-
+    return NextResponse.json(data, { status: 200 });
   } catch (err) {
-    logError('Erro inesperado:', err)
-    return NextResponse.json({ error: 'Erro no servidor' }, { status: 500 })
+    logError('Erro inesperado:', err);
+    return NextResponse.json({ error: 'Erro no servidor' }, { status: 500 });
   }
 }
 
 interface UpdateBody {
-  id_pai?: string | null
-  name?: string
-  description?: string
+  id_pai?: string | null;
+  name?: string;
+  description?: string;
 }
 
 export async function PUT(req: NextRequest) {
-  const user = await validateUser(req)
+  const user = await validateUser(req);
 
   if (!user) {
-      return NextResponse.json({ error: 'Token inválido' }, { status: 401 })
+    return NextResponse.json({ error: 'Token inválido' }, { status: 401 });
   }
 
   const url = new URL(req.url);
   const parts = url.pathname.split('/');
   const id = parts[parts.indexOf('collections') + 1]?.trim();
 
-  const idError = validateUUID(id)
-  if (idError) {return NextResponse.json({ error: idError }, { status: 400 })}
-
-  let body: UpdateBody
-  try {
-    body = await req.json()
-  } catch {
-    return NextResponse.json({ error: 'JSON inválido no corpo da requisição' }, { status: 400 })
+  const idError = validateUUID(id);
+  if (idError) {
+    return NextResponse.json({ error: idError }, { status: 400 });
   }
 
-  const { id_pai, name, description } = body
+  let body: UpdateBody;
+  try {
+    body = await req.json();
+  } catch {
+    return NextResponse.json(
+      { error: 'JSON inválido no corpo da requisição' },
+      { status: 400 }
+    );
+  }
+
+  const { id_pai, name, description } = body;
 
   if (id_pai === undefined && name === undefined && description === undefined) {
-    return NextResponse.json({ error: 'Nada para atualizar' }, { status: 400 })
-  }  
-
-  const errors: Record<string, string> = {}
-
-  const idPaiError = validateFieldType(id_pai, 'string', 'id_pai', { required: false, nullable: true })
-  if (idPaiError) {
-    errors.id_pai = idPaiError
-  } else if (id_pai !== null && id_pai !== undefined && !isValidUUID(id_pai)) {
-    errors.id_pai = 'ID do pai inválido'
+    return NextResponse.json({ error: 'Nada para atualizar' }, { status: 400 });
   }
 
-  const nameError = validateFieldType(name, 'string', 'name', { required: false, nullable: false })
-  if (nameError) {errors.name = nameError}
+  const errors: Record<string, string> = {};
 
-  const descriptionError = validateFieldType(description, 'string', 'description', { required: false, nullable: false })
-  if (descriptionError) {errors.description = descriptionError}
+  const idPaiError = validateFieldType(id_pai, 'string', 'id_pai', {
+    required: false,
+    nullable: true,
+  });
+  if (idPaiError) {
+    errors.id_pai = idPaiError;
+  } else if (id_pai !== null && id_pai !== undefined && !isValidUUID(id_pai)) {
+    errors.id_pai = 'ID do pai inválido';
+  }
+
+  const nameError = validateFieldType(name, 'string', 'name', {
+    required: false,
+    nullable: false,
+  });
+  if (nameError) {
+    errors.name = nameError;
+  }
+
+  const descriptionError = validateFieldType(
+    description,
+    'string',
+    'description',
+    { required: false, nullable: false }
+  );
+  if (descriptionError) {
+    errors.description = descriptionError;
+  }
 
   if (Object.keys(errors).length > 0) {
-    return NextResponse.json({ error: errors }, { status: 400 })
+    return NextResponse.json({ error: errors }, { status: 400 });
   }
 
-const updates: UpdateBody & { updated_at: string } = {
-  updated_at: new Date().toISOString(),
-  ...(id_pai !== undefined ? { id_pai } : {}),
-  ...(name !== undefined ? { name } : {}),
-  ...(description !== undefined ? { description } : {}),
-}
+  const updates: UpdateBody & { updated_at: string } = {
+    updated_at: new Date().toISOString(),
+    ...(id_pai !== undefined ? { id_pai } : {}),
+    ...(name !== undefined ? { name } : {}),
+    ...(description !== undefined ? { description } : {}),
+  };
 
   try {
     const { data, error } = await supabaseAdmin
@@ -95,14 +123,16 @@ const updates: UpdateBody & { updated_at: string } = {
       .update(updates)
       .eq('id', id)
       .select()
-      .single()
+      .single();
 
-    if (error) {return handleSupabaseError(error)}
+    if (error) {
+      return handleSupabaseError(error);
+    }
 
-    return NextResponse.json(data, { status: 200 })
+    return NextResponse.json(data, { status: 200 });
   } catch (err) {
-    logError(err)
-    return NextResponse.json({ error: 'Erro no servidor' }, { status: 500 })
+    logError(err);
+    return NextResponse.json({ error: 'Erro no servidor' }, { status: 500 });
   }
 }
 
@@ -114,8 +144,11 @@ export async function DELETE(req: NextRequest) {
 
   const url = new URL(req.url);
   const parts = url.pathname.split('/');
-  const id = parts[parts.indexOf('collections') + 1]?.trim();  const idError = validateUUID(id);
-  if (idError) {return NextResponse.json({ error: idError }, { status: 400 });}
+  const id = parts[parts.indexOf('collections') + 1]?.trim();
+  const idError = validateUUID(id);
+  if (idError) {
+    return NextResponse.json({ error: idError }, { status: 400 });
+  }
 
   // Checar se há coleções-filho com id_pai = id
   const { data: children, error: childrenError } = await supabaseAdmin
@@ -146,10 +179,14 @@ export async function DELETE(req: NextRequest) {
       .delete()
       .eq('id', id);
 
-    if (deleteError)
-      {return NextResponse.json({ error: deleteError.message }, { status: 500 });}
+    if (deleteError) {
+      return NextResponse.json({ error: deleteError.message }, { status: 500 });
+    }
 
-    return NextResponse.json({ message: 'Deletado com sucesso' }, { status: 200 });
+    return NextResponse.json(
+      { message: 'Deletado com sucesso' },
+      { status: 200 }
+    );
   } catch (err) {
     logError(err);
     return NextResponse.json({ error: 'Erro no servidor' }, { status: 500 });

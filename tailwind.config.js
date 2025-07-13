@@ -1,7 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
-    "./src/**/*.{js,ts,jsx,tsx}", // seu caminho dos arquivos
+    './src/**/*.{js,ts,jsx,tsx}', // seu caminho dos arquivos
   ],
   theme: {
     extend: {
@@ -14,7 +14,7 @@ module.exports = {
         background: '#FFFFFF',
         backgroundExtra: '#E1D5BF',
         text: '#222222',
-        textSuave: '#9CA3AF'
+        textSuave: '#9CA3AF',
       },
       fontFamily: {
         merriweather: ['Merriweather', 'serif'],
@@ -27,8 +27,8 @@ module.exports = {
         body: ['20px', { lineHeight: '30px', fontWeight: '400' }],
         small: ['12px', { lineHeight: '17px', fontWeight: '400' }],
         button: ['14px', { lineHeight: '18px', fontWeight: '600' }],
-      }
+      },
     },
   },
   plugins: [],
-}
+};

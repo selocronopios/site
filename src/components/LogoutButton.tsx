@@ -11,9 +11,5 @@ export default function LogoutButton() {
     router.push('/admin/login');
   }
 
-  return (
-    <button onClick={handleLogout}>
-      Sair
-    </button>
-  );
+  return <button onClick={handleLogout}>Sair</button>;
 }
