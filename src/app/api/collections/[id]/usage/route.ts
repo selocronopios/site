@@ -1,3 +1,4 @@
+import { logError } from '@/lib/logger';
 import { supabaseAdmin } from '@/lib/supabaseAdmin';
 import { handleSupabaseError, validateUUID } from '@/lib/utils';
 import { NextRequest, NextResponse } from 'next/server';
@@ -36,7 +37,7 @@ export async function GET(req: NextRequest) {
       childCollections: children,
     });
   } catch (err) {
-    console.error('Erro inesperado:', err);
+    logError(err);
     return NextResponse.json({ error: 'Erro no servidor' }, { status: 500 });
   }
 }

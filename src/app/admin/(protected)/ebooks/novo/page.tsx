@@ -42,8 +42,12 @@ export default function NewEbookPage() {
         if (!res.ok) throw new Error('Erro ao buscar coleções');
         const data = await res.json();
         setCollections(data);
-      } catch (err: any) {
-        setError(err.message || 'Erro desconhecido');
+      } catch (err) {
+        if (err instanceof Error) {
+          setError(err.message);
+        } else {
+          setError('Erro desconhecido');
+        }
       }
     };
     fetchCollections();
@@ -117,9 +121,6 @@ export default function NewEbookPage() {
         body: JSON.stringify(payload),
       });
 
-      const text = await res.clone().text();
-      console.log('Resposta da API (raw):', text);
-
       if (!res.ok) throw new Error('Falha ao salvar ebook');
 
       fileInputRef.current && (fileInputRef.current.value = '');
@@ -128,8 +129,12 @@ export default function NewEbookPage() {
       setCover(null);
 
       router.push('/admin/ebooks');
-    } catch (err: any) {
-      setError(err.message || 'Erro desconhecido');
+    } catch (err) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('Erro desconhecido');
+      }
     } finally {
       setLoading(false);
     }

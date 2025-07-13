@@ -1,7 +1,7 @@
 // src/components/DeleteButton.tsx
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 interface Props {
   id: string;

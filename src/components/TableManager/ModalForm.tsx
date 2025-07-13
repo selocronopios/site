@@ -18,7 +18,12 @@ export default function ModalForm({
   onClose,
   onSuccess,
 }: Props) {
-  const [form, setForm] = useState<DataItem>({});
+  const [form, setForm] = useState<DataItem>(() =>
+    fields.reduce((acc, field) => {
+      acc[field.key] = '';
+      return acc;
+    }, {} as DataItem)
+  );
 
   useEffect(() => {
     if (item) {

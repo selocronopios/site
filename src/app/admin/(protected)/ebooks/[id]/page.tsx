@@ -41,8 +41,12 @@ export default function EditEbookPage() {
         if (!res.ok) throw new Error('Erro ao buscar coleções');
         const data = await res.json();
         setCollections(data);
-      } catch (err: any) {
-        setError(err.message || 'Erro desconhecido');
+      } catch (err) {
+        if (err instanceof Error) {
+          setError(err.message);
+        } else {
+          setError('Erro desconhecido');
+        }
       }
     };
 
@@ -71,8 +75,12 @@ export default function EditEbookPage() {
           file_id: data.file_id || '',
           cover_id: data.cover_id || '',
         });
-      } catch (err: any) {
-        setError(err.message || 'Erro desconhecido');
+      } catch (err) {
+        if (err instanceof Error) {
+          setError(err.message);
+        } else {
+          setError('Erro desconhecido');
+        }
       }
     };
 
@@ -138,8 +146,12 @@ export default function EditEbookPage() {
 
       if (!res.ok) throw new Error('Falha ao salvar ebook');
       router.push('/admin/ebooks');
-    } catch (err: any) {
-      setError(err.message || 'Erro desconhecido');
+    } catch (err) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('Erro desconhecido');
+      }
     } finally {
       setLoading(false);
     }
