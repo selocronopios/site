@@ -4,15 +4,7 @@ import './globals.css';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
-// const geistSans = Geist({
-//   variable: '--font-geist-sans',
-//   subsets: ['latin'],
-// });
-
-// const geistMono = Geist_Mono({
-//   variable: '--font-geist-mono',
-//   subsets: ['latin'],
-// });
+const isMaintenance = process.env.NEXT_PUBLIC_MAINTENANCE_MODE === 'true';
 
 export const metadata: Metadata = {
   title: 'História Intelectual',
@@ -31,10 +23,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="pt-br">
-      <body className="pt-20 bg-background text-text">
-        <Header />
+      <body
+        className={`${isMaintenance ? '' : 'pt-20'} bg-background text-text`}
+      >
+        {!isMaintenance && <Header />}
         <main className="min-h-screen">{children}</main>
-        <Footer />
+        {!isMaintenance && <Footer />}
       </body>
     </html>
   );
