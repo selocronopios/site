@@ -78,9 +78,6 @@ export default function AdminLayout({
               <a href="/admin/ebooks" className="body">
                 Ebooks
               </a>
-              <a href="/admin/team" className="body">
-                Equipe
-              </a>
               <a href="/admin/config" className="body">
                 Configurações
               </a>

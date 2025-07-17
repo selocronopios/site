@@ -1,3 +1,4 @@
+// src/app/admin/(protected)/ebooks/novo/page.tsx
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
@@ -390,7 +391,7 @@ export default function NewEbookPage() {
           </button>
           <button
             type="button"
-            onClick={() => router.back()}
+            onClick={() => router.push('/admin/ebooks')}
             className="px-6 py-2 bg-gray-200 hover:bg-gray-300 text-black rounded shadow"
             disabled={loading}
           >

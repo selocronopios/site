@@ -24,7 +24,7 @@ module.exports = {
         h1: ['36px', { lineHeight: '47px', fontWeight: '700' }],
         h2: ['28px', { lineHeight: '39px', fontWeight: '600' }],
         h3: ['20px', { lineHeight: '28px', fontWeight: '600' }],
-        body: ['20px', { lineHeight: '30px', fontWeight: '400' }],
+        body: ['18', { lineHeight: '30px', fontWeight: '400' }],
         small: ['12px', { lineHeight: '17px', fontWeight: '400' }],
         button: ['14px', { lineHeight: '18px', fontWeight: '600' }],
       },
