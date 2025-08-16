@@ -21,7 +21,9 @@ export default async function EbooksPage() {
   const ebooksWithCollectionName = data.map((item) => ({
     id: item.id,
     title: item.title,
-    authors: item.authors,
+    authors: Array.isArray(item.authors)
+      ? item.authors.join(', ')
+      : item.authors,
     year: item.year,
     collection_id: item.collection_id,
     collection_name: item.collections?.name || '—',

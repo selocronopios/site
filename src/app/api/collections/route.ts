@@ -5,7 +5,7 @@ import {
   isValidUUID,
   handleSupabaseError,
   validateFieldType,
-} from '@/lib/utils';
+} from '@/lib/validacoes';
 import { validateUser } from '@/lib/auth/validadeUser';
 import { logError } from '@/lib/logger';
 
@@ -92,7 +92,7 @@ export async function GET(req: NextRequest) {
 
     let query = supabaseAdmin
       .from('collections')
-      .select('*')
+      .select('*, ebooks(*)')
       .order('name', { ascending: true });
     if (id_pai) {
       query = query.eq('id_pai', id_pai);

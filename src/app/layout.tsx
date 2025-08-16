@@ -1,10 +1,10 @@
+// src/app/layout.tsx
+
 import type { Metadata } from 'next';
-// import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-
-const isMaintenance = process.env.NEXT_PUBLIC_MAINTENANCE_MODE === 'true';
+import MainWrapper from '@/components/MainWrapper';
 
 export const metadata: Metadata = {
   title: 'História Intelectual',
@@ -23,12 +23,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="pt-br">
-      <body
-        className={`${isMaintenance ? '' : 'pt-20'} bg-background text-text`}
-      >
-        {!isMaintenance && <Header />}
-        <main className="min-h-screen">{children}</main>
-        {!isMaintenance && <Footer />}
+      <body className={`bg-background text-text`}>
+        {/* Header e Footer viram client components que controlam visibilidade */}
+        <Header />
+        <MainWrapper>{children}</MainWrapper>
+        <Footer />
       </body>
     </html>
   );

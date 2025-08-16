@@ -1,7 +1,7 @@
-// app/api/media/signed-url/route.ts
+// src/app/api/media/signed-url/[id]/route.ts
 import { supabaseAdmin } from '@/lib/supabaseAdmin';
 import { NextRequest, NextResponse } from 'next/server';
-import { handleSupabaseError, validateUUID } from '@/lib/utils';
+import { handleSupabaseError, validateUUID } from '@/lib/validacoes';
 import { logError } from '@/lib/logger';
 
 export async function GET(req: NextRequest) {

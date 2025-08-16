@@ -3,24 +3,49 @@
 import { useKeenSlider } from 'keen-slider/react';
 import 'keen-slider/keen-slider.min.css';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import Link from 'next/link';
 
-const colecoes = [
-  'Itinerários da História Intelectual',
-  'História Intelectual em perspectiva (trans)nacional',
-  'História Intelectual, esfera pública e cultura impressa',
-  'História intelectual e gênero',
-  'Dicionário Biográfico de Mulheres Brasileiras',
-  'História Intelectual e decolonialidade',
-  'História Intelectual e culturas políticas',
-];
+interface Colecoes {
+  id: string;
+  name: string;
+}
 
 export default function ColecoesCarousel() {
+  const [colecoes, setColecoes] = useState<Colecoes[]>([]);
+  const [carregando, setCarregando] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [sliderRef, instanceRef] = useKeenSlider<HTMLDivElement>({
     slides: { perView: 'auto', spacing: 16 },
   });
 
+  useEffect(() => {
+    const fetchColecoes = async () => {
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_SITE_URL}/api/collections`
+        );
+        if (!res.ok) throw new Error('Erro ao buscas coleções.');
+        const data = await res.json();
+        const colecoesComLivros = data.filter(
+          (colecoes: any) =>
+            Array.isArray(colecoes.ebooks) && colecoes.ebooks.length > 0
+        );
+        setColecoes(colecoesComLivros);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Erro desconhecido');
+      } finally {
+        setCarregando(false);
+      }
+    };
+    fetchColecoes();
+  }, []);
+
   const prev = () => instanceRef.current?.prev();
   const next = () => instanceRef.current?.next();
+
+  if (carregando) return <p className="px-4">Carregando coleções...</p>;
+  if (error) return <p className="px-4 text-red-600">Erro: {error}</p>;
 
   return (
     <div className="w-full flex items-center gap-4 px-4 py-2">
@@ -34,13 +59,13 @@ export default function ColecoesCarousel() {
 
       {/* Carrossel */}
       <div ref={sliderRef} className="keen-slider flex-1">
-        {colecoes.map((titulo, i) => (
-          <div
-            key={i}
-            className="keen-slider__slide min-w-[150px] bg-selectionLight text-secondary font-medium rounded p-4 shadow text-left flex items-center"
+        {colecoes.map(({ id, name }) => (
+          <Link
+            href={`/colecoes/${id}`}
+            className="keen-slider__slide min-w-[150px] bg-primary text-white font-medium rounded p-4 shadow text-left flex items-center"
           >
-            {titulo}
-          </div>
+            {name}
+          </Link>
         ))}
       </div>
 

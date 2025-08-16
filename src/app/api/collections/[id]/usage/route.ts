@@ -1,6 +1,6 @@
 import { logError } from '@/lib/logger';
 import { supabaseAdmin } from '@/lib/supabaseAdmin';
-import { handleSupabaseError, validateUUID } from '@/lib/utils';
+import { handleSupabaseError, validateUUID } from '@/lib/validacoes';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(req: NextRequest) {
@@ -16,7 +16,7 @@ export async function GET(req: NextRequest) {
   try {
     const { data: ebooks, error: ebookError } = await supabaseAdmin
       .from('ebooks')
-      .select('id, title')
+      .select('id, title, link')
       .eq('collection_id', collectionId);
 
     if (ebookError) {

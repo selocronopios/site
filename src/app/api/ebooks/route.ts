@@ -4,24 +4,29 @@ import {
   isValidUUID,
   handleSupabaseError,
   validateFieldType,
-} from '@/lib/utils';
+} from '@/lib/validacoes';
 import { validateUser } from '@/lib/auth/validadeUser';
 import { logError } from '@/lib/logger';
 
 interface UpdateBody {
   title?: string;
   subtitle?: string | null;
-  authors?: string;
-  authorship?: string;
+  authors?: string[];
+  authorship?: string[];
   summary?: string;
-  details?: string;
   year?: number;
   description?: string;
   file_id?: string;
+  link_path: string;
   cover_id?: string;
-  // link?: string | null;
+  link?: string | null;
   collection_id?: string;
-  keywords?: string;
+  keywords?: string[];
+  publisher?: string;
+  edition?: number;
+  pages?: number;
+  format?: string;
+  isbn?: string;
 }
 
 export async function POST(req: NextRequest) {
@@ -47,14 +52,17 @@ export async function POST(req: NextRequest) {
     authors,
     authorship,
     summary,
-    details,
     year,
     description,
     file_id,
     cover_id,
-    // link,
     collection_id,
     keywords,
+    publisher,
+    edition,
+    pages,
+    format,
+    isbn,
   } = body;
 
   const errors: Record<string, string> = {};
@@ -75,7 +83,7 @@ export async function POST(req: NextRequest) {
     errors.subtitle = subtitleError;
   }
 
-  const authorsError = validateFieldType(authors, 'string', 'authors', {
+  const authorsError = validateFieldType(authors, 'string[]', 'authors', {
     required: true,
     nullable: false,
   });
@@ -85,7 +93,7 @@ export async function POST(req: NextRequest) {
 
   const authorshipError = validateFieldType(
     authorship,
-    'string',
+    'string[]',
     'authorship',
     { required: true, nullable: false }
   );
@@ -99,14 +107,6 @@ export async function POST(req: NextRequest) {
   });
   if (summaryError) {
     errors.summary = summaryError;
-  }
-
-  const detailsError = validateFieldType(details, 'string', 'details', {
-    required: true,
-    nullable: false,
-  });
-  if (detailsError) {
-    errors.summary = detailsError;
   }
 
   let yearFinal = 0;
@@ -163,14 +163,6 @@ export async function POST(req: NextRequest) {
     errors.cover_id = 'ID do cover_id inválido';
   }
 
-  // const linkError = validateFieldType(link, 'string', 'link', {
-  //   required: true,
-  //   nullable: true,
-  // });
-  // if (linkError) {
-  //   errors.link = linkError;
-  // }
-
   const collection_idError = validateFieldType(
     collection_id,
     'string',
@@ -187,7 +179,7 @@ export async function POST(req: NextRequest) {
     errors.collection_id = 'ID do collection_id inválido';
   }
 
-  const keywordsError = validateFieldType(keywords, 'string', 'keywords', {
+  const keywordsError = validateFieldType(keywords, 'string[]', 'keywords', {
     required: true,
     nullable: false,
   });
@@ -195,11 +187,94 @@ export async function POST(req: NextRequest) {
     errors.keywords = keywordsError;
   }
 
+  const publisherError = validateFieldType(publisher, 'string', 'publisher', {
+    required: true,
+    nullable: false,
+  });
+  if (publisherError) {
+    errors.publisher = publisherError;
+  }
+
+  const editionError = validateFieldType(edition, 'number', 'edition', {
+    required: true,
+    nullable: false,
+  });
+  if (editionError) {
+    errors.edition = editionError;
+  }
+
+  const pagesError = validateFieldType(pages, 'number', 'pages', {
+    required: true,
+    nullable: false,
+  });
+  if (pagesError) {
+    errors.pages = pagesError;
+  }
+
+  const formatError = validateFieldType(format, 'string', 'format', {
+    required: true,
+    nullable: false,
+  });
+  if (formatError) {
+    errors.format = formatError;
+  }
+
+  const isbnError = validateFieldType(isbn, 'string', 'isbn', {
+    required: true,
+    nullable: false,
+  });
+  if (isbnError) {
+    errors.isbn = isbnError;
+  }
+
   if (Object.keys(errors).length > 0) {
     return NextResponse.json({ error: errors }, { status: 400 });
   }
 
   try {
+    const { data: isbnExiste, error: isbnError } = await supabaseAdmin
+      .from('ebooks')
+      .select('id')
+      .eq('isbn', isbn)
+      .single();
+
+    if (!isbnError && isbnExiste) {
+      return NextResponse.json(
+        { error: 'ISBN já cadastrado' },
+        { status: 400 }
+      );
+    }
+
+    const { data: fileData, error: fileError } = await supabaseAdmin
+      .from('media_files')
+      .select('path')
+      .eq('id', cover_id)
+      .single();
+
+    if (fileError || !fileData?.path) {
+      return NextResponse.json(
+        { error: 'Arquivo (cover_id) não encontrado na tabela midias' },
+        { status: 400 }
+      );
+    }
+
+    const publicLink = fileData.path;
+
+    const { data: linkEbookData, error: linkEbookError } = await supabaseAdmin
+      .from('media_files')
+      .select('path')
+      .eq('id', file_id)
+      .single();
+
+    if (linkEbookError || !linkEbookData?.path) {
+      return NextResponse.json(
+        { error: 'Arquivo (cover_id) não encontrado na tabela midias' },
+        { status: 400 }
+      );
+    }
+
+    const publicLinkEbook = linkEbookData.path;
+
     const { data, error } = await supabaseAdmin
       .from('ebooks')
       .insert([
@@ -209,14 +284,19 @@ export async function POST(req: NextRequest) {
           authors,
           authorship,
           summary,
-          details,
           year: yearFinal,
           description,
           file_id,
+          link_path: publicLinkEbook,
           cover_id,
-          // link,
+          link: publicLink,
           collection_id,
           keywords,
+          publisher,
+          edition,
+          pages,
+          format,
+          isbn,
         },
       ])
       .select();

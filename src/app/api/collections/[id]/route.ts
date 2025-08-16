@@ -7,7 +7,7 @@ import {
   validateUUID,
   handleSupabaseError,
   validateFieldType,
-} from '@/lib/utils';
+} from '@/lib/validacoes';
 import { logError } from '@/lib/logger';
 
 export async function GET(req: NextRequest) {

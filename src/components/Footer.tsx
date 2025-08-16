@@ -1,8 +1,13 @@
 'use client';
 
 import { FaYoutube, FaFacebookF, FaInstagram } from 'react-icons/fa';
+import { usePathname } from 'next/navigation';
 
 export default function Footer() {
+  const pathName = usePathname();
+  const isAdmin = pathName.startsWith('/admin');
+  const isMaintenance = process.env.NEXT_PUBLIC_MAINTENANCE_MODE === 'true';
+  if (isAdmin || isMaintenance) return null;
   return (
     <footer className="bg-white border-t border-primary mt-0">
       <div className="max-w-7xl mx-auto px-4 py-6 flex flex-col md:flex-row justify-between items-center">

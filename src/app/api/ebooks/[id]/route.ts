@@ -5,7 +5,7 @@ import {
   validateUUID,
   handleSupabaseError,
   validateFieldType,
-} from '@/lib/utils';
+} from '@/lib/validacoes';
 import { validateUser } from '@/lib/auth/validadeUser';
 import { logError } from '@/lib/logger';
 
@@ -22,7 +22,7 @@ export async function GET(req: NextRequest) {
   try {
     const { data, error } = await supabaseAdmin
       .from('ebooks')
-      .select('*')
+      .select('*, collections(name)')
       .eq('id', id)
       .single();
 
@@ -40,17 +40,22 @@ export async function GET(req: NextRequest) {
 interface UpdateBody {
   title?: string;
   subtitle?: string | null;
-  authors?: string;
-  authorship?: string;
+  authors?: string[];
+  authorship?: string[];
   summary?: string;
-  details?: string;
   year?: number;
   description?: string;
   file_id?: string;
+  link_path?: string | null;
   cover_id?: string;
-  // link?: string | null;
+  link?: string | null;
   collection_id?: string;
-  keywords?: string;
+  keywords?: string[];
+  publisher?: string;
+  edition?: number;
+  pages?: number;
+  format?: string;
+  isbn?: string;
 }
 
 export async function PUT(req: NextRequest) {
@@ -84,14 +89,17 @@ export async function PUT(req: NextRequest) {
     authors,
     authorship,
     summary,
-    details,
     year,
     description,
     file_id,
     cover_id,
-    // link,
     collection_id,
     keywords,
+    publisher,
+    edition,
+    pages,
+    format,
+    isbn,
   } = body;
 
   if (
@@ -100,13 +108,17 @@ export async function PUT(req: NextRequest) {
     authors === undefined &&
     authorship === undefined &&
     summary === undefined &&
-    details === undefined &&
     year === undefined &&
     description === undefined &&
     file_id === undefined &&
     cover_id === undefined &&
     collection_id === undefined &&
-    keywords === undefined
+    keywords === undefined &&
+    publisher === undefined &&
+    edition === undefined &&
+    pages === undefined &&
+    format === undefined &&
+    isbn === undefined
   ) {
     return NextResponse.json({ error: 'Nada para atualizar' }, { status: 400 });
   }
@@ -129,7 +141,7 @@ export async function PUT(req: NextRequest) {
     errors.subtitle = subtitleError;
   }
 
-  const authorsError = validateFieldType(authors, 'string', 'authors', {
+  const authorsError = validateFieldType(authors, 'string[]', 'authors', {
     required: false,
     nullable: false,
   });
@@ -139,7 +151,7 @@ export async function PUT(req: NextRequest) {
 
   const authorshipError = validateFieldType(
     authorship,
-    'string',
+    'string[]',
     'authorship',
     { required: false, nullable: false }
   );
@@ -155,15 +167,15 @@ export async function PUT(req: NextRequest) {
     errors.summary = summaryError;
   }
 
-  const detailsError = validateFieldType(details, 'string', 'details', {
-    required: false,
-    nullable: false,
-  });
-  if (detailsError) {
-    errors.summary = detailsError;
+  let yearFinal = 0;
+
+  if (typeof year === 'string') {
+    yearFinal = parseInt(year, 10);
+  } else if (typeof year === 'number') {
+    yearFinal = year;
   }
 
-  const yearError = validateFieldType(year, 'number', 'year', {
+  const yearError = validateFieldType(yearFinal, 'number', 'year', {
     required: false,
     nullable: false,
   });
@@ -209,14 +221,6 @@ export async function PUT(req: NextRequest) {
     errors.cover_id = 'ID do cover_id inválido';
   }
 
-  // const linkError = validateFieldType(link, 'string', 'link', {
-  //   required: false,
-  //   nullable: true,
-  // });
-  // if (linkError) {
-  //   errors.link = linkError;
-  // }
-
   const collection_idError = validateFieldType(
     collection_id,
     'string',
@@ -233,12 +237,52 @@ export async function PUT(req: NextRequest) {
     errors.collection_id = 'ID do collection_id inválido';
   }
 
-  const keywordsError = validateFieldType(keywords, 'string', 'keywords', {
+  const keywordsError = validateFieldType(keywords, 'string[]', 'keywords', {
     required: false,
     nullable: false,
   });
   if (keywordsError) {
     errors.keywords = keywordsError;
+  }
+
+  const publisherError = validateFieldType(publisher, 'string', 'publisher', {
+    required: false,
+    nullable: false,
+  });
+  if (publisherError) {
+    errors.publisher = publisherError;
+  }
+
+  const editionError = validateFieldType(edition, 'number', 'edition', {
+    required: false,
+    nullable: false,
+  });
+  if (editionError) {
+    errors.edition = editionError;
+  }
+
+  const pagesError = validateFieldType(pages, 'number', 'pages', {
+    required: false,
+    nullable: false,
+  });
+  if (pagesError) {
+    errors.pages = pagesError;
+  }
+
+  const formatError = validateFieldType(format, 'string', 'format', {
+    required: false,
+    nullable: false,
+  });
+  if (formatError) {
+    errors.format = formatError;
+  }
+
+  const isbnError = validateFieldType(isbn, 'string', 'isbn', {
+    required: false,
+    nullable: false,
+  });
+  if (isbnError) {
+    errors.isbn = isbnError;
   }
 
   if (Object.keys(errors).length > 0) {
@@ -252,17 +296,80 @@ export async function PUT(req: NextRequest) {
     ...(authors !== undefined ? { authors } : {}),
     ...(authorship !== undefined ? { authorship } : {}),
     ...(summary !== undefined ? { summary } : {}),
-    ...(details !== undefined ? { details } : {}),
     ...(year !== undefined ? { year } : {}),
     ...(description !== undefined ? { description } : {}),
     ...(file_id !== undefined ? { file_id } : {}),
     ...(cover_id !== undefined ? { cover_id } : {}),
-    // ...(link !== undefined ? { link } : {}),
     ...(collection_id !== undefined ? { collection_id } : {}),
     ...(keywords !== undefined ? { keywords } : {}),
+    ...(publisher !== undefined ? { publisher } : {}),
+    ...(edition !== undefined ? { edition } : {}),
+    ...(pages !== undefined ? { pages } : {}),
+    ...(format !== undefined ? { format } : {}),
+    ...(isbn !== undefined ? { isbn } : {}),
   };
 
   try {
+    if (cover_id) {
+      const { data: ebooksAtual, error: ebooksError } = await supabaseAdmin
+        .from('ebooks')
+        .select('cover_id')
+        .eq('id', id)
+        .single();
+
+      if (ebooksError) {
+        return handleSupabaseError(ebooksError);
+      }
+
+      if (ebooksAtual?.cover_id !== cover_id) {
+        const { data: mediaData, error: mediaError } = await supabaseAdmin
+          .from('media_files')
+          .select('path')
+          .eq('id', cover_id)
+          .single();
+
+        if (mediaError || !mediaData?.path) {
+          return NextResponse.json(
+            { error: 'Arquivo (file_id) não encontrado na tabela midias' },
+            { status: 400 }
+          );
+        }
+
+        updates.link = mediaData.path;
+      }
+    }
+
+    if (file_id) {
+      const { data: ebooksLinkAtual, error: ebooksLinkError } =
+        await supabaseAdmin
+          .from('ebooks')
+          .select('file_id')
+          .eq('id', id)
+          .single();
+
+      if (ebooksLinkError) {
+        return handleSupabaseError(ebooksLinkError);
+      }
+
+      if (ebooksLinkAtual?.file_id !== file_id) {
+        const { data: mediaEbookData, error: mediaEbookError } =
+          await supabaseAdmin
+            .from('media_files')
+            .select('path')
+            .eq('id', file_id)
+            .single();
+
+        if (mediaEbookError || !mediaEbookData?.path) {
+          return NextResponse.json(
+            { error: 'Arquivo (file_id) não encontrado na tabela midias' },
+            { status: 400 }
+          );
+        }
+
+        updates.link_path = mediaEbookData.path;
+      }
+    }
+
     const { data, error } = await supabaseAdmin
       .from('ebooks')
       .update(updates)

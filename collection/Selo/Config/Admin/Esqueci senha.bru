@@ -1,0 +1,29 @@
+meta {
+  name: Esqueci senha
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{url}}/config
+  body: json
+  auth: bearer
+}
+
+headers {
+  Content-Type: application/json
+  User-Agent: insomnia/11.2.0
+}
+
+auth:bearer {
+  token: {{auth}}
+}
+
+body:json {
+  {
+    "email": "infoselocronopios@gmail.com",
+    "oldPassword":"novaSenha123",
+    "newPassword": "novaSenha123456"
+  }
+  
+}

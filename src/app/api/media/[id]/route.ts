@@ -2,7 +2,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabaseAdmin';
 import { validateUser } from '@/lib/auth/validadeUser';
-import { validateUUID, handleSupabaseError } from '@/lib/utils';
+import { validateUUID, handleSupabaseError } from '@/lib/validacoes';
 import { logError } from '@/lib/logger';
 
 export async function GET(req: NextRequest) {
