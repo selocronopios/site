@@ -9,6 +9,13 @@ import Link from 'next/link';
 interface Colecoes {
   id: string;
   name: string;
+  temEbooks: boolean;
+}
+
+interface ApiColecao {
+  id: string;
+  name: string;
+  ebooks?: unknown[];
 }
 
 export default function ColecoesCarousel() {
@@ -25,12 +32,16 @@ export default function ColecoesCarousel() {
         const res = await fetch(
           `${process.env.NEXT_PUBLIC_SITE_URL}/api/collections`
         );
-        if (!res.ok) throw new Error('Erro ao buscas coleções.');
-        const data = await res.json();
-        const colecoesComLivros = data.filter(
-          (colecoes: any) =>
-            Array.isArray(colecoes.ebooks) && colecoes.ebooks.length > 0
-        );
+        if (!res.ok) throw new Error('Erro ao buscar coleções.');
+
+        const data: ApiColecao[] = await res.json();
+
+        const colecoesComLivros: Colecoes[] = data.map((colecao) => ({
+          id: colecao.id,
+          name: colecao.name,
+          temEbooks: Array.isArray(colecao.ebooks) && colecao.ebooks.length > 0,
+        }));
+
         setColecoes(colecoesComLivros);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Erro desconhecido');
@@ -44,7 +55,13 @@ export default function ColecoesCarousel() {
   const prev = () => instanceRef.current?.prev();
   const next = () => instanceRef.current?.next();
 
-  if (carregando) return <p className="px-4">Carregando coleções...</p>;
+  if (carregando) {
+    return (
+      <main className="p-8 flex justify-center items-center min-h-[200px]">
+        <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+      </main>
+    );
+  }
   if (error) return <p className="px-4 text-red-600">Erro: {error}</p>;
 
   return (
@@ -59,14 +76,24 @@ export default function ColecoesCarousel() {
 
       {/* Carrossel */}
       <div ref={sliderRef} className="keen-slider flex-1">
-        {colecoes.map(({ id, name }) => (
-          <Link
-            href={`/colecoes/${id}`}
-            className="keen-slider__slide min-w-[150px] bg-primary text-white font-medium rounded p-4 shadow text-left flex items-center"
-          >
-            {name}
-          </Link>
-        ))}
+        {colecoes.map(({ id, name, temEbooks }, index) =>
+          temEbooks ? (
+            <Link
+              key={id ?? index}
+              href={`/colecoes/${id}`}
+              className="keen-slider__slide min-w-[150px] bg-primary text-white font-medium rounded p-4 shadow text-left flex items-center hover:bg-primary/80 transition"
+            >
+              {name}
+            </Link>
+          ) : (
+            <div
+              key={id ?? index}
+              className="keen-slider__slide min-w-[150px] bg-gray-300 text-gray-600 font-medium rounded p-4 shadow text-left flex items-center cursor-not-allowed"
+            >
+              {name}
+            </div>
+          )
+        )}
       </div>
 
       {/* Botão próximo */}

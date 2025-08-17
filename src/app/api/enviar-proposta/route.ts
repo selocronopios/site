@@ -1,18 +1,19 @@
-//src/app/api/enviar-proposta/route.ts
-
-import { NextRequest, NextResponse } from 'next/server';
+// app/api/enviar-proposta/route.ts
+import { NextResponse } from 'next/server';
 import Mailgun from 'mailgun.js';
 import formData from 'form-data';
 
+// Configuração do Mailgun
 const mailgun = new Mailgun(formData);
 const mg = mailgun.client({
   username: 'api',
   key: process.env.MAILGUN_API_KEY!,
 });
 
-export async function POST(req: NextRequest) {
+export async function POST(req: Request) {
   try {
     const form = await req.formData();
+
     const autores = form.get('autores') as string;
     const afiliacao = form.get('afiliacao') as string;
     const title = form.get('title') as string;
@@ -22,37 +23,45 @@ export async function POST(req: NextRequest) {
 
     if (!file) {
       return NextResponse.json(
-        { success: false, error: 'Arquivo ausente' },
+        { error: 'Arquivo não enviado.' },
         { status: 400 }
       );
     }
 
-    const buffer = Buffer.from(await file.arrayBuffer());
+    // Converte o arquivo em Buffer
+    const arrayBuffer = await file.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
 
-    const data = new formData();
-    data.append('from', 'Envio de proposta <infoselocronopios@gmail.com>');
-    data.append('to', 'infoselocronopios@gmail.com');
-    data.append('subject', `Nova proposta: ${title}`);
-    data.append(
-      'text',
-      `Nova proposta de publicação recebida:
-        Autores: ${autores}
-        Afiliação: ${afiliacao}
-        Título: ${title}
-        Email: ${email}
-        Telefone: ${telefone}`
-    );
-    data.append('attachment', buffer, file.name);
+    // Monta os dados do e-mail
+    const options = {
+      from: 'Envio de proposta <infoselocronopios@gmail.com>',
+      to: 'infoselocronopios@gmail.com',
+      subject: `Nova proposta: ${title}`,
+      text: `Nova proposta de publicação recebida:
+Autores: ${autores}
+Afiliação: ${afiliacao}
+Título: ${title}
+Email: ${email}
+Telefone: ${telefone}`,
+      attachment: [
+        {
+          data: buffer,
+          filename: file.name,
+        },
+      ],
+    };
 
+    // Envio do e-mail
     const response = await mg.messages.create(
       process.env.MAILGUN_DOMAIN!,
-      data as any
+      options
     );
-    console.log('Email enviado:', response);
 
-    return NextResponse.json({ success: true });
-  } catch (error) {
-    console.error('Erro ao enviar proposta:', error);
-    return NextResponse.json({ success: false, error }, { status: 500 });
+    return NextResponse.json({ success: true, response });
+  } catch (err) {
+    return NextResponse.json(
+      { error: `Falha ao enviar proposta.: ${err}` },
+      { status: 500 }
+    );
   }
 }

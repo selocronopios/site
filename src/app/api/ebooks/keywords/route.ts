@@ -1,4 +1,3 @@
-import { logError } from '@/lib/logger';
 import { supabaseAdmin } from '@/lib/supabaseAdmin';
 import { NextResponse } from 'next/server';
 
@@ -10,7 +9,6 @@ export async function GET() {
       .order('keywords', { ascending: true });
 
     if (error) {
-      logError('Erro do Supabase:', error);
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 

@@ -33,7 +33,7 @@ export default function EbookPage() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [aceito, setAceito] = useState(false);
-  const [ebookLinkURL, setEbookLinkURL] = useState<string | null>(null);
+  const [arquivo, setArquivo] = useState<string | null>(null);
 
   useEffect(() => {
     if (!id) return;
@@ -46,11 +46,10 @@ export default function EbookPage() {
         setEbook(data);
 
         const ebookLink = data.file_id;
+        setArquivo(data.file_id);
 
         const resLink = await fetch(`/api/media/signed-url/${ebookLink}`);
         if (!resLink.ok) throw new Error('Erro ao consultar ebook');
-        const dataLink = await resLink.json();
-        setEbookLinkURL(dataLink.url);
       } catch (err) {
         if (err instanceof Error) {
           setError(err.message);
@@ -66,7 +65,13 @@ export default function EbookPage() {
 
   const urlImagem = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/publico/`;
 
-  if (loading) return <p>Carregando...</p>;
+  if (loading) {
+    return (
+      <main className="p-8 flex justify-center items-center min-h-[200px]">
+        <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+      </main>
+    );
+  }
   if (error) return <div>Erro: {error}</div>;
   if (!ebook) return <div>Ebook não encontrado!</div>;
 
@@ -126,16 +131,45 @@ export default function EbookPage() {
                 .
               </label>
             </div>
-            {ebookLinkURL && (
-              <a
-                href={ebookLinkURL}
-                target="_blank"
-                className={`bg-success text-white heading-h2 w-[300px] h-[40px] rounded-2xl hover:bg-hoverSucesso flex items-center justify-center mx-auto ${!aceito ? 'pointer-events-none opacity-50' : ''}`}
+            {arquivo && (
+              <button
+                onClick={async () => {
+                  if (!aceito) return;
+
+                  try {
+                    // Pega URL assinada da rota
+                    const res = await fetch(`/api/media/signed-url/${arquivo}`);
+                    if (!res.ok) throw new Error('Falha ao gerar link seguro');
+
+                    const { url } = await res.json();
+
+                    // Baixa o arquivo
+                    const fileRes = await fetch(url);
+                    if (!fileRes.ok) throw new Error('Erro ao baixar arquivo');
+                    const blob = await fileRes.blob();
+
+                    // Cria link temporário
+                    const link = document.createElement('a');
+                    link.href = URL.createObjectURL(blob);
+
+                    // Usa título ou id como nome do arquivo
+                    link.download = `${ebook.title || arquivo}.pdf`;
+
+                    link.click();
+                    URL.revokeObjectURL(link.href);
+                  } catch (err) {
+                    alert(
+                      `Não foi possível baixar o eBook. Tente novamente: ${err}`
+                    );
+                  }
+                }}
+                disabled={!aceito}
+                className={`bg-success text-white heading-h2 w-[300px] h-[40px] rounded-2xl hover:bg-hoverSucesso flex items-center justify-center mx-auto transition ${
+                  !aceito ? 'opacity-50 cursor-not-allowed' : ''
+                }`}
               >
-                <button className="bg-success text-white heading-h2 w-[300px] h-[40px] rounded-2xl hover:bg-hoverSucesso">
-                  Baixar eBook
-                </button>
-              </a>
+                Baixar eBook
+              </button>
             )}
           </div>
         </div>

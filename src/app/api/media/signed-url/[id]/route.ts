@@ -2,7 +2,6 @@
 import { supabaseAdmin } from '@/lib/supabaseAdmin';
 import { NextRequest, NextResponse } from 'next/server';
 import { handleSupabaseError, validateUUID } from '@/lib/validacoes';
-import { logError } from '@/lib/logger';
 
 export async function GET(req: NextRequest) {
   const url = new URL(req.url);
@@ -24,11 +23,11 @@ export async function GET(req: NextRequest) {
       return handleSupabaseError(error);
     }
 
-    const { bucket, path } = data;
+    const { path } = data;
 
     const { data: selectData, error: selectError } = await supabaseAdmin.storage
-      .from(bucket)
-      .createSignedUrl(path, 60 * 10);
+      .from('privado')
+      .createSignedUrl(path, 60);
 
     if (selectError) {
       if (selectError.message === 'Object not found') {
@@ -43,7 +42,9 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json({ url: selectData.signedUrl });
   } catch (err) {
-    logError(err);
-    return NextResponse.json({ error: 'Erro no servidor' }, { status: 500 });
+    return NextResponse.json(
+      { error: `Erro no servidor: ${err}` },
+      { status: 500 }
+    );
   }
 }

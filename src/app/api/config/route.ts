@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabaseAdmin';
 import { validateUser } from '@/lib/auth/validadeUser';
-import { logError } from '@/lib/logger';
 
 export async function POST(req: NextRequest) {
   const user = await validateUser(req);
@@ -50,7 +49,9 @@ export async function POST(req: NextRequest) {
       { status: 200 }
     );
   } catch (err) {
-    logError(err);
-    return NextResponse.json({ error: 'Erro no servidor' }, { status: 500 });
+    return NextResponse.json(
+      { error: `Erro no servidor: ${err}` },
+      { status: 500 }
+    );
   }
 }

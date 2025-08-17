@@ -61,8 +61,8 @@ export default function Page() {
 
   if (carregando) {
     return (
-      <main className="p-8 text-center">
-        <p>Carregando...</p>
+      <main className="p-8 flex justify-center items-center min-h-[200px]">
+        <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin" />
       </main>
     );
   }

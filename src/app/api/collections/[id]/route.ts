@@ -8,7 +8,6 @@ import {
   handleSupabaseError,
   validateFieldType,
 } from '@/lib/validacoes';
-import { logError } from '@/lib/logger';
 
 export async function GET(req: NextRequest) {
   const url = new URL(req.url);
@@ -33,8 +32,10 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json(data, { status: 200 });
   } catch (err) {
-    logError('Erro inesperado:', err);
-    return NextResponse.json({ error: 'Erro no servidor' }, { status: 500 });
+    return NextResponse.json(
+      { error: `Erro no servidor: ${err}` },
+      { status: 500 }
+    );
   }
 }
 
@@ -131,8 +132,10 @@ export async function PUT(req: NextRequest) {
 
     return NextResponse.json(data, { status: 200 });
   } catch (err) {
-    logError(err);
-    return NextResponse.json({ error: 'Erro no servidor' }, { status: 500 });
+    return NextResponse.json(
+      { error: `Erro no servidor: ${err}` },
+      { status: 500 }
+    );
   }
 }
 
@@ -188,7 +191,9 @@ export async function DELETE(req: NextRequest) {
       { status: 200 }
     );
   } catch (err) {
-    logError(err);
-    return NextResponse.json({ error: 'Erro no servidor' }, { status: 500 });
+    return NextResponse.json(
+      { error: `Erro no servidor: ${err}` },
+      { status: 500 }
+    );
   }
 }

@@ -6,7 +6,6 @@ import {
   validateFieldType,
 } from '@/lib/validacoes';
 import { validateUser } from '@/lib/auth/validadeUser';
-import { logError } from '@/lib/logger';
 
 interface UpdateBody {
   title?: string;
@@ -307,8 +306,10 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json(data, { status: 201 });
   } catch (err) {
-    logError(err);
-    return NextResponse.json({ error: 'Erro no servidor' }, { status: 500 });
+    return NextResponse.json(
+      { error: `Erro no servidor: ${err}` },
+      { status: 500 }
+    );
   }
 }
 
@@ -326,13 +327,14 @@ export async function GET() {
       .order('title', { ascending: true });
 
     if (error) {
-      logError('Erro do Supabase:', error);
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
     return NextResponse.json(data, { status: 200 });
   } catch (err) {
-    logError(err);
-    return NextResponse.json({ error: 'Erro no servidor' }, { status: 500 });
+    return NextResponse.json(
+      { error: `Erro no servidor: ${err}` },
+      { status: 500 }
+    );
   }
 }

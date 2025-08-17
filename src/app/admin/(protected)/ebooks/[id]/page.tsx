@@ -180,10 +180,14 @@ export default function EditEbookPage() {
       return;
     }
 
-    const uploadFile = async (file: File): Promise<string> => {
+    const uploadFile = async (
+      file: File,
+      bucket: string,
+      folder: string
+    ): Promise<string> => {
       const form = new FormData();
-      form.append('bucket', 'privado');
-      form.append('folder', 'convers');
+      form.append('bucket', bucket);
+      form.append('folder', folder);
       form.append('file', file);
 
       const res = await fetch('/api/media/upload', {
@@ -200,8 +204,8 @@ export default function EditEbookPage() {
       let finalFileId = fileId;
       let finalCoverId = coverId;
 
-      if (file) finalFileId = await uploadFile(file);
-      if (cover) finalCoverId = await uploadFile(cover);
+      if (file) finalFileId = await uploadFile(file, 'privado', 'ebook');
+      if (cover) finalCoverId = await uploadFile(cover, 'publico', 'capa');
 
       const payload = {
         ...data,

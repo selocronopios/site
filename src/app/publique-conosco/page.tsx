@@ -7,7 +7,6 @@ import React, { useState } from 'react';
 export default function Publique() {
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState('');
-  const [error, setError] = useState<string | null>(null);
   const [file, setFile] = useState<File | null>(null);
 
   const [formData, setFormData] = useState({
@@ -17,24 +16,6 @@ export default function Publique() {
     email: '',
     telefone: '',
   });
-
-  // const sendTestEmail = async () => {
-  //   setLoading(true);
-  //   setStatus('');
-
-  //   const res = await fetch('/api/send-test-email', {
-  //     method: 'POST',
-  //   });
-
-  //   const data = await res.json();
-  //   setLoading(false);
-
-  //   if (data.success) {
-  //     setStatus('Email enviado com sucesso!');
-  //   } else {
-  //     setStatus('Erro ao enviar email.');
-  //   }
-  // };
 
   const handleChange = async (
     e: React.ChangeEvent<
@@ -84,11 +65,7 @@ export default function Publique() {
   return (
     <div className="bg-background p-8 max-w-7xl mx-auto px-4 space-y-8 text-justify">
       <h1 className="heading-h1 text-primary text-center">Publique conosco</h1>
-      {error && (
-        <div className="mb-4 text-red-700 bg-red-100 border border-red-300 p-3 rounded">
-          {error}
-        </div>
-      )}
+
       <div className="grid grid-cols-2 gap-4">
         <a href="/arquivos/DiretrizesEditoriais-2025-07-19.pdf" target="_blank">
           <button className="bg-success text-white heading-h1 w-full h-[120px] px-4 py-2 rounded-2xl hover:bg-hoverSucesso">

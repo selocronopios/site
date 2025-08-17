@@ -140,10 +140,14 @@ export default function NewEbookPage() {
     }
 
     try {
-      const uploadFile = async (file: File): Promise<string> => {
+      const uploadFile = async (
+        file: File,
+        bucket: string,
+        folder: string
+      ): Promise<string> => {
         const form = new FormData();
-        form.append('bucket', 'privado');
-        form.append('folder', 'convers');
+        form.append('bucket', bucket);
+        form.append('folder', folder);
         form.append('file', file);
 
         const res = await fetch('/api/media/upload', {
@@ -156,8 +160,8 @@ export default function NewEbookPage() {
         return data.id || '';
       };
 
-      const fileId = await uploadFile(file);
-      const coverId = await uploadFile(cover);
+      const fileId = await uploadFile(file, 'privado', 'ebook');
+      const coverId = await uploadFile(cover, 'publico', 'capa');
 
       if (!fileId || !coverId) {
         setError('Falha ao obter os IDs dos arquivos enviados.');

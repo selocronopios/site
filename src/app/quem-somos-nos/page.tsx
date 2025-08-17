@@ -151,8 +151,8 @@ const membros = [
   },
   {
     nome: 'Stella Ferreira Gontijo',
-    funcao: 'Doutoranda',
-    titulacao: 'UFMG',
+    funcao: 'Doutoranda em História',
+    titulacao: 'Universidade Federal de Minas Gerais (UFMG)',
     lattes: 'https://lattes.cnpq.br/4794994866272483',
     foto: '/membros/StellaGontijo.webp',
   },
@@ -198,7 +198,7 @@ export default function QuemSomos() {
                       rel="noopener noreferrer"
                       className="text-blue-600 underline"
                     >
-                      Lattes
+                      {par[0].lattes}
                     </a>
                   </p>
                 )}
@@ -241,7 +241,7 @@ export default function QuemSomos() {
                           rel="noopener noreferrer"
                           className="text-blue-600 underline"
                         >
-                          Lattes
+                          {par[1].lattes}
                         </a>
                       </p>
                     )}

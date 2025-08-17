@@ -2,7 +2,6 @@
 import { NextRequest } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabaseAdmin';
 import { createServerSupabaseClient } from '@/lib/supabaseServer';
-import { logError } from '@/lib/logger';
 
 export async function validateUser(req: NextRequest) {
   const token = req.headers.get('Authorization')?.replace('Bearer ', '');
@@ -20,7 +19,6 @@ export async function validateUser(req: NextRequest) {
   const supabase = await createServerSupabaseClient();
   const { data, error } = await supabase.auth.getUser();
   if (error || !data?.user) {
-    logError(error);
     return null;
   }
 

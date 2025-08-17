@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
-import { Body } from '@/components/Typography';
 
 interface Colecao {
   id: string;
@@ -70,7 +69,13 @@ export default function ColecaoPage() {
   const inicio = (paginaAtual - 1) * porPagina;
   const ebooksPagina = ebooksOrdenados.slice(inicio, inicio + porPagina);
 
-  if (loading) return <p>Carregando...</p>;
+  if (loading) {
+    return (
+      <main className="p-8 flex justify-center items-center min-h-[200px]">
+        <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+      </main>
+    );
+  }
   if (error) return <div>Erro: {error}</div>;
   if (!colecao) return <div>Coleção não encontrada!</div>;
 
