@@ -4,10 +4,11 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useState } from 'react';
 import { FaSearch } from 'react-icons/fa';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 
 export default function Header() {
   const pathName = usePathname();
+  const router = useRouter();
   const [search, setSearch] = useState('');
   const isAdmin = pathName.startsWith('/admin');
   const isMaintenance = process.env.NEXT_PUBLIC_MAINTENANCE_MODE === 'true';
@@ -15,6 +16,10 @@ export default function Header() {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (search.trim() === '') return;
+
+    // Redireciona para a página de busca com a query
+    router.push(`/busca?query=${encodeURIComponent(search.trim())}`);
+    setSearch(''); // opcional: limpa o input após a busca
   };
 
   if (isAdmin || isMaintenance) return null;

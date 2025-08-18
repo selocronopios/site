@@ -11,8 +11,8 @@ interface Ebook {
   };
   title: string;
   subtitle: string;
-  authors: string;
-  keywords: string;
+  authors: string[];
+  keywords: string[];
   description: string;
   authorship: string;
   summary: string;
@@ -104,9 +104,12 @@ export default function EbookPage() {
             {ebook.subtitle && (
               <h2 className="heading-h2 text-text mb-2">{ebook.subtitle}</h2>
             )}
-            <h3 className="heading-h3 text-text mb-2">{ebook.authors}</h3>
             <h3 className="heading-h3 text-text mb-2">
-              Palavras-chave:{ebook.keywords}
+              {ebook.authors?.join(', ')}
+            </h3>
+
+            <h3 className="heading-h3 text-text mb-2">
+              Palavras-chave:{ebook.keywords?.join(', ')}
             </h3>
             <p className="heading-text text-text text-justify mb-2">
               {ebook.description}
