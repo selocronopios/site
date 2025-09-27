@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://www.historiaintelectualufmg.com.br
+
+# Sitemaps
+Sitemap: https://www.historiaintelectualufmg.com.br/sitemap.xml
