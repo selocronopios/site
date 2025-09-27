@@ -1,6 +1,7 @@
 import Maintenance from '@/components/Maintenance';
 import { Body } from '@/components/Typography';
 import Image from 'next/image';
+import Link from 'next/link';
 
 export default function Home() {
   const isMaintenance = process.env.NEXT_PUBLIC_MAINTENANCE_MODE === 'true';
@@ -10,7 +11,7 @@ export default function Home() {
   }
 
   return (
-    <div className="bg-background p-8 max-w-7xl mx-auto px-4 space-y-8 text-justify">
+    <div className="bg-background p-4 sm:p-6 md:p-8 max-w-7xl mx-auto space-y-8 text-justify">
       <Body className="mt-4">
         Este site tem como objetivo funcionar como uma plataforma colaborativa e
         interdisciplinar, reunindo pesquisadores, estudantes e profissionais de
@@ -69,11 +70,11 @@ export default function Home() {
         como à formação de novos pesquisadores.
       </Body>
 
-      <h1 className="heading-h1 text-primary text-center">
+      <h2 className="heading-h2 text-primary text-center">
         Grupo de história intelectual: pesquisa, extensão e divulgação
         <br />
         científica (CENEX/UFMG – Registro 405042)
-      </h1>
+      </h2>
 
       <Body>
         As atividades do Grupo de Pesquisa “História Intelectual: narrativas,
@@ -113,17 +114,17 @@ export default function Home() {
         Intelecções e Contextus.
       </Body>
 
-      <h1 className="heading-h1 text-primary text-center">
+      <h2 className="heading-h2 text-primary text-center">
         Cronópios Selo Editorial
-      </h1>
+      </h2>
 
       <div className="flex justify-center">
         <Image
           src="/logo-selo.png"
-          alt="Banner principal"
+          alt="Logo do Cronópios Selo Editorial"
           width={600}
           height={300}
-          className="h-auto object-cover"
+          className="h-auto object-cover w-full max-w-md"
           priority
         />
       </div>
@@ -152,8 +153,11 @@ export default function Home() {
         livros que apresentam trajetórias de mulheres na universidade, na
         ciência, na política, nos movimentos sociais, entre outros campos. Os
         trabalhos serão selecionados por meio de editais previamente publicados
-        no site, de acordo com as regras estabelecidas. Para saber mais, clique
-        aqui.
+        no site, de acordo com as regras estabelecidas. Para saber mais,{' '}
+        <Link href="/publique-conosco" className="text-primary underline">
+          clique aqui
+        </Link>
+        .
       </Body>
     </div>
   );

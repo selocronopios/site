@@ -158,160 +158,106 @@ const membros = [
   },
 ];
 
-function agruparEmPares<T>(array: T[]): T[][] {
-  const pares = [];
-  for (let i = 0; i < array.length; i += 2) {
-    pares.push([array[i], array[i + 1]]);
-  }
-  return pares;
-}
-
-const membrosAgrupados = agruparEmPares(membros);
-
 export default function QuemSomos() {
   return (
-    <div>
-      <div className="bg-background p-8 max-w-7xl mx-auto px-4 space-y-8 text-justify">
-        <h1 className="heading-h1 text-primary text-center">
-          Grupo de Pesquisa “História Intelectual: práticas, narrativas e <br />{' '}
+    <div className="bg-background text-text">
+      {/* Title */}
+      <div className="max-w-7xl mx-auto p-4 sm:p-6 md:p-8 text-center">
+        <h1 className="heading-h1 text-primary">Quem Somos</h1>
+        <p className="mt-2 text-base sm:text-lg">
+          Grupo de Pesquisa “História Intelectual: práticas, narrativas e
           circulação de ideias” (UFMG/CNPq)
-        </h1>
-
-        <div
-          className="grid gap-x-6 gap-y-4 items-center"
-          style={{ gridTemplateColumns: 'auto 5rem 5rem auto' }}
-        >
-          {membrosAgrupados.map((par, i) => (
-            <React.Fragment key={i}>
-              {/* Lado esquerdo */}
-              <div className="text-right space-y-1">
-                <p>
-                  <strong>{par[0]?.nome}</strong>
-                </p>
-                <p>{par[0]?.funcao}</p>
-                <p>{par[0]?.titulacao}</p>
-                {par[0]?.lattes && (
-                  <p>
-                    <a
-                      href={par[0].lattes}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-blue-600 underline"
-                    >
-                      {par[0].lattes}
-                    </a>
-                  </p>
-                )}
-              </div>
-
-              <div className="bg-gray-300 w-full max-w-[80px] h-auto flex items-center justify-center overflow-hidden">
-                {par[0]?.foto && (
-                  <img
-                    src={par[0].foto}
-                    alt={par[0].nome}
-                    className="h-full w-full object-cover"
-                  />
-                )}
-              </div>
-
-              {/* Lado direito */}
-              {par[1] ? (
-                <>
-                  <div className="bg-gray-300 w-full max-w-[80px] h-auto flex items-center justify-center overflow-hidden">
-                    {par[1]?.foto && (
-                      <img
-                        src={par[1].foto}
-                        alt={par[1].nome}
-                        className="h-full w-full object-cover"
-                      />
-                    )}
-                  </div>
-
-                  <div className="text-left space-y-1">
-                    <p>
-                      <strong>{par[1]?.nome}</strong>
-                    </p>
-                    <p>{par[1]?.funcao}</p>
-                    <p>{par[1]?.titulacao}</p>
-                    {par[1]?.lattes && (
-                      <p>
-                        <a
-                          href={par[1].lattes}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-blue-600 underline"
-                        >
-                          {par[1].lattes}
-                        </a>
-                      </p>
-                    )}
-                  </div>
-                </>
-              ) : (
-                <>
-                  <div />
-                  <div />
-                </>
-              )}
-            </React.Fragment>
-          ))}
-        </div>
+        </p>
       </div>
-      <div className="bg-selectionLight w-full">
-        <div className="max-w-7xl mx-auto p-8 space-y-8 text-justify">
-          <h1 className="heading-h1 text-secondary text-center">
-            Cronópios Selo Editorial
-          </h1>
-          <h2 className="heading-h2 text-secondary text-center">
-            Equipe Editorial
-          </h2>
+
+      {/* Grid de Membros */}
+      <div className="max-w-7xl mx-auto p-4 sm:p-6 md:p-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {membros.map((membro, index) => (
           <div
-            className="grid gap-x-6 gap-y-4"
-            style={{ gridTemplateColumns: '28rem auto auto' }}
+            key={index}
+            className="bg-white shadow-md rounded-lg overflow-hidden flex flex-col items-center text-center p-4"
           >
-            <div className="flex justify-left">
+            {membro.foto && (
+              <Image
+                src={membro.foto}
+                alt={membro.nome}
+                width={150}
+                height={150}
+                className="rounded-full object-cover w-32 h-32 mb-4"
+                priority={index < 8}
+              />
+            )}
+            <h2 className="font-semibold text-lg">{membro.nome}</h2>
+            <p className="text-sm mt-1">{membro.funcao}</p>
+            <p className="text-sm">{membro.titulacao}</p>
+            {membro.lattes && (
+              <a
+                href={membro.lattes}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-2 text-blue-600 underline inline-flex items-center gap-1"
+              >
+                Lattes
+              </a>
+            )}
+          </div>
+        ))}
+      </div>
+
+      {/* Editorial */}
+      <div className="bg-selectionLight w-full py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 space-y-8">
+          <h2 className="heading-h2 text-secondary text-center">
+            Cronópios Selo Editorial
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-6 items-start">
+            {/* Logo */}
+            <div className="flex justify-center md:justify-start">
               <Image
                 src="/selo.png"
-                alt="Selo"
+                alt="Selo Cronópios Editorial"
                 width={450}
                 height={300}
-                className="h-auto object-cover"
+                className="h-auto object-cover rounded-md"
                 priority
               />
             </div>
-            <div className="flex flex-col text-text text-center">
-              <h3 className="heading-h3">Coordenação Geral</h3>
-              <p className="body">Adriane Vidal Costa (UFMG)</p>
-            </div>
-            <div className="flex flex-col text-text text-center">
-              <h3 className="heading-h3">Conselho Editorial</h3>
-              <p className="body">
-                Alexandra Pita González (Universidad de Colima, México)
-              </p>
-              <p className="body">Ana Amélia de Melo (UEC, Brasil)</p>
-              <p className="body">Carine Dalmás (UEMA, Brasil)</p>
-              <p className="body">Carlos Armani (UFSM, Brasil)</p>
-              <p className="body">Claudio Maíz (UNCuyo, Argentina)</p>
-              <p className="body">Eduardo Devés Valdés (Usach, Chile)</p>
-              <p className="body">Eliana R. de Freitas Dutra (UFMG, Brasil)</p>
-              <p className="body">Elisa Campos Borges (UFF, Brasil)</p>
-              <p className="body">Giselle Venâncio (UFF, Brasil)</p>
-              <p className="body">
-                Heloisa Maria Murgel Starling (UFMG, Brasil)
-              </p>
-              <p className="body">Inés de Torres (UDELAR, Uruguai)</p>
-              <p className="body">
-                José Alves de Freitas Neto (UNICAMP, Brasil)
-              </p>
-              <p className="body">Liliana Weinberg (UNAM, México)</p>
-              <p className="body">
-                Maria Elisa Noronha de Sá (PUC-Rio, Brasil)
-              </p>
-              <p className="body">
-                Maria da Gloria de Oliveira (UFRRJ, Brasil)
-              </p>
-              <p className="body">Petrônio Domingues (UFS)</p>
-              <p className="body">Rafael Araújo (UERJ, Brasil)</p>
+
+            {/* Coordenação Geral + Conselho Editorial */}
+            <div className="md:col-span-2 flex flex-col gap-6">
+              {/* Coordenação Geral */}
+              <div className="p-4 text-center">
+                <h4 className="font-semibold text-lg mb-2">
+                  Coordenação Geral
+                </h4>
+                <p>Adriane Vidal Costa (UFMG)</p>
+              </div>
+
+              {/* Conselho Editorial */}
+              <div className="p-4">
+                <h4 className="font-semibold text-lg mb-4 text-center">
+                  Conselho Editorial
+                </h4>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
+                  <p>Alexandra Pita González (Universidad de Colima, México)</p>
+                  <p>Ana Amélia de Melo (UEC, Brasil)</p>
+                  <p>Carine Dalmás (UEMA, Brasil)</p>
+                  <p>Carlos Armani (UFSM, Brasil)</p>
+                  <p>Claudio Maíz (UNCuyo, Argentina)</p>
+                  <p>Eduardo Devés Valdés (Usach, Chile)</p>
+                  <p>Eliana R. de Freitas Dutra (UFMG, Brasil)</p>
+                  <p>Elisa Campos Borges (UFF, Brasil)</p>
+                  <p>Giselle Venâncio (UFF, Brasil)</p>
+                  <p>Heloisa Maria Murgel Starling (UFMG, Brasil)</p>
+                  <p>Inés de Torres (UDELAR, Uruguai)</p>
+                  <p>José Alves de Freitas Neto (UNICAMP, Brasil)</p>
+                  <p>Liliana Weinberg (UNAM, México)</p>
+                  <p>Maria Elisa Noronha de Sá (PUC-Rio, Brasil)</p>
+                  <p>Maria da Gloria de Oliveira (UFRRJ, Brasil)</p>
+                  <p>Petrônio Domingues (UFS)</p>
+                  <p>Rafael Araújo (UERJ, Brasil)</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -319,3 +265,153 @@ export default function QuemSomos() {
     </div>
   );
 }
+
+// <div>
+//   <div className="bg-background p-8 max-w-7xl mx-auto px-4 space-y-8 text-justify">
+//     <h1 className="heading-h1 text-primary text-center">
+//       Grupo de Pesquisa “História Intelectual: práticas, narrativas e <br />{' '}
+//       circulação de ideias” (UFMG/CNPq)
+//     </h1>
+
+//     <div
+//       className="grid gap-x-6 gap-y-4 items-center"
+//       style={{ gridTemplateColumns: 'auto 5rem 5rem auto' }}
+//     >
+//       {membrosAgrupados.map((par, i) => (
+//         <React.Fragment key={i}>
+//           {/* Lado esquerdo */}
+//           <div className="text-right space-y-1">
+//             <p>
+//               <strong>{par[0]?.nome}</strong>
+//             </p>
+//             <p>{par[0]?.funcao}</p>
+//             <p>{par[0]?.titulacao}</p>
+//             {par[0]?.lattes && (
+//               <p>
+//                 <a
+//                   href={par[0].lattes}
+//                   target="_blank"
+//                   rel="noopener noreferrer"
+//                   className="text-blue-600 underline"
+//                 >
+//                   {par[0].lattes}
+//                 </a>
+//               </p>
+//             )}
+//           </div>
+
+//           <div className="bg-gray-300 w-full max-w-[80px] h-auto flex items-center justify-center overflow-hidden">
+//             {par[0]?.foto && (
+//               <img
+//                 src={par[0].foto}
+//                 alt={par[0].nome}
+//                 className="h-full w-full object-cover"
+//               />
+//             )}
+//           </div>
+
+//           {/* Lado direito */}
+//           {par[1] ? (
+//             <>
+//               <div className="bg-gray-300 w-full max-w-[80px] h-auto flex items-center justify-center overflow-hidden">
+//                 {par[1]?.foto && (
+//                   <img
+//                     src={par[1].foto}
+//                     alt={par[1].nome}
+//                     className="h-full w-full object-cover"
+//                   />
+//                 )}
+//               </div>
+
+//               <div className="text-left space-y-1">
+//                 <p>
+//                   <strong>{par[1]?.nome}</strong>
+//                 </p>
+//                 <p>{par[1]?.funcao}</p>
+//                 <p>{par[1]?.titulacao}</p>
+//                 {par[1]?.lattes && (
+//                   <p>
+//                     <a
+//                       href={par[1].lattes}
+//                       target="_blank"
+//                       rel="noopener noreferrer"
+//                       className="text-blue-600 underline"
+//                     >
+//                       {par[1].lattes}
+//                     </a>
+//                   </p>
+//                 )}
+//               </div>
+//             </>
+//           ) : (
+//             <>
+//               <div />
+//               <div />
+//             </>
+//           )}
+//         </React.Fragment>
+//       ))}
+//     </div>
+//   </div>
+//   <div className="bg-selectionLight w-full">
+//     <div className="max-w-7xl mx-auto p-8 space-y-8 text-justify">
+//       <h1 className="heading-h1 text-secondary text-center">
+//         Cronópios Selo Editorial
+//       </h1>
+//       <h2 className="heading-h2 text-secondary text-center">
+//         Equipe Editorial
+//       </h2>
+//       <div
+//         className="grid gap-x-6 gap-y-4"
+//         style={{ gridTemplateColumns: '28rem auto auto' }}
+//       >
+//         <div className="flex justify-left">
+//           <Image
+//             src="/selo.png"
+//             alt="Selo"
+//             width={450}
+//             height={300}
+//             className="h-auto object-cover"
+//             priority
+//           />
+//         </div>
+//         <div className="flex flex-col text-text text-center">
+//           <h3 className="heading-h3">Coordenação Geral</h3>
+//           <p className="body">Adriane Vidal Costa (UFMG)</p>
+//         </div>
+//         <div className="flex flex-col text-text text-center">
+//           <h3 className="heading-h3">Conselho Editorial</h3>
+//           <p className="body">
+//             Alexandra Pita González (Universidad de Colima, México)
+//           </p>
+//           <p className="body">Ana Amélia de Melo (UEC, Brasil)</p>
+//           <p className="body">Carine Dalmás (UEMA, Brasil)</p>
+//           <p className="body">Carlos Armani (UFSM, Brasil)</p>
+//           <p className="body">Claudio Maíz (UNCuyo, Argentina)</p>
+//           <p className="body">Eduardo Devés Valdés (Usach, Chile)</p>
+//           <p className="body">Eliana R. de Freitas Dutra (UFMG, Brasil)</p>
+//           <p className="body">Elisa Campos Borges (UFF, Brasil)</p>
+//           <p className="body">Giselle Venâncio (UFF, Brasil)</p>
+//           <p className="body">
+//             Heloisa Maria Murgel Starling (UFMG, Brasil)
+//           </p>
+//           <p className="body">Inés de Torres (UDELAR, Uruguai)</p>
+//           <p className="body">
+//             José Alves de Freitas Neto (UNICAMP, Brasil)
+//           </p>
+//           <p className="body">Liliana Weinberg (UNAM, México)</p>
+//           <p className="body">
+//             Maria Elisa Noronha de Sá (PUC-Rio, Brasil)
+//           </p>
+//           <p className="body">
+//             Maria da Gloria de Oliveira (UFRRJ, Brasil)
+//           </p>
+//           <p className="body">Petrônio Domingues (UFS)</p>
+//           <p className="body">Rafael Araújo (UERJ, Brasil)</p>
+//         </div>
+//       </div>
+//     </div>
+//   </div>
+// </div>
+//   );
+// }
