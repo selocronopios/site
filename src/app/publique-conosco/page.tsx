@@ -154,13 +154,13 @@ export default function Publique() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          <button className="bg-success text-white heading-h2 w-full h-28 rounded-2xl hover:bg-hoverSucesso transition">
+          <button className="bg-success text-white heading-h2 w-full h-20 sm:h-28 rounded-2xl hover:bg-hoverSucesso transition">
             Formatação
           </button>
         </a>
         <Link href="/termos-uso" target="_blank">
-          <button className="bg-success text-white heading-h2 w-full h-28 rounded-2xl hover:bg-hoverSucesso transition">
-            Termos de Uso e Política de Direitos Autorais
+          <button className="bg-success text-white heading-h2 w-full h-20 sm:h-28 rounded-2xl hover:bg-hoverSucesso transition">
+            Termos de Uso e Política
           </button>
         </Link>
       </div>
