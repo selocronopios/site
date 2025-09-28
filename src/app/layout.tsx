@@ -24,7 +24,6 @@ export default function RootLayout({
   return (
     <html lang="pt-br">
       <body className={`bg-background text-text`}>
-        {/* Header e Footer viram client components que controlam visibilidade */}
         <Header />
         <MainWrapper>{children}</MainWrapper>
         <Footer />

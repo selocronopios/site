@@ -137,9 +137,9 @@ const membros = [
   },
   {
     nome: 'Taciana Almeida Garrido de Resende',
-    funcao: 'Mestrando em História',
+    funcao: 'Doutora em História',
     titulacao: 'Universidade Federal de Minas Gerais (UFMG)',
-    lattes: 'https://lattes.cnpq.br/2136645835800739',
+    lattes: 'http://lattes.cnpq.br/9042114986463823',
     foto: '/membros/TacianaResende.webp',
   },
   {
@@ -151,7 +151,7 @@ const membros = [
   },
   {
     nome: 'Stella Ferreira Gontijo',
-    funcao: 'Doutoranda em História',
+    funcao: 'Doutora em História',
     titulacao: 'Universidade Federal de Minas Gerais (UFMG)',
     lattes: 'https://lattes.cnpq.br/4794994866272483',
     foto: '/membros/StellaGontijo.webp',

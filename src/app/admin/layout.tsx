@@ -1,5 +1,10 @@
 //src/app/admin/layout.tsx
+import type { Metadata } from 'next';
 import '../globals.css';
+
+export const metadata: Metadata = {
+  robots: 'noindex, nofollow',
+};
 
 export default function AdminLayout({
   children,

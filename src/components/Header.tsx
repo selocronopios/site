@@ -39,11 +39,15 @@ export default function Header() {
         {/* Logo */}
         <Link href="/" className="flex items-center">
           <Image
-            src="/logo-site2.png"
+            src="/logo-600.png"
             alt="Logo História Intelectual"
-            width={180}
-            height={200}
+            width={200}
+            height={67}
             className="object-contain"
+            priority
+            sizes="(max-width: 400px) 200px,
+               (max-width: 768px) 400px,
+               600px"
           />
         </Link>
 
