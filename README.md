@@ -162,7 +162,7 @@ yarn install
 Crie um arquivo .env.local na raiz com as chaves do Supabase:
 
 ```
-NEXT_PUBLIC_SUPABASE_URL=https://<seu-projeto>.supabase.co
+NEXT_PUBLIC_SUPABASE_URL=https://<projeto>.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=chave_anonima
 
 SUPABASE_SERVICE_ROLE_KEY=chave_service_role
