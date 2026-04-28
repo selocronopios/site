@@ -3,6 +3,7 @@ import tseslint from 'typescript-eslint';
 import react from 'eslint-plugin-react';
 import prettierPlugin from 'eslint-plugin-prettier';
 import prettierConfig from 'eslint-config-prettier';
+import nextPlugin from '@next/eslint-plugin-next';
 
 export default [
   {
@@ -26,6 +27,7 @@ export default [
       '@typescript-eslint': tseslint.plugin,
       react,
       prettier: prettierPlugin,
+      '@next/next': nextPlugin,
     },
     rules: {
       // React
