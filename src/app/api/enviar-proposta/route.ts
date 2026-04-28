@@ -32,17 +32,32 @@ export async function POST(req: Request) {
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
 
-    // Monta os dados do e-mail
+    const fromEmail =
+      'Cronópios Selo Editorial <contato@publicacoes.historiaintelectualufmg.com.br>';
+
     const options = {
-      from: 'Envio de proposta <infoselocronopios@gmail.com>',
-      to: 'infoselocronopios@gmail.com',
-      subject: `Nova proposta: ${title}`,
-      text: `Nova proposta de publicação recebida:
-Autores: ${autores}
-Afiliação: ${afiliacao}
-Título: ${title}
-Email: ${email}
-Telefone: ${telefone}`,
+      from: fromEmail,
+      to: ['infoselocronopios@gmail.com', email],
+      subject: `Confirmação de recebimento: ${title}`,
+      html: `
+        <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; padding: 20px; border-radius: 10px;">
+          <h2 style="color: #2c3e50; border-bottom: 2px solid #eee; padding-bottom: 10px;">Nova Proposta de Publicação</h2>
+          <p style="font-size: 16px;">Olá, <strong>${autores}</strong>.</p>
+          <p>Recebemos os detalhes da sua submissão para <em>Cronópios Selo Editorial</em>.</p>
+          
+          <div style="background-color: #f9f9f9; padding: 15px; border-radius: 5px; margin: 20px 0;">
+            <p style="margin: 5px 0;"><strong>Título:</strong> ${title}</p>
+            <p style="margin: 5px 0;"><strong>Afiliação:</strong> ${afiliacao}</p>
+            <p style="margin: 5px 0;"><strong>Telefone:</strong> ${telefone}</p>
+            <p style="margin: 5px 0;"><strong>E-mail:</strong> ${email}</p>
+          </div>
+          
+          <p style="font-size: 14px; color: #7f8c8d;">O arquivo anexado foi enviado com sucesso para a equipe editorial.</p>
+          <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;" />
+          <p style="font-size: 12px; color: #bdc3c7; text-align: center;">Cronópios Selo Editorial - UFMG</p>
+        </div>
+      `,
+      text: `Nova proposta recebida: ${title}. Autores: ${autores}.`,
       attachment: [
         {
           data: buffer,
