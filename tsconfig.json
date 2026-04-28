@@ -14,7 +14,7 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
-    "types": ["react", "jest", "node"],
+    "types": ["react", "node"],
     "plugins": [
       {
         "name": "next"
