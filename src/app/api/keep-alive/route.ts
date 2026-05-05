@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabaseClient } from '@/lib/supabaseClient';
+import { supabaseAdmin } from '@/lib/supabaseAdmin';
 
 export async function GET(req: NextRequest) {
   // 1. Validar se a requisição tem a chave secreta de Cron para evitar abuso público
@@ -13,7 +13,7 @@ export async function GET(req: NextRequest) {
   try {
     // 2. Fazer uma query extremamente simples e rápida para bater no banco do supabaseClient
     // Substitua 'profiles' ou 'users' por qualquer tabela real que você tenha
-    const { error } = await supabaseClient.from('ebooks').select('id').limit(1);
+    const { error } = await supabaseAdmin.from('ebooks').select('id').limit(1);
 
     if (error) throw error;
 
