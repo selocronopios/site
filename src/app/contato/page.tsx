@@ -59,7 +59,7 @@ const Contato: React.FC = () => {
             target="_blank"
             rel="noopener noreferrer"
             aria-label={contato.name}
-            className={`flex flex-col items-center justify-center p-6 rounded-2xl text-white ${contato.color} transition transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset[...]
+            className={`flex flex-col items-center justify-center p-6 rounded-2xl text-white ${contato.color} transition transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2`}
           >
             <div className="text-3xl mb-2">{contato.icon}</div>
             <span className="font-semibold text-center">{contato.name}</span>
