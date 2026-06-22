@@ -36,7 +36,7 @@ const contatos: ContatoItem[] = [
   },
   {
     name: 'Email',
-    href: 'mailto:selocronopios@gmail.com',
+    href: 'mailto:infoselocronopios@gmail.com',
     icon: <FaEnvelope />,
     color: 'bg-gray-800 hover:bg-gray-900',
   },
@@ -59,7 +59,7 @@ const Contato: React.FC = () => {
             target="_blank"
             rel="noopener noreferrer"
             aria-label={contato.name}
-            className={`flex flex-col items-center justify-center p-6 rounded-2xl text-white ${contato.color} transition transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary`}
+            className={`flex flex-col items-center justify-center p-6 rounded-2xl text-white ${contato.color} transition transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset[...]
           >
             <div className="text-3xl mb-2">{contato.icon}</div>
             <span className="font-semibold text-center">{contato.name}</span>
