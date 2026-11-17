@@ -55,11 +55,13 @@ content:
           collection: colecoes
       - name: authors
         label: Autores / Organizadores
-        type: list
+        type: string
+        list: true
         required: true
       - name: keywords
         label: Palavras-chave
-        type: list
+        type: string
+        list: true
       - name: description
         label: Sinopse / Descrição
         type: text
