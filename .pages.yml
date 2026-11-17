@@ -10,23 +10,30 @@ content:
     format: json
     filename: "{primary}.json"
     view:
-      fields: [name, order]
-      primary: name
-      sort: [order, name]
+      fields: [titulo, ordem]
+      primary: titulo
+      sort: [ordem, titulo]
     fields:
-      - name: name
+      - name: titulo
         label: Nome da Coleção
         type: string
         required: true
-      - name: description
+      - name: descricao
         label: Descrição / Ementa
         type: text
-      - name: parentCollection
+      - name: colecaoPai
         label: Coleção Pai (opcional, para subcoleções)
         type: reference
         options:
           collection: colecoes
-      - name: order
+          search: titulo
+          value: "{slug}"
+      - name: imagem
+        label: Imagem / Logo da Coleção
+        type: image
+        options:
+          extensions: [jpg, jpeg, png, webp, svg]
+      - name: ordem
         label: Ordem de exibição
         type: number
         default: 1
