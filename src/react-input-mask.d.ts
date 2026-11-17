@@ -16,3 +16,4 @@ declare module 'react-input-mask' {
   const InputMask: ComponentType<Props>;
   export default InputMask;
 }
+declare module '*.css';

@@ -9,6 +9,15 @@ export interface Colecao {
   order: number;
 }
 
+export interface Colecao {
+  id: string;
+  name: string;
+  description?: string;
+  parentCollection?: string | null;
+  order: number;
+  subcolecoesCount?: number;
+}
+
 export interface Ebook {
   id: string;
   title: string;
@@ -56,15 +65,31 @@ function lerArquivosJson<T>(diretorio: string): Array<T & { id: string }> {
     });
 }
 
+export function getColecoesPrincipais(): Colecao[] {
+  const todas = getColecoes();
+  return todas
+    .filter((col) => !col.parentCollection)
+    .map((col) => ({
+      ...col,
+      subcolecoesCount: todas.filter((sub) => sub.parentCollection === col.id)
+        .length,
+    }));
+}
+
 export function getColecoes(): Colecao[] {
   return lerArquivosJson<
-    Partial<Colecao> & { titulo?: string; descricao?: string; ordem?: number }
+    Partial<Colecao> & {
+      titulo?: string;
+      descricao?: string;
+      colecaoPai?: string | null;
+      ordem?: number;
+    }
   >(COLECOES_DIR)
     .map((col) => ({
       id: col.id,
       name: col.name ?? col.titulo ?? col.id,
       description: col.description ?? col.descricao ?? '',
-      parentCollection: normalizarSlug(col.parentCollection),
+      parentCollection: normalizarSlug(col.parentCollection ?? col.colecaoPai),
       order: col.order ?? col.ordem ?? 99,
     }))
     .sort((a, b) => a.order - b.order || a.name.localeCompare(b.name, 'pt-BR'));

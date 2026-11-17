@@ -3,14 +3,30 @@ import CatalogoGrid from '@/components/CatalogoGrid';
 import { getColecoes, getEbooks } from '@/lib/acervo';
 
 export default function Page() {
-  const colecoes = getColecoes();
+  const todasColecoes = getColecoes();
   const livros = getEbooks();
 
-  const colecoesCarousel = colecoes.map((col) => ({
-    id: col.id,
-    name: col.name,
-    temEbooks: livros.some((livro) => livro.collection === col.id),
-  }));
+  const colecoesPrincipais = todasColecoes.filter(
+    (col) => !col.parentCollection
+  );
+
+  const colecoesCarousel = colecoesPrincipais.map((col) => {
+    const idsSubcolecoes = todasColecoes
+      .filter((sub) => sub.parentCollection === col.id)
+      .map((sub) => sub.id);
+
+    const temEbooks = livros.some(
+      (livro) =>
+        livro.collection === col.id || idsSubcolecoes.includes(livro.collection)
+    );
+
+    return {
+      id: col.id,
+      name: col.name,
+      temEbooks,
+      subcolecoesCount: idsSubcolecoes.length,
+    };
+  });
 
   return (
     <main>
