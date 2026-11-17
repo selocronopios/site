@@ -1,14 +1,18 @@
 'use client';
 
 import Link from 'next/link';
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
+import HCaptcha from '@hcaptcha/react-hcaptcha';
 
 export default function Publique() {
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+  const captchaRef = useRef<HCaptcha>(null);
   const [aceito, setAceito] = useState(false);
   const [formatado, setFormatado] = useState(false);
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState('');
   const [file, setFile] = useState<File | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [errors, setErrors] = useState<{ email?: string; telefone?: string }>(
     {}
   );
@@ -32,7 +36,6 @@ export default function Publique() {
 
     setFormData((prev) => ({ ...prev, telefone: formatted }));
 
-    // validação em tempo real
     setErrors((prev) => ({
       ...prev,
       telefone: /^\(\d{2}\) \d{5}-\d{4}$/.test(formatted)
@@ -83,9 +86,14 @@ export default function Publique() {
       telefone: '',
     });
     setFile(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
     setAceito(false);
     setFormatado(false);
     setErrors({});
+    setCaptchaToken(null);
+    captchaRef.current?.resetCaptcha();
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -98,31 +106,85 @@ export default function Publique() {
     }
     if (!validateForm()) return;
 
+    if (!captchaToken) {
+      setStatus(
+        'Por favor, confirme a verificação de segurança (captcha) antes de enviar.'
+      );
+      return;
+    }
+
+    const web3FormsKey = process.env.NEXT_PUBLIC_WEB3FORMS_KEY;
+    if (!web3FormsKey) {
+      setStatus('Chave de envio de e-mail não configurada.');
+      return;
+    }
+
     setLoading(true);
 
-    const form = new FormData();
-    form.append('autores', formData.autores);
-    form.append('afiliacao', formData.afiliacao);
-    form.append('title', formData.title);
-    form.append('email', formData.email);
-    form.append('telefone', formData.telefone);
-    form.append('file', file);
-
     try {
-      const res = await fetch('/api/enviar-proposta', {
+      // 1. Solicita a URL pré-assinada ao backend
+      const resUrl = await fetch('/api/enviar-proposta', {
         method: 'POST',
-        body: form,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          fileName: file.name,
+          fileType: file.type,
+          fileSize: file.size,
+        }),
       });
 
-      if (!res.ok) throw new Error(`Status ${res.status}`);
+      const dataUrl = await resUrl.json();
+      if (!resUrl.ok) {
+        throw new Error(
+          dataUrl.detalhe || dataUrl.error || `Erro ${resUrl.status}`
+        );
+      }
 
-      const data = await res.json();
+      const { uploadUrl, downloadUrl, contentType } = dataUrl;
 
-      if (data.success) {
+      // 2. Envia o arquivo direto do navegador para o Backblaze B2
+      const resUpload = await fetch(uploadUrl, {
+        method: 'PUT',
+        headers: { 'Content-Type': contentType },
+        body: file,
+      });
+
+      if (!resUpload.ok) {
+        throw new Error('Falha ao transferir o arquivo para o servidor.');
+      }
+
+      // 3. Dispara os dados da proposta + link temporário para o e-mail do selo
+      const resEmail = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          access_key: web3FormsKey,
+          'h-captcha-response': captchaToken,
+          subject: `Nova Proposta Editorial: ${formData.title}`,
+          from_name: 'Cronópios Selo Editorial',
+          replyto: formData.email,
+          Autores: formData.autores,
+          Afiliação: formData.afiliacao,
+          Título: formData.title,
+          'E-mail de contato': formData.email,
+          Telefone: formData.telefone,
+          Arquivo: `${file.name} (${(file.size / (1024 * 1024)).toFixed(2)} MB)`,
+          'Link para download (válido por 7 dias)': downloadUrl,
+        }),
+      });
+
+      const dataEmail = await resEmail.json();
+
+      if (resEmail.ok && dataEmail.success) {
         setStatus('Proposta enviada com sucesso!');
         resetForm();
       } else {
-        setStatus(data.message || 'Erro ao enviar proposta.');
+        setCaptchaToken(null);
+        captchaRef.current?.resetCaptcha();
+        setStatus(
+          dataEmail.message ||
+            'Arquivo enviado, mas houve erro ao notificar por e-mail.'
+        );
       }
     } catch (err) {
       setStatus(err instanceof Error ? err.message : 'Erro desconhecido');
@@ -245,6 +307,7 @@ export default function Publique() {
           <div className="flex flex-col gap-1 md:col-span-2">
             <label>Arquivo:</label>
             <input
+              ref={fileInputRef}
               type="file"
               accept=".pdf"
               onChange={handleFileChange}
@@ -290,6 +353,16 @@ export default function Publique() {
             </a>
             .
           </label>
+        </div>
+
+        <div className="mt-2">
+          <HCaptcha
+            ref={captchaRef}
+            sitekey="50b2fe65-b00b-4b9e-ad62-3ba471098be2"
+            reCaptchaCompat={false}
+            onVerify={(token) => setCaptchaToken(token)}
+            onExpire={() => setCaptchaToken(null)}
+          />
         </div>
 
         <button

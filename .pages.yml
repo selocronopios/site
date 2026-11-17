@@ -9,28 +9,23 @@ content:
     path: src/content/colecoes
     format: json
     view:
-      fields: [titulo, ordem]
-      primary: titulo
-      sort: [ordem, titulo]
+      fields: [name, order]
+      primary: name
+      sort: [order, name]
     fields:
-      - name: titulo
+      - name: name
         label: Nome da Coleção
         type: string
         required: true
-      - name: descricao
+      - name: description
         label: Descrição / Ementa
         type: text
-      - name: colecaoPai
+      - name: parentCollection
         label: Coleção Pai (opcional, para subcoleções)
         type: reference
         options:
           collection: colecoes
-      - name: imagem
-        label: Imagem de Capa da Coleção
-        type: image
-        options:
-          extensions: [jpg, jpeg, png, webp]
-      - name: ordem
+      - name: order
         label: Ordem de exibição
         type: number
         default: 1
@@ -41,61 +36,79 @@ content:
     path: src/content/ebooks
     format: json
     view:
-      fields: [titulo, autores, colecao, ano, publicado]
-      primary: titulo
-      sort: [ano, titulo]
+      fields: [title, collection, year, published]
+      primary: title
+      sort: [created_at, title]
     fields:
-      - name: titulo
-        label: Título da Obra
+      - name: title
+        label: Título
         type: string
         required: true
-      - name: subtitulo
+      - name: subtitle
         label: Subtítulo
         type: string
-      - name: autores
-        label: Autores / Organizadores
-        type: string
-        required: true
-      - name: colecao
+      - name: collection
         label: Coleção
         type: reference
         required: true
         options:
           collection: colecoes
-      - name: ano
-        label: Ano de Publicação
+      - name: authors
+        label: Autores / Organizadores
+        type: list
+        required: true
+      - name: keywords
+        label: Palavras-chave
+        type: list
+      - name: description
+        label: Sinopse / Descrição
+        type: text
+        required: true
+      - name: authorship
+        label: Autoria (Minibiografia)
+        type: text
+      - name: summary
+        label: Sumário
+        type: text
+      - name: publisher
+        label: Editora
+        type: string
+        default: Cronópios Selo Editorial
+      - name: year
+        label: Ano de publicação
         type: number
         required: true
+      - name: edition
+        label: Edição
+        type: string
+        default: 1ª
+      - name: pages
+        label: Páginas
+        type: number
+      - name: format
+        label: Formato
+        type: string
+        default: PDF (eBook)
       - name: isbn
         label: ISBN
         type: string
-      - name: paginas
-        label: Número de Páginas
-        type: number
-      - name: sinopse
-        label: Sinopse / Resumo
-        type: text
-        required: true
-      - name: palavrasChave
-        label: Palavras-chave
-        type: list
-      - name: capa
-        label: Capa do E-book
+      - name: cover
+        label: Capa do eBook
         type: image
         required: true
         options:
           extensions: [jpg, jpeg, png, webp]
       - name: pdf
-        label: Arquivo PDF do E-book
+        label: Arquivo PDF do eBook
         type: file
         required: true
         options:
           extensions: [pdf]
-      - name: destaque
-        label: Destacar na página inicial?
-        type: boolean
-        default: false
-      - name: publicado
+      - name: created_at
+        label: Data de adição ao catálogo
+        type: date
+        required: true
+      - name: published
         label: Publicado no site?
         type: boolean
         default: true

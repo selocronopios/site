@@ -13,7 +13,6 @@ export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
 
-  const isAdmin = pathName.startsWith('/admin');
   const isMaintenance = process.env.NEXT_PUBLIC_MAINTENANCE_MODE === 'true';
 
   const handleSearch = (e: React.FormEvent) => {
@@ -25,7 +24,7 @@ export default function Header() {
     setMenuOpen(false);
   };
 
-  if (isAdmin || isMaintenance) return null;
+  if (isMaintenance) return null;
 
   const links = [
     { href: '/quem-somos-nos', label: 'Quem somos nós' },
