@@ -8,6 +8,7 @@ content:
     type: collection
     path: src/content/colecoes
     format: json
+    filename: "{primary}.json"
     view:
       fields: [name, order]
       primary: name
@@ -35,6 +36,7 @@ content:
     type: collection
     path: src/content/ebooks
     format: json
+    filename: "{primary}.json"
     view:
       fields: [title, collection, year, published]
       primary: title
