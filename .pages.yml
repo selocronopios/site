@@ -1,0 +1,101 @@
+media:
+  input: public/acervo
+  output: /acervo
+
+content:
+  - name: colecoes
+    label: Coleções
+    type: collection
+    path: src/content/colecoes
+    format: json
+    view:
+      fields: [titulo, ordem]
+      primary: titulo
+      sort: [ordem, titulo]
+    fields:
+      - name: titulo
+        label: Nome da Coleção
+        type: string
+        required: true
+      - name: descricao
+        label: Descrição / Ementa
+        type: text
+      - name: colecaoPai
+        label: Coleção Pai (opcional, para subcoleções)
+        type: reference
+        options:
+          collection: colecoes
+      - name: imagem
+        label: Imagem de Capa da Coleção
+        type: image
+        options:
+          extensions: [jpg, jpeg, png, webp]
+      - name: ordem
+        label: Ordem de exibição
+        type: number
+        default: 1
+
+  - name: ebooks
+    label: E-books
+    type: collection
+    path: src/content/ebooks
+    format: json
+    view:
+      fields: [titulo, autores, colecao, ano, publicado]
+      primary: titulo
+      sort: [ano, titulo]
+    fields:
+      - name: titulo
+        label: Título da Obra
+        type: string
+        required: true
+      - name: subtitulo
+        label: Subtítulo
+        type: string
+      - name: autores
+        label: Autores / Organizadores
+        type: string
+        required: true
+      - name: colecao
+        label: Coleção
+        type: reference
+        required: true
+        options:
+          collection: colecoes
+      - name: ano
+        label: Ano de Publicação
+        type: number
+        required: true
+      - name: isbn
+        label: ISBN
+        type: string
+      - name: paginas
+        label: Número de Páginas
+        type: number
+      - name: sinopse
+        label: Sinopse / Resumo
+        type: text
+        required: true
+      - name: palavrasChave
+        label: Palavras-chave
+        type: list
+      - name: capa
+        label: Capa do E-book
+        type: image
+        required: true
+        options:
+          extensions: [jpg, jpeg, png, webp]
+      - name: pdf
+        label: Arquivo PDF do E-book
+        type: file
+        required: true
+        options:
+          extensions: [pdf]
+      - name: destaque
+        label: Destacar na página inicial?
+        type: boolean
+        default: false
+      - name: publicado
+        label: Publicado no site?
+        type: boolean
+        default: true
