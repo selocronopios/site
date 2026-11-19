@@ -1,5 +1,15 @@
 import Image from 'next/image';
 import React from 'react';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Equipe e Conselho Editorial',
+  description:
+    'Conheça os pesquisadores, coordenadores e o conselho editorial do projeto História Intelectual (UFMG) e do Selo Cronópios.', // 124 caracteres
+  alternates: {
+    canonical: '/quem-somos-nos',
+  },
+};
 
 const membros = [
   {

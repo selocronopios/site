@@ -1,8 +1,18 @@
 /** @type {import('next-sitemap').IConfig} */
 module.exports = {
-  siteUrl: 'https://www.historiaintelectualufmg.com.br',
-  generateRobotsTxt: true, // também cria o robots.txt
-  changefreq: 'weekly',
-  priority: 0.7,
-  sitemapSize: 5000,
+  siteUrl:
+    process.env.NEXT_PUBLIC_SITE_URL ||
+    'https://historiaintelectualufmg.com.br',
+  generateRobotsTxt: true,
+  generateIndexSitemap: false,
+  exclude: ['/api/*', '/404', '/500'],
+  robotsTxtOptions: {
+    policies: [
+      {
+        userAgent: '*',
+        allow: '/',
+        disallow: ['/api/'],
+      },
+    ],
+  },
 };

@@ -53,8 +53,8 @@ module.exports = {
         },
       },
       fontFamily: {
-        merriweather: ['Merriweather', 'serif'],
-        roboto: ['Roboto', 'sans-serif'],
+        merriweather: ['var(--font-merriweather)', 'serif'],
+        roboto: ['var(--font-roboto)', 'sans-serif'],
       },
       fontSize: {
         h1: ['36px', { lineHeight: '47px', fontWeight: '700' }],

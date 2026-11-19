@@ -7,14 +7,6 @@ export interface Colecao {
   description?: string;
   parentCollection?: string | null;
   order: number;
-}
-
-export interface Colecao {
-  id: string;
-  name: string;
-  description?: string;
-  parentCollection?: string | null;
-  order: number;
   subcolecoesCount?: number;
 }
 
@@ -137,4 +129,16 @@ export function getEbookPorId(id: string): Ebook | undefined {
 
 export function getEbooksPorColecao(colecaoId: string): Ebook[] {
   return getEbooks().filter((ebook) => ebook.collection === colecaoId);
+}
+
+export function resumirParaSeo(
+  texto: string | undefined,
+  fallback: string
+): string {
+  if (!texto || !texto.trim()) return fallback;
+
+  const limpo = texto.replace(/\s+/g, ' ').trim();
+  if (limpo.length <= 155) return limpo;
+
+  return `${limpo.slice(0, 152).replace(/\s+\S*$/, '')}...`;
 }

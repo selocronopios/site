@@ -1,3 +1,4 @@
+// src/app/colecoes/[id]/page.tsx
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import CatalogoGrid from '@/components/CatalogoGrid';
@@ -6,7 +7,46 @@ import {
   getColecoes,
   getEbooks,
   getEbooksPorColecao,
+  resumirParaSeo,
 } from '@/lib/acervo';
+import type { Metadata } from 'next';
+
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL || 'https://historiaintelectualufmg.com.br';
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const { id } = await params;
+  const colecao = getColecaoPorId(id);
+
+  if (!colecao) return {};
+
+  const fallback = `Explore os e-books gratuitos da coleção "${colecao.name}" no portal História Intelectual (UFMG). Obras acadêmicas em acesso aberto.`;
+  const descricaoSeo = resumirParaSeo(colecao.description, fallback);
+  const urlColecao = `${siteUrl}/colecoes/${colecao.id}`;
+
+  return {
+    title: colecao.name,
+    description: descricaoSeo,
+    alternates: {
+      canonical: `/colecoes/${colecao.id}`,
+    },
+    openGraph: {
+      type: 'website',
+      url: urlColecao,
+      title: `${colecao.name} | História Intelectual`,
+      description: descricaoSeo,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${colecao.name} | História Intelectual`,
+      description: descricaoSeo,
+    },
+  };
+}
 
 export function generateStaticParams() {
   return getColecoes().map((col) => ({ id: col.id }));
@@ -36,8 +76,95 @@ export default async function ColecaoPage({
     (col) => col.parentCollection === id
   );
 
+  const urlColecao = `${siteUrl}/colecoes/${colecao.id}`;
+
+  const itensLista =
+    ebooks.length > 0
+      ? ebooks.map((livro, index) => ({
+          '@type': 'ListItem',
+          position: index + 1,
+          url: `${siteUrl}/ebooks/${livro.id}`,
+          name: livro.title,
+        }))
+      : subcolecoes.map((sub, index) => ({
+          '@type': 'ListItem',
+          position: index + 1,
+          url: `${siteUrl}/colecoes/${sub.id}`,
+          name: sub.name,
+        }));
+
+  const collectionJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: colecao.name,
+    description: colecao.description || undefined,
+    url: urlColecao,
+    inLanguage: 'pt-BR',
+    isPartOf: colecaoPai
+      ? {
+          '@type': 'CollectionPage',
+          name: colecaoPai.name,
+          url: `${siteUrl}/colecoes/${colecaoPai.id}`,
+        }
+      : {
+          '@type': 'WebSite',
+          name: 'História Intelectual: Pesquisa e Extensão',
+          url: siteUrl,
+        },
+    mainEntity:
+      itensLista.length > 0
+        ? {
+            '@type': 'ItemList',
+            numberOfItems: itensLista.length,
+            itemListElement: itensLista,
+          }
+        : undefined,
+  };
+
+  const breadcrumbJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: 'Início',
+        item: siteUrl,
+      },
+      ...(colecaoPai
+        ? [
+            {
+              '@type': 'ListItem',
+              position: 2,
+              name: colecaoPai.name,
+              item: `${siteUrl}/colecoes/${colecaoPai.id}`,
+            },
+          ]
+        : []),
+      {
+        '@type': 'ListItem',
+        position: colecaoPai ? 3 : 2,
+        name: colecao.name,
+        item: urlColecao,
+      },
+    ],
+  };
+
   return (
-    <main>
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(collectionJsonLd).replace(/</g, '\\u003c'),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(breadcrumbJsonLd).replace(/</g, '\\u003c'),
+        }}
+      />
+
       <div className="bg-background p-8 max-w-7xl mx-auto px-4 space-y-8">
         {/* Trilha de navegação quando for uma subcoleção */}
         {colecaoPai && (
@@ -154,6 +281,6 @@ export default async function ColecaoPage({
           </section>
         )}
       </div>
-    </main>
+    </>
   );
 }

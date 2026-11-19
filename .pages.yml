@@ -1,6 +1,14 @@
 media:
-  input: public/acervo
-  output: /acervo
+  - name: capas
+    label: Capas dos E-books
+    input: public/acervo/capas
+    output: /acervo/capas
+    categories: [image]
+  - name: ebooks
+    label: E-books (PDF)
+    input: public/acervo/ebooks
+    output: /acervo/ebooks
+    extensions: [pdf]
 
 content:
   - name: colecoes
@@ -8,7 +16,7 @@ content:
     type: collection
     path: src/content/colecoes
     format: json
-    filename: "{primary}.json"
+    filename: '{primary}.json'
     view:
       fields: [titulo, ordem]
       primary: titulo
@@ -27,11 +35,12 @@ content:
         options:
           collection: colecoes
           search: titulo
-          value: "{slug}"
+          value: '{slug}'
       - name: imagem
         label: Imagem / Logo da Coleção
         type: image
         options:
+          media: capas
           extensions: [jpg, jpeg, png, webp, svg]
       - name: ordem
         label: Ordem de exibição
@@ -43,7 +52,7 @@ content:
     type: collection
     path: src/content/ebooks
     format: json
-    filename: "{primary}.json"
+    filename: '{primary}.json'
     view:
       fields: [title, collection, year, published]
       primary: title
@@ -108,12 +117,14 @@ content:
         type: image
         required: true
         options:
+          media: capas
           extensions: [jpg, jpeg, png, webp]
       - name: pdf
         label: Arquivo PDF do eBook
         type: file
         required: true
         options:
+          media: ebooks
           extensions: [pdf]
       - name: created_at
         label: Data de adição ao catálogo

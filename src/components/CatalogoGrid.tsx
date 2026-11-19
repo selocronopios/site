@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import type { Ebook } from '@/lib/acervo';
 
 const porPagina = 12;
@@ -37,6 +38,7 @@ export default function CatalogoGrid({
     <>
       <div className="flex justify-end">
         <select
+          aria-label="Ordenar catálogo"
           value={ordem}
           onChange={(e) => {
             setOrdem(e.target.value as 'alfabetica' | 'created_at');
@@ -50,15 +52,26 @@ export default function CatalogoGrid({
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 px-4 py-8">
-        {livrosPagina.map((livro) => (
-          <Link key={livro.id} href={`/ebooks/${livro.id}`}>
+        {livrosPagina.map((livro, index) => (
+          <Link key={livro.id} href={`/ebooks/${livro.id}`} className="group">
             <div className="p-4 flex flex-col items-center">
-              <img
-                src={livro.cover}
-                alt={livro.title}
-                className="w-48 h-full object-cover rounded mb-2"
-              />
-              <span className="text-sm text-center font-medium text-text">
+              <div className="relative w-48 aspect-[2/3] overflow-hidden rounded mb-2 bg-gray-100 shadow-sm">
+                {livro.cover ? (
+                  <Image
+                    src={livro.cover}
+                    alt={`Capa do livro ${livro.title}`}
+                    fill
+                    priority={paginaAtual === 1 && index < 4}
+                    sizes="192px"
+                    className="object-cover transition-transform duration-300 group-hover:scale-105"
+                  />
+                ) : (
+                  <div className="flex h-full w-full items-center justify-center p-4 text-center text-xs text-gray-500">
+                    {livro.title}
+                  </div>
+                )}
+              </div>
+              <span className="text-sm text-center font-medium text-text group-hover:underline">
                 {livro.title}
               </span>
             </div>
