@@ -57,7 +57,7 @@ export default function ColecoesCarousel({ colecoes }: ColecoesCarouselProps) {
           return clicavel ? (
             <Link
               key={id}
-              href={`/colecoes/${id}`}
+              href={`/selo-cronopios/acervo/${id}`}
               className={`keen-slider__slide min-w-[160px] max-w-[210px] font-medium rounded p-4 shadow text-left flex flex-col justify-between transition-colors ${
                 temEbooks
                   ? 'bg-primary text-white hover:bg-primary/80'

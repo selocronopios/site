@@ -1,6 +1,5 @@
 import Maintenance from '@/components/Maintenance';
 import { Body } from '@/components/Typography';
-import Image from 'next/image';
 import Link from 'next/link';
 import type { Metadata } from 'next';
 
@@ -13,7 +12,7 @@ export const metadata: Metadata = {
       'História Intelectual: Pesquisa e Extensão | UFMG e Selo Cronópios',
   },
   description:
-    'Plataforma colaborativa dos grupos de pesquisa e extensão em História Intelectual da UFMG e do Cronópios Selo Editorial, com e-books científicos gratuitos em acesso aberto.',
+    'Plataforma colaborativa dos grupos de pesquisa e extensão em História Intelectual da UFMG e do Selo Editorial Cronópios, com e-books científicos gratuitos em acesso aberto.',
   alternates: {
     canonical: '/',
   },
@@ -22,7 +21,7 @@ export const metadata: Metadata = {
     url: siteUrl,
     title: 'História Intelectual: Pesquisa e Extensão',
     description:
-      'Plataforma colaborativa dos grupos de pesquisa e extensão em História Intelectual da UFMG e do Cronópios Selo Editorial.',
+      'Plataforma colaborativa dos grupos de pesquisa e extensão em História Intelectual da UFMG e do Selo Editorial Cronópios.',
     images: [`${siteUrl}/logo-selo.png`],
   },
   twitter: {
@@ -45,7 +44,7 @@ export default function Home() {
     '@context': 'https://schema.org',
     '@type': 'Organization',
     name: 'História Intelectual: Pesquisa e Extensão',
-    alternateName: 'Cronópios Selo Editorial',
+    alternateName: 'Selo Editorial Cronópios',
     url: siteUrl,
     logo: `${siteUrl}/logo-600.png`,
     parentOrganization: {
@@ -144,7 +143,7 @@ export default function Home() {
           O grupo organiza seminários de alcance nacional e internacional,
           editais para a apresentação de pesquisas, realiza conferências e
           exposições, além de fomentar o intercâmbio com outros grupos de
-          congêêneres, tanto no Brasil quanto no exterior. Em síntese, o grupo
+          congêneres, tanto no Brasil quanto no exterior. Em síntese, o grupo
           busca consolidar-se como espaço de suporte às investigações na área,
           como à formação de novos pesquisadores.
         </Body>
@@ -163,7 +162,7 @@ export default function Home() {
           pesquisa, extensão e divulgação científica, o grupo busca ampliar os
           debates sobre o tema, estabelecendo conexões com pesquisadores e
           docentes em âmbito nacional e internacional e, de forma abrangente, o
-          o público externo à academia – como escolas, associações culturais e
+          público externo à academia – como escolas, associações culturais e
           movimentos sociais.
         </Body>
 
@@ -171,12 +170,15 @@ export default function Home() {
           O grupo reúne pesquisadores, estudantes de graduação e pós-graduação
           (inclusive egressos) da UFMG, além de participantes externos dedicados
           temas correlatos à História Intelectual. No campo da divulgação
-          científica, promove eventos nacionais e internacionais e gerencia o
-          Cronópios Selo Editorial, comprometido com a democratização do
-          conhecimento produzido por pesquisadoras e pesquisadores da área. A
-          proposta é publicar e-books de acesso gratuito, disponíveis para
-          download neste site, constituindo um instrumento ágil de comunicação e
-          de difusão de produções acadêmicas.
+          científica, promove eventos nacionais e internacionais e gerencia o{' '}
+          <Link href="/selo-cronopios" className="text-primary underline">
+            Selo Editorial Cronópios
+          </Link>
+          , comprometido com a democratização do conhecimento produzido por
+          pesquisadoras e pesquisadores da área. A proposta é publicar e-books
+          de de acesso gratuito, disponíveis para download neste site, constitui
+          n um um instrumento ágil de comunicação e de difusão de produç ões
+          acadêmicas.
         </Body>
 
         <Body>
@@ -191,53 +193,6 @@ export default function Home() {
           explorar o cenário cultural da capital por meio do estudo da
           literatura, do cinema e da imprensa e a realização e promoção do
           podcast do grupo Intelecções e Contextus.
-        </Body>
-
-        <h2 className="heading-h2 text-primary text-center">
-          Cronópios Selo Editorial
-        </h2>
-
-        <div className="flex justify-center">
-          <Image
-            src="/logo-selo.png"
-            alt="Logo do Cronópios Selo Editorial"
-            width={600}
-            height={300}
-            className="h-auto object-cover w-full max-w-md"
-            priority
-          />
-        </div>
-
-        <Body>
-          A criação do selo editorial representa um passo importante para
-          democratizar o acesso ao conhecimento acadêmico e valorizar a produção
-          científica nacional. A disponibilização gratuita dos e-books amplia o
-          alcance dessas pesquisas, promovendo a divulgação científica e
-          contribuindo para a formação crítica e cidadã de leitores dentro e do
-          do meio acadêmico.
-        </Body>
-        <Body>
-          O selo editorial é destinado à divulgação de pesquisas científicas,
-          fruto de dissertações e teses, por meio de e-books gratuitos
-          organizados em seis coleções: Itinerários da História Intelectual;
-          História Intelectual em Perspectiva (Trans)nacional; História
-          Intelectual, Esfera Pública e Cultura Impressa; História Intelectual e
-          Gênero; História Intelectual e Decolonialidade; e História Intelectual
-          e Culturas Políticas.
-        </Body>
-
-        <Body>
-          A coleção História Intelectual e Gênero contará com uma subcoleção
-          intitulada Dicionário Biográfico de Mulheres Brasileiras, composta por
-          livros que apresentam trajetórias de mulheres na universidade, na
-          ciência, na política, nos movimentos sociais, entre outros campos. Os
-          trabalhos serão selecionados por meio de editais previamente
-          publicados no site, de acordo com as regras estabelecidas. Para saber
-          mais,{' '}
-          <Link href="/publique-conosco" className="text-primary underline">
-            clique aqui
-          </Link>
-          .
         </Body>
       </div>
     </>

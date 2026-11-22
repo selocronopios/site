@@ -53,7 +53,11 @@ export default function CatalogoGrid({
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 px-4 py-8">
         {livrosPagina.map((livro, index) => (
-          <Link key={livro.id} href={`/ebooks/${livro.id}`} className="group">
+          <Link
+            key={livro.slug}
+            href={`/selo-cronopios/acervo/ebooks/${livro.slug}`}
+            className="group"
+          >
             <div className="p-4 flex flex-col items-center">
               <div className="relative w-48 aspect-[2/3] overflow-hidden rounded mb-2 bg-gray-100 shadow-sm">
                 {livro.cover ? (

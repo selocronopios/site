@@ -38,9 +38,10 @@ export default function Footer() {
       </div>
 
       <div className="bg-primary text-white text-sm px-4 py-2 flex justify-between items-center">
-        <p>
-          ©2025 História Intelectual: pesquisa e extensão. Todos os direitos
-          reservados.
+        <p suppressHydrationWarning>
+          {' '}
+          ©{new Date().getFullYear()} História Intelectual: pesquisa e
+          extensão. Todos os direitos reservados.
         </p>
       </div>
     </footer>

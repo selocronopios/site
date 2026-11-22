@@ -44,3 +44,5 @@ next-env.d.ts
 #sitemap e robot
 public/sitemap*.xml
 public/robots.txt
+
+lista.md

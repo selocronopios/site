@@ -1,23 +1,56 @@
 import Image from 'next/image';
-import React from 'react';
 import type { Metadata } from 'next';
 
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL || 'https://historiaintelectualufmg.com.br';
+
+interface Membro {
+  nome: string;
+  funcao: string;
+  titulacao: string;
+  lattes: string;
+  foto: string;
+  cargoCoordenacao?: string;
+}
+
 export const metadata: Metadata = {
-  title: 'Equipe e Conselho Editorial',
+  title: 'Quem Somos — Grupo de Pesquisa História Intelectual (UFMG)',
   description:
-    'Conheça os pesquisadores, coordenadores e o conselho editorial do projeto História Intelectual (UFMG) e do Selo Cronópios.', // 124 caracteres
+    'Conheça a coordenação e os pesquisadores do Grupo de Pesquisa “História Intelectual: práticas, narrativas e circulação de ideias” (UFMG/CNPq).',
   alternates: {
     canonical: '/quem-somos-nos',
   },
+  openGraph: {
+    type: 'website',
+    url: `${siteUrl}/quem-somos-nos`,
+    title: 'Quem Somos | História Intelectual (UFMG)',
+    description:
+      'Grupo de Pesquisa “História Intelectual: práticas, narrativas e circulação de ideias” (UFMG/CNPq).',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Quem Somos | História Intelectual (UFMG)',
+    description:
+      'Grupo de Pesquisa “História Intelectual: práticas, narrativas e circulação de ideias” (UFMG/CNPq).',
+  },
 };
 
-const membros = [
+const membros: Membro[] = [
   {
     nome: 'Adriane Vidal Costa',
     funcao: 'Professora do Departamento de História',
     titulacao: 'Universidade Federal de Minas Gerais (UFMG)',
     lattes: 'https://lattes.cnpq.br/9890139156631559',
     foto: '/membros/AdrianeCosta.webp',
+    cargoCoordenacao: 'Coordenação do Grupo',
+  },
+  {
+    nome: 'Stella Ferreira Gontijo',
+    funcao: 'Doutora em História',
+    titulacao: 'Universidade Federal de Minas Gerais (UFMG)',
+    lattes: 'https://lattes.cnpq.br/4794994866272483',
+    foto: '/membros/StellaGontijo.webp',
+    cargoCoordenacao: 'Vice-Coordenação do Grupo',
   },
   {
     nome: 'André Luis Martins Amaral',
@@ -112,7 +145,7 @@ const membros = [
   },
   {
     nome: 'Laize Costa Barbosa Lacerda',
-    funcao: 'Licenciada em História. Graduanda Bacharel em História',
+    funcao: 'Licenciada em História · Graduanda Bacharel em História',
     titulacao: 'Universidade Federal de Minas Gerais (UFMG)',
     lattes: 'https://lattes.cnpq.br/0452292391314586',
     foto: '/membros/LaizeLacerda.webp',
@@ -120,7 +153,7 @@ const membros = [
   {
     nome: 'Mariana Oliveira Cruz',
     funcao: 'Graduada em História',
-    titulacao: 'Fundação João Pinheiro/Fapemig',
+    titulacao: 'Fundação João Pinheiro / FAPEMIG',
     lattes: 'https://lattes.cnpq.br/2315905575280846',
     foto: '/membros/MarianaCruz.webp',
   },
@@ -149,7 +182,7 @@ const membros = [
     nome: 'Taciana Almeida Garrido de Resende',
     funcao: 'Doutora em História',
     titulacao: 'Universidade Federal de Minas Gerais (UFMG)',
-    lattes: 'http://lattes.cnpq.br/9042114986463823',
+    lattes: 'https://lattes.cnpq.br/9042114986463823',
     foto: '/membros/TacianaResende.webp',
   },
   {
@@ -159,269 +192,232 @@ const membros = [
     lattes: 'https://lattes.cnpq.br/1537876901491256',
     foto: '/membros/VitorPereira.webp',
   },
-  {
-    nome: 'Stella Ferreira Gontijo',
-    funcao: 'Doutora em História',
-    titulacao: 'Universidade Federal de Minas Gerais (UFMG)',
-    lattes: 'https://lattes.cnpq.br/4794994866272483',
-    foto: '/membros/StellaGontijo.webp',
-  },
 ];
 
-export default function QuemSomos() {
+function IconeLattes() {
   return (
-    <div className="bg-background text-text">
-      {/* Title */}
-      <div className="max-w-7xl mx-auto p-4 sm:p-6 md:p-8 text-center">
-        <h1 className="heading-h1 text-primary">Quem Somos</h1>
-        <p className="mt-2 text-base sm:text-lg">
-          Grupo de Pesquisa “História Intelectual: práticas, narrativas e
-          circulação de ideias” (UFMG/CNPq)
-        </p>
-      </div>
-
-      {/* Grid de Membros */}
-      <div className="max-w-7xl mx-auto p-4 sm:p-6 md:p-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {membros.map((membro, index) => (
-          <div
-            key={index}
-            className="bg-white shadow-md rounded-lg overflow-hidden flex flex-col items-center text-center p-4"
-          >
-            {membro.foto && (
-              <Image
-                src={membro.foto}
-                alt={membro.nome}
-                width={150}
-                height={150}
-                className="rounded-full object-cover w-32 h-32 mb-4"
-                priority={index < 8}
-              />
-            )}
-            <h2 className="font-semibold text-lg">{membro.nome}</h2>
-            <p className="text-sm mt-1">{membro.funcao}</p>
-            <p className="text-sm">{membro.titulacao}</p>
-            {membro.lattes && (
-              <a
-                href={membro.lattes}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-2 text-blue-600 underline inline-flex items-center gap-1"
-              >
-                Lattes
-              </a>
-            )}
-          </div>
-        ))}
-      </div>
-
-      {/* Editorial */}
-      <div className="bg-selectionLight w-full py-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 space-y-8">
-          <h2 className="heading-h2 text-secondary text-center">
-            Cronópios Selo Editorial
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-6 items-start">
-            {/* Logo */}
-            <div className="flex justify-center md:justify-start">
-              <Image
-                src="/selo.png"
-                alt="Selo Cronópios Editorial"
-                width={450}
-                height={300}
-                className="h-auto object-cover rounded-md"
-                priority
-              />
-            </div>
-
-            {/* Coordenação Geral + Conselho Editorial */}
-            <div className="md:col-span-2 flex flex-col gap-6">
-              {/* Coordenação Geral */}
-              <div className="p-4 text-center">
-                <h4 className="font-semibold text-lg mb-2">
-                  Coordenação Geral
-                </h4>
-                <p>Adriane Vidal Costa (UFMG)</p>
-              </div>
-
-              {/* Conselho Editorial */}
-              <div className="p-4">
-                <h4 className="font-semibold text-lg mb-4 text-center">
-                  Conselho Editorial
-                </h4>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
-                  <p>Alexandra Pita González (Universidad de Colima, México)</p>
-                  <p>Ana Amélia de Melo (UEC, Brasil)</p>
-                  <p>Carine Dalmás (UEMA, Brasil)</p>
-                  <p>Carlos Armani (UFSM, Brasil)</p>
-                  <p>Claudio Maíz (UNCuyo, Argentina)</p>
-                  <p>Eduardo Devés Valdés (Usach, Chile)</p>
-                  <p>Eliana R. de Freitas Dutra (UFMG, Brasil)</p>
-                  <p>Elisa Campos Borges (UFF, Brasil)</p>
-                  <p>Giselle Venâncio (UFF, Brasil)</p>
-                  <p>Heloisa Maria Murgel Starling (UFMG, Brasil)</p>
-                  <p>Inés de Torres (UDELAR, Uruguai)</p>
-                  <p>José Alves de Freitas Neto (UNICAMP, Brasil)</p>
-                  <p>Liliana Weinberg (UNAM, México)</p>
-                  <p>Maria Elisa Noronha de Sá (PUC-Rio, Brasil)</p>
-                  <p>Maria da Gloria de Oliveira (UFRRJ, Brasil)</p>
-                  <p>Petrônio Domingues (UFS)</p>
-                  <p>Rafael Araújo (UERJ, Brasil)</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 20 20"
+      fill="currentColor"
+      className="h-3.5 w-3.5 shrink-0"
+      aria-hidden="true"
+    >
+      <path
+        fillRule="evenodd"
+        d="M4.25 5.5a.75.75 0 0 0-.75.75v8.5c0 .414.336.75.75.75h8.5a.75.75 0 0 0 .75-.75v-4a.75.75 0 0 1 1.5 0v4A2.25 2.25 0 0 1 12.75 17h-8.5A2.25 2.25 0 0 1 2 14.75v-8.5A2.25 2.25 0 0 1 4.25 4h5a.75.75 0 0 1 0 1.5h-5Z"
+        clipRule="evenodd"
+      />
+      <path
+        fillRule="evenodd"
+        d="M6.194 12.753a.75.75 0 0 0 1.06.053L16.5 4.44v2.81a.75.75 0 0 0 1.5 0v-4.5a.75.75 0 0 0-.75-.75h-4.5a.75.75 0 0 0 0 1.5h2.553l-9.056 8.194a.75.75 0 0 0-.053 1.06Z"
+        clipRule="evenodd"
+      />
+    </svg>
   );
 }
 
-// <div>
-//   <div className="bg-background p-8 max-w-7xl mx-auto px-4 space-y-8 text-justify">
-//     <h1 className="heading-h1 text-primary text-center">
-//       Grupo de Pesquisa “História Intelectual: práticas, narrativas e <br />{' '}
-//       circulação de ideias” (UFMG/CNPq)
-//     </h1>
+export default function QuemSomos() {
+  const coordenacao = membros.filter((m) => Boolean(m.cargoCoordenacao));
+  const pesquisadores = membros
+    .filter((m) => !m.cargoCoordenacao)
+    .sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'));
 
-//     <div
-//       className="grid gap-x-6 gap-y-4 items-center"
-//       style={{ gridTemplateColumns: 'auto 5rem 5rem auto' }}
-//     >
-//       {membrosAgrupados.map((par, i) => (
-//         <React.Fragment key={i}>
-//           {/* Lado esquerdo */}
-//           <div className="text-right space-y-1">
-//             <p>
-//               <strong>{par[0]?.nome}</strong>
-//             </p>
-//             <p>{par[0]?.funcao}</p>
-//             <p>{par[0]?.titulacao}</p>
-//             {par[0]?.lattes && (
-//               <p>
-//                 <a
-//                   href={par[0].lattes}
-//                   target="_blank"
-//                   rel="noopener noreferrer"
-//                   className="text-blue-600 underline"
-//                 >
-//                   {par[0].lattes}
-//                 </a>
-//               </p>
-//             )}
-//           </div>
+  const organizationJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'ResearchOrganization',
+    name: 'Grupo de Pesquisa História Intelectual: práticas, narrativas e circulação de ideias',
+    url: `${siteUrl}/quem-somos-nos`,
+    parentOrganization: {
+      '@type': 'CollegeOrUniversity',
+      name: 'Universidade Federal de Minas Gerais (UFMG)',
+    },
+    member: membros.map((membro) => ({
+      '@type': 'Person',
+      name: membro.nome,
+      jobTitle: membro.cargoCoordenacao
+        ? `${membro.cargoCoordenacao} · ${membro.funcao}`
+        : membro.funcao,
+      affiliation: {
+        '@type': 'Organization',
+        name: membro.titulacao,
+      },
+      sameAs: membro.lattes,
+    })),
+  };
 
-//           <div className="bg-gray-300 w-full max-w-[80px] h-auto flex items-center justify-center overflow-hidden">
-//             {par[0]?.foto && (
-//               <img
-//                 src={par[0].foto}
-//                 alt={par[0].nome}
-//                 className="h-full w-full object-cover"
-//               />
-//             )}
-//           </div>
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(organizationJsonLd).replace(/</g, '\\u003c'),
+        }}
+      />
 
-//           {/* Lado direito */}
-//           {par[1] ? (
-//             <>
-//               <div className="bg-gray-300 w-full max-w-[80px] h-auto flex items-center justify-center overflow-hidden">
-//                 {par[1]?.foto && (
-//                   <img
-//                     src={par[1].foto}
-//                     alt={par[1].nome}
-//                     className="h-full w-full object-cover"
-//                   />
-//                 )}
-//               </div>
+      <div className="bg-background text-text min-h-screen py-10 sm:py-12">
+        <div className="max-w-7xl mx-auto px-4 space-y-12">
+          {/* Cabeçalho Institucional */}
+          <header className="max-w-3xl mx-auto text-center space-y-4">
+            <span className="inline-flex items-center rounded-full bg-primary/10 px-3.5 py-1 text-xs font-semibold uppercase tracking-wider text-primary">
+              UFMG · CNPq
+            </span>
 
-//               <div className="text-left space-y-1">
-//                 <p>
-//                   <strong>{par[1]?.nome}</strong>
-//                 </p>
-//                 <p>{par[1]?.funcao}</p>
-//                 <p>{par[1]?.titulacao}</p>
-//                 {par[1]?.lattes && (
-//                   <p>
-//                     <a
-//                       href={par[1].lattes}
-//                       target="_blank"
-//                       rel="noopener noreferrer"
-//                       className="text-blue-600 underline"
-//                     >
-//                       {par[1].lattes}
-//                     </a>
-//                   </p>
-//                 )}
-//               </div>
-//             </>
-//           ) : (
-//             <>
-//               <div />
-//               <div />
-//             </>
-//           )}
-//         </React.Fragment>
-//       ))}
-//     </div>
-//   </div>
-//   <div className="bg-selectionLight w-full">
-//     <div className="max-w-7xl mx-auto p-8 space-y-8 text-justify">
-//       <h1 className="heading-h1 text-secondary text-center">
-//         Cronópios Selo Editorial
-//       </h1>
-//       <h2 className="heading-h2 text-secondary text-center">
-//         Equipe Editorial
-//       </h2>
-//       <div
-//         className="grid gap-x-6 gap-y-4"
-//         style={{ gridTemplateColumns: '28rem auto auto' }}
-//       >
-//         <div className="flex justify-left">
-//           <Image
-//             src="/selo.png"
-//             alt="Selo"
-//             width={450}
-//             height={300}
-//             className="h-auto object-cover"
-//             priority
-//           />
-//         </div>
-//         <div className="flex flex-col text-text text-center">
-//           <h3 className="heading-h3">Coordenação Geral</h3>
-//           <p className="body">Adriane Vidal Costa (UFMG)</p>
-//         </div>
-//         <div className="flex flex-col text-text text-center">
-//           <h3 className="heading-h3">Conselho Editorial</h3>
-//           <p className="body">
-//             Alexandra Pita González (Universidad de Colima, México)
-//           </p>
-//           <p className="body">Ana Amélia de Melo (UEC, Brasil)</p>
-//           <p className="body">Carine Dalmás (UEMA, Brasil)</p>
-//           <p className="body">Carlos Armani (UFSM, Brasil)</p>
-//           <p className="body">Claudio Maíz (UNCuyo, Argentina)</p>
-//           <p className="body">Eduardo Devés Valdés (Usach, Chile)</p>
-//           <p className="body">Eliana R. de Freitas Dutra (UFMG, Brasil)</p>
-//           <p className="body">Elisa Campos Borges (UFF, Brasil)</p>
-//           <p className="body">Giselle Venâncio (UFF, Brasil)</p>
-//           <p className="body">
-//             Heloisa Maria Murgel Starling (UFMG, Brasil)
-//           </p>
-//           <p className="body">Inés de Torres (UDELAR, Uruguai)</p>
-//           <p className="body">
-//             José Alves de Freitas Neto (UNICAMP, Brasil)
-//           </p>
-//           <p className="body">Liliana Weinberg (UNAM, México)</p>
-//           <p className="body">
-//             Maria Elisa Noronha de Sá (PUC-Rio, Brasil)
-//           </p>
-//           <p className="body">
-//             Maria da Gloria de Oliveira (UFRRJ, Brasil)
-//           </p>
-//           <p className="body">Petrônio Domingues (UFS)</p>
-//           <p className="body">Rafael Araújo (UERJ, Brasil)</p>
-//         </div>
-//       </div>
-//     </div>
-//   </div>
-// </div>
-//   );
-// }
+            <h1 className="heading-h1 text-primary">Quem Somos</h1>
+
+            <p className="text-lg sm:text-xl font-medium text-gray-800 leading-snug">
+              Grupo de Pesquisa “História Intelectual: práticas, narrativas e
+              circulação de ideias”
+            </p>
+
+            <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
+              Sediado no Departamento de História da Universidade Federal de
+              Minas Gerais (UFMG) e certificado pelo CNPq, o grupo reúne
+              docentes, doutores, pós-graduandos e graduandos dedicados à
+              pesquisa e à extensão universitária no campo da História
+              Intelectual.
+            </p>
+          </header>
+
+          {/* Coordenação e Vice-Coordenação */}
+          {coordenacao.length > 0 && (
+            <section
+              aria-labelledby="heading-coordenacao"
+              className="space-y-5"
+            >
+              <div className="flex items-center gap-3">
+                <h2
+                  id="heading-coordenacao"
+                  className="heading-h2 text-text shrink-0"
+                >
+                  Coordenação
+                </h2>
+                <div className="h-px flex-1 bg-gray-200" />
+              </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {coordenacao.map((membro) => (
+                  <article
+                    key={membro.nome}
+                    className="rounded-2xl border border-primary/20 bg-white p-6 sm:p-7 shadow-sm flex flex-col sm:flex-row items-center sm:items-start gap-5 text-center sm:text-left h-full"
+                  >
+                    <Image
+                      src={membro.foto}
+                      alt={membro.nome}
+                      width={150}
+                      height={150}
+                      priority
+                      className="rounded-full object-cover w-32 h-32 shrink-0 ring-2 ring-primary/20"
+                    />
+
+                    <div className="flex-1 flex flex-col justify-between h-full space-y-3">
+                      <div className="space-y-1.5">
+                        <span className="inline-flex items-center rounded-full bg-primary/10 px-3 py-0.5 text-xs font-semibold text-primary">
+                          {membro.cargoCoordenacao}
+                        </span>
+                        <h3 className="text-lg sm:text-xl font-bold text-gray-900 leading-snug">
+                          {membro.nome}
+                        </h3>
+                        <p className="text-sm font-medium text-gray-700">
+                          {membro.funcao}
+                        </p>
+                        <p className="text-xs sm:text-sm text-gray-500">
+                          {membro.titulacao}
+                        </p>
+                      </div>
+
+                      {membro.lattes && (
+                        <div className="pt-1">
+                          <a
+                            href={membro.lattes}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label={`Currículo Lattes de ${membro.nome}`}
+                            className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/5 px-4 py-1.5 text-xs font-semibold text-primary hover:bg-primary hover:text-white transition-colors"
+                          >
+                            <span>Currículo Lattes</span>
+                            <IconeLattes />
+                          </a>
+                        </div>
+                      )}
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* Pesquisadores e Pesquisadoras */}
+          <section
+            aria-labelledby="heading-pesquisadores"
+            className="space-y-6"
+          >
+            <div className="flex items-center justify-between gap-3">
+              <div className="flex items-center gap-3 flex-1">
+                <h2
+                  id="heading-pesquisadores"
+                  className="heading-h2 text-text shrink-0"
+                >
+                  Pesquisadores e Pesquisadoras
+                </h2>
+                <div className="h-px flex-1 bg-gray-200" />
+              </div>
+              <span className="text-xs font-medium text-gray-500 shrink-0">
+                {pesquisadores.length} integrantes
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {pesquisadores.map((membro, index) => (
+                <article
+                  key={membro.nome}
+                  className="group rounded-2xl border border-gray-200/80 bg-white p-6 shadow-sm hover:border-primary/35 hover:shadow-md transition-all flex flex-col justify-between items-center text-center h-full"
+                >
+                  <div className="flex flex-col items-center w-full">
+                    {membro.foto && (
+                      <Image
+                        src={membro.foto}
+                        alt={membro.nome}
+                        width={150}
+                        height={150}
+                        priority={index < 8}
+                        className="rounded-full object-cover w-32 h-32 mb-4 ring-2 ring-gray-100 group-hover:ring-primary/25 transition-all"
+                      />
+                    )}
+
+                    <h3 className="font-semibold text-base sm:text-lg text-gray-900 leading-snug">
+                      {membro.nome}
+                    </h3>
+
+                    <p className="text-sm font-medium text-gray-700 mt-1.5 leading-snug">
+                      {membro.funcao}
+                    </p>
+
+                    <p className="text-xs text-gray-500 mt-1 leading-relaxed">
+                      {membro.titulacao}
+                    </p>
+                  </div>
+
+                  {membro.lattes && (
+                    <div className="pt-5 mt-auto">
+                      <a
+                        href={membro.lattes}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={`Currículo Lattes de ${membro.nome}`}
+                        className="inline-flex items-center gap-1.5 rounded-full border border-primary/25 bg-primary/5 px-3.5 py-1.5 text-xs font-semibold text-primary hover:bg-primary hover:text-white transition-colors"
+                      >
+                        <span>Currículo Lattes</span>
+                        <IconeLattes />
+                      </a>
+                    </div>
+                  )}
+                </article>
+              ))}
+            </div>
+          </section>
+        </div>
+      </div>
+    </>
+  );
+}

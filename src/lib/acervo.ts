@@ -12,6 +12,7 @@ export interface Colecao {
 
 export interface Ebook {
   id: string;
+  slug: string;
   title: string;
   subtitle?: string;
   collection: string;
@@ -39,6 +40,16 @@ const EBOOKS_DIR = path.join(process.cwd(), 'src/content/ebooks');
 function normalizarSlug(valor?: string | null): string | null {
   if (!valor) return null;
   return path.basename(valor, '.json');
+}
+
+export function gerarSlug(texto: string): string {
+  return texto
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
 }
 
 function lerArquivosJson<T>(diretorio: string): Array<T & { id: string }> {
@@ -93,12 +104,25 @@ export function getColecaoPorId(id: string): Colecao | undefined {
 
 export function getEbooks(): Ebook[] {
   const mapaColecoes = new Map(getColecoes().map((col) => [col.id, col.name]));
-  return lerArquivosJson<Partial<Ebook>>(EBOOKS_DIR)
+  const slugsUsados = new Set<string>();
+
+  return lerArquivosJson<Partial<Ebook> & { slug?: string }>(EBOOKS_DIR)
     .filter((ebook) => ebook.published !== false)
     .map((ebook) => {
       const collectionId = normalizarSlug(ebook.collection) ?? '';
+      const slugInformado = ebook.slug?.trim();
+      const baseSlug = gerarSlug(slugInformado || ebook.title || ebook.id);
+
+      let slugFinal = baseSlug || ebook.id;
+      let contador = 2;
+      while (slugsUsados.has(slugFinal)) {
+        slugFinal = `${baseSlug}-${contador}`;
+        contador += 1;
+      }
+      slugsUsados.add(slugFinal);
       return {
         id: ebook.id,
+        slug: slugFinal,
         title: ebook.title ?? ebook.id,
         subtitle: ebook.subtitle,
         collection: collectionId,
@@ -108,7 +132,7 @@ export function getEbooks(): Ebook[] {
         description: ebook.description ?? '',
         authorship: ebook.authorship,
         summary: ebook.summary,
-        publisher: ebook.publisher || 'Cronópios Selo Editorial',
+        publisher: ebook.publisher || 'Selo Editorial Cronópios',
         year: ebook.year ?? new Date().getFullYear(),
         edition: ebook.edition,
         pages: ebook.pages,
@@ -123,9 +147,18 @@ export function getEbooks(): Ebook[] {
     .sort((a, b) => a.title.localeCompare(b.title, 'pt-BR'));
 }
 
-export function getEbookPorId(id: string): Ebook | undefined {
-  return getEbooks().find((ebook) => ebook.id === id);
+export function getEbookPorSlug(slug: string): Ebook | undefined {
+  if (!slug) return undefined;
+  const slugNormalizado = decodeURIComponent(slug).trim();
+
+  return getEbooks().find(
+    (ebook) => ebook.slug === slugNormalizado || ebook.id === slugNormalizado
+  );
 }
+
+// export function getEbookPorId(id: string): Ebook | undefined {
+//   return getEbooks().find((ebook) => ebook.id === id);
+// }
 
 export function getEbooksPorColecao(colecaoId: string): Ebook[] {
   return getEbooks().filter((ebook) => ebook.collection === colecaoId);

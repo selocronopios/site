@@ -6,7 +6,7 @@ import { getColecoes, getEbooks } from '@/lib/acervo';
 export const metadata: Metadata = {
   title: 'Página não encontrada',
   description:
-    'O endereço acessado não foi encontrado. Explore o catálogo e as coleções do portal História Intelectual (UFMG).',
+    'O endereço acessado não foi encontrado. Explore o acervo do portal História Intelectual (UFMG).',
   robots: {
     index: false,
     follow: true,
@@ -46,11 +46,11 @@ export default function NotFound() {
         </div>
 
         <div className="flex flex-wrap items-center justify-center gap-4">
-          <Link href="/" className="btn">
-            Ir para o catálogo completo
+          <Link href="/selo-cronopios/acervo" className="btn">
+            Ir para o acervo
           </Link>
           <Link
-            href="/publique-conosco"
+            href="/selo-cronopios/publique-conosco"
             className="font-roboto font-semibold text-button border border-primary text-primary px-4 py-2 rounded-md hover:bg-primary/10 transition-colors"
           >
             Publique conosco
@@ -66,7 +66,7 @@ export default function NotFound() {
               {colecoesAtivas.map((col) => (
                 <Link
                   key={col.id}
-                  href={`/colecoes/${col.id}`}
+                  href={`/selo-cronopios/acervo/${col.id}`}
                   className="rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm font-medium text-text shadow-sm hover:border-primary hover:text-primary transition-colors"
                 >
                   {col.name}

@@ -18,10 +18,41 @@ const b2 = new S3Client({
 });
 
 const TAMANHO_MAXIMO_BYTES = 100 * 1024 * 1024; // 100 MB
-const EXTENSOES_PERMITIDAS = ['.pdf', '.doc', '.docx', '.zip'];
+const EXTENSOES_PERMITIDAS = ['.doc', '.docx'];
+const MIME_TYPES_WORD = [
+  'application/msword',
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+];
+
+function isJanelaSubmissaoAberta(dataReferencia = new Date()): boolean {
+  const partes = new Intl.DateTimeFormat('en-US', {
+    timeZone: 'America/Sao_Paulo',
+    year: 'numeric',
+    month: 'numeric',
+  }).formatToParts(dataReferencia);
+
+  const ano = Number(partes.find((p) => p.type === 'year')?.value);
+  const mes = Number(partes.find((p) => p.type === 'month')?.value);
+
+  if (ano === 2027) {
+    return mes === 8 || mes === 9;
+  }
+
+  return ano > 2027 && [3, 4, 8, 9].includes(mes);
+}
 
 export async function POST(request: Request) {
   try {
+    if (!isJanelaSubmissaoAberta()) {
+      return NextResponse.json(
+        {
+          error:
+            'O recebimento de propostas ocorre apenas em março, abril, agosto e setembro, a partir de agosto de 2027.',
+        },
+        { status: 403 }
+      );
+    }
+
     const { fileName, fileType, fileSize } = await request.json();
 
     if (!fileName || !fileSize) {
@@ -38,10 +69,30 @@ export async function POST(request: Request) {
       );
     }
 
-    const extensao = fileName.slice(fileName.lastIndexOf('.')).toLowerCase();
+    const indicePonto = fileName.lastIndexOf('.');
+    const extensao =
+      indicePonto !== -1 ? fileName.slice(indicePonto).toLowerCase() : '';
+
     if (!EXTENSOES_PERMITIDAS.includes(extensao)) {
       return NextResponse.json(
-        { error: 'Formato inválido. Envie PDF, DOC, DOCX ou ZIP.' },
+        {
+          error:
+            'Formato inválido. Envie apenas arquivos Word (.doc ou .docx).',
+        },
+        { status: 400 }
+      );
+    }
+
+    const tipoPermitido =
+      !fileType ||
+      fileType === 'application/octet-stream' ||
+      MIME_TYPES_WORD.includes(fileType);
+    if (!tipoPermitido) {
+      return NextResponse.json(
+        {
+          error:
+            'Tipo de arquivo inválido. Envie um documento Word (.doc ou .docx).',
+        },
         { status: 400 }
       );
     }
@@ -52,7 +103,13 @@ export async function POST(request: Request) {
       .replace(/[^a-zA-Z0-9._-]/g, '_');
 
     const chaveObjeto = `${new Date().toISOString().slice(0, 10)}/${crypto.randomUUID()}-${nomeLimpo}`;
-    const contentType = fileType || 'application/octet-stream';
+
+    const contentType =
+      fileType && MIME_TYPES_WORD.includes(fileType)
+        ? fileType
+        : extensao === '.doc'
+          ? 'application/msword'
+          : 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
 
     const uploadUrl = await getSignedUrl(
       b2,
@@ -74,8 +131,7 @@ export async function POST(request: Request) {
     );
 
     return NextResponse.json({ uploadUrl, downloadUrl, contentType });
-  } catch (err) {
-    const detalhe = err instanceof Error ? err.message : 'Erro desconhecido';
+  } catch {
     return NextResponse.json(
       { error: 'Falha ao preparar o envio do arquivo.' },
       { status: 500 }

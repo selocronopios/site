@@ -62,6 +62,13 @@ content:
         label: Título
         type: string
         required: true
+      - name: slug
+        label: Slug da URL (opcional)
+        type: string
+        description: 'Se ficar em branco, o sistema gera automaticamente a partir do título. Preencha apenas se quiser personalizar o link (ex.: historia-intelectual-ufmg).'
+        pattern:
+          regex: '^[a-z0-9]+(?:-[a-z0-9]+)*$'
+          message: 'Use apenas letras minúsculas sem acento, números e hífens (ex.: meu-livro-2026).'
       - name: subtitle
         label: Subtítulo
         type: string
@@ -93,7 +100,7 @@ content:
       - name: publisher
         label: Editora
         type: string
-        default: Cronópios Selo Editorial
+        default: Selo Editorial Cronópios
       - name: year
         label: Ano de publicação
         type: number

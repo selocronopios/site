@@ -1,0 +1,60 @@
+name: Gerar slug padrão em novos e-books
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'src/content/ebooks/*.json'
+
+permissions:
+  contents: write
+
+jobs:
+  preencher-slug:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout do repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Preencher slug ausente a partir do título
+        run: |
+          node -e '
+            const fs = require("fs");
+            const path = require("path");
+
+            const dir = "src/content/ebooks";
+            const gerarSlug = (texto) =>
+              texto
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")
+                .toLowerCase()
+                .trim()
+                .replace(/[^a-z0-9]+/g, "-")
+                .replace(/^-+|-+$/g, "");
+
+            for (const arquivo of fs.readdirSync(dir).filter((f) => f.endsWith(".json"))) {
+              const caminho = path.join(dir, arquivo);
+              const dados = JSON.parse(fs.readFileSync(caminho, "utf8"));
+
+              if ((!dados.slug || !String(dados.slug).trim()) && dados.title) {
+                dados.slug = gerarSlug(dados.title);
+                fs.writeFileSync(caminho, JSON.stringify(dados, null, 2) + "\n", "utf8");
+              }
+            }
+          '
+
+      - name: Commitar slugs gerados
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add src/content/ebooks/*.json
+            git commit -m "chore(acervo): gera slug padrão a partir do título [skip ci]"
+            git push
+          fi

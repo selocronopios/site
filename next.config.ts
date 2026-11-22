@@ -2,9 +2,26 @@ import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   eslint: {
-    // Desabilitar durante builds de desenvolvimento
-    // Habilitar no Vercel (CI/CD)
     ignoreDuringBuilds: process.env.CI !== 'true',
+  },
+  async redirects() {
+    return [
+      {
+        source: '/colecoes',
+        destination: '/selo-cronopios/acervo',
+        permanent: true,
+      },
+      {
+        source: '/colecoes/:id',
+        destination: '/selo-cronopios/acervo/:id',
+        permanent: true,
+      },
+      {
+        source: '/publique-conosco',
+        destination: '/selo-cronopios/publique-conosco',
+        permanent: true,
+      },
+    ];
   },
 };
 

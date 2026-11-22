@@ -1,4 +1,3 @@
-// src/app/colecoes/[id]/page.tsx
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import CatalogoGrid from '@/components/CatalogoGrid';
@@ -10,6 +9,7 @@ import {
   resumirParaSeo,
 } from '@/lib/acervo';
 import type { Metadata } from 'next';
+import Breadcrumbs from '@/components/Breadcrumbs';
 
 const siteUrl =
   process.env.NEXT_PUBLIC_SITE_URL || 'https://historiaintelectualufmg.com.br';
@@ -26,13 +26,13 @@ export async function generateMetadata({
 
   const fallback = `Explore os e-books gratuitos da coleção "${colecao.name}" no portal História Intelectual (UFMG). Obras acadêmicas em acesso aberto.`;
   const descricaoSeo = resumirParaSeo(colecao.description, fallback);
-  const urlColecao = `${siteUrl}/colecoes/${colecao.id}`;
+  const urlColecao = `${siteUrl}/selo-cronopios/acervo/${colecao.id}`;
 
   return {
     title: colecao.name,
     description: descricaoSeo,
     alternates: {
-      canonical: `/colecoes/${colecao.id}`,
+      canonical: `/selo-cronopios/acervo/${colecao.id}`,
     },
     openGraph: {
       type: 'website',
@@ -76,20 +76,20 @@ export default async function ColecaoPage({
     (col) => col.parentCollection === id
   );
 
-  const urlColecao = `${siteUrl}/colecoes/${colecao.id}`;
+  const urlColecao = `${siteUrl}/selo-cronopios/acervo/${colecao.id}`;
 
   const itensLista =
     ebooks.length > 0
       ? ebooks.map((livro, index) => ({
           '@type': 'ListItem',
           position: index + 1,
-          url: `${siteUrl}/ebooks/${livro.id}`,
+          url: `${siteUrl}/selo-cronopios/acervo/ebooks/${livro.slug}`,
           name: livro.title,
         }))
       : subcolecoes.map((sub, index) => ({
           '@type': 'ListItem',
           position: index + 1,
-          url: `${siteUrl}/colecoes/${sub.id}`,
+          url: `${siteUrl}/selo-cronopios/acervo/${sub.id}`,
           name: sub.name,
         }));
 
@@ -104,7 +104,7 @@ export default async function ColecaoPage({
       ? {
           '@type': 'CollectionPage',
           name: colecaoPai.name,
-          url: `${siteUrl}/colecoes/${colecaoPai.id}`,
+          url: `${siteUrl}/selo-cronopios/acervo/${colecaoPai.id}`,
         }
       : {
           '@type': 'WebSite',
@@ -121,34 +121,20 @@ export default async function ColecaoPage({
         : undefined,
   };
 
-  const breadcrumbJsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'BreadcrumbList',
-    itemListElement: [
-      {
-        '@type': 'ListItem',
-        position: 1,
-        name: 'Início',
-        item: siteUrl,
-      },
-      ...(colecaoPai
-        ? [
-            {
-              '@type': 'ListItem',
-              position: 2,
-              name: colecaoPai.name,
-              item: `${siteUrl}/colecoes/${colecaoPai.id}`,
-            },
-          ]
-        : []),
-      {
-        '@type': 'ListItem',
-        position: colecaoPai ? 3 : 2,
-        name: colecao.name,
-        item: urlColecao,
-      },
-    ],
-  };
+  const breadcrumbItems = [
+    ...(colecaoPai
+      ? [
+          {
+            label: colecaoPai.name,
+            href: `/selo-cronopios/acervo/${colecaoPai.id}`,
+          },
+        ]
+      : []),
+    {
+      label: colecao.name,
+      href: `/selo-cronopios/acervo/${colecao.id}`,
+    },
+  ];
 
   return (
     <>
@@ -158,34 +144,10 @@ export default async function ColecaoPage({
           __html: JSON.stringify(collectionJsonLd).replace(/</g, '\\u003c'),
         }}
       />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(breadcrumbJsonLd).replace(/</g, '\\u003c'),
-        }}
-      />
 
-      <div className="bg-background p-8 max-w-7xl mx-auto px-4 space-y-8">
+      <div className="bg-background py-8 max-w-7xl mx-auto px-4 space-y-8">
         {/* Trilha de navegação quando for uma subcoleção */}
-        {colecaoPai && (
-          <nav
-            aria-label="Navegação estrutural"
-            className="flex flex-wrap items-center justify-center gap-2 text-sm text-gray-600"
-          >
-            <Link href="/" className="hover:text-primary transition-colors">
-              Início
-            </Link>
-            <span>/</span>
-            <Link
-              href={`/colecoes/${colecaoPai.id}`}
-              className="hover:text-primary transition-colors font-medium"
-            >
-              {colecaoPai.name}
-            </Link>
-            <span>/</span>
-            <span className="text-gray-900 font-semibold">{colecao.name}</span>
-          </nav>
-        )}
+        <Breadcrumbs items={breadcrumbItems} />
 
         {/* Cabeçalho da coleção */}
         <div className="space-y-3 text-center max-w-3xl mx-auto">
@@ -237,7 +199,7 @@ export default async function ColecaoPage({
                 return (
                   <Link
                     key={sub.id}
-                    href={`/colecoes/${sub.id}`}
+                    href={`/selo-cronopios/acervo/${sub.id}`}
                     className="group flex flex-col justify-between rounded-xl border border-gray-200 bg-white p-5 shadow-sm hover:border-primary/50 hover:shadow transition-colors"
                   >
                     <div className="space-y-2">

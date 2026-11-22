@@ -90,7 +90,10 @@ export default function BuscaClient({ ebooks }: BuscaClientProps) {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 px-4 py-8">
             {livrosPagina.map((livro) => (
-              <Link key={livro.id} href={`/ebooks/${livro.id}`}>
+              <Link
+                key={livro.id}
+                href={`/selo-cronopios/acervo/ebooks/${livro.id}`}
+              >
                 <div className="p-4 flex flex-col items-center">
                   <img
                     src={livro.cover}
