@@ -1,7 +1,16 @@
-import Maintenance from '@/components/Maintenance';
-import { Body } from '@/components/Typography';
+import Image from 'next/image';
 import Link from 'next/link';
 import type { Metadata } from 'next';
+import {
+  FaArrowRight,
+  FaBookOpen,
+  FaChalkboardTeacher,
+  FaPodcast,
+  FaUniversity,
+  FaUsers,
+} from 'react-icons/fa';
+import Maintenance from '@/components/Maintenance';
+import { getEbooks } from '@/lib/acervo';
 
 const siteUrl =
   process.env.NEXT_PUBLIC_SITE_URL || 'https://historiaintelectualufmg.com.br';
@@ -33,12 +42,60 @@ export const metadata: Metadata = {
   },
 };
 
+const linhasPesquisa = [
+  {
+    numero: '01',
+    titulo: 'Itinerários da História Intelectual',
+    descricao: 'Aportes teórico-metodológicos e historiografia.',
+  },
+  {
+    numero: '02',
+    titulo: 'História Intelectual em perspectiva (trans)nacional',
+    descricao: 'Redes de sociabilidades, conexões e trânsitos.',
+  },
+  {
+    numero: '03',
+    titulo: 'História Intelectual e esfera pública',
+    descricao: 'Educação, cidadania e instituições.',
+  },
+  {
+    numero: '04',
+    titulo: 'História Intelectual e gênero',
+    descricao: 'Feminismos, sexualidades e interseccionalidades.',
+  },
+  {
+    numero: '05',
+    titulo: 'História Intelectual e decolonialidade',
+    descricao: 'Modernidade, autodeterminação e identidades.',
+  },
+  {
+    numero: '06',
+    titulo: 'História Intelectual e culturas políticas',
+    descricao: 'Tradições, representações e imaginários.',
+  },
+];
+
+const fontesPesquisadas = [
+  'Impressos',
+  'Obras literárias',
+  'Biografias',
+  'Petições e manifestos',
+  'Correspondências',
+  'Ensaios',
+  'Produções cinematográficas',
+  'Produções musicológicas',
+];
+
 export default function Home() {
   const isMaintenance = process.env.NEXT_PUBLIC_MAINTENANCE_MODE === 'true';
 
   if (isMaintenance) {
     return <Maintenance />;
   }
+
+  const ebooksRecentes = [...getEbooks()]
+    .sort((a, b) => b.created_at.localeCompare(a.created_at))
+    .slice(0, 4);
 
   const organizationJsonLd = {
     '@context': 'https://schema.org',
@@ -55,6 +112,7 @@ export default function Home() {
     sameAs: [
       'https://www.instagram.com/selocronopios',
       'https://www.youtube.com/@selocron%C3%B3pios',
+      'https://www.facebook.com/people/Selo-Editorial-Cron%C3%B3pios/pfbid02o6pRAZX2bR4F4f3SvUkjSiADx8S9mAoErDNPA9pnE9sU5vTcw1Spsp6zALecxhiXl/',
     ],
   };
 
@@ -68,7 +126,7 @@ export default function Home() {
       '@type': 'SearchAction',
       target: {
         '@type': 'EntryPoint',
-        urlTemplate: `${siteUrl}/busca?q={search_term_string}`,
+        urlTemplate: `${siteUrl}/busca?query={search_term_string}`,
       },
       'query-input': 'required name=search_term_string',
     },
@@ -89,111 +147,349 @@ export default function Home() {
         }}
       />
 
-      <div className="bg-background p-4 sm:p-6 md:p-8 max-w-7xl mx-auto space-y-8 text-justify">
-        <Body className="mt-4">
-          Este site tem como objetivo funcionar como uma plataforma colaborativa
-          interdisciplinar, reunindo pesquisadores, estudantes e profissionais
-          diversas áreas. Seu propósito é fortalecer os vínculos institucionais
-          acadêmicos em níveis nacional e internacional, incentivar a produção
-          científica de excelência e promover a ampla e acessível disseminação
-          conhecimento histórico junto à sociedade. Trata-se de uma iniciativa
-          integra e articula dois grupos vinculados ao Departamento de História
-          ao Programa de Pós-graduação em História da Universidade Federal de
-          Minas Gerais: o Grupo de Pesquisa “História Intelectual: práticas,
-          narrativas e circulação de ideias” (CNPq) e o Grupo “História
-          Intelectual: pesquisa, extensão e divulgação científica” (CENEX/–
-          Registro 405042).
-        </Body>
-        <h1 className="heading-h1 text-primary text-center">
-          Grupo de Pesquisa “História Intelectual: práticas, narrativas e <br />{' '}
-          circulação de ideias” (UFMG/CNPq)
-        </h1>
-        <Body>
-          O Grupo de Pesquisa “História Intelectual: práticas, narrativas e
-          circulação de ideias” (UFMG/CNPq), criado em 2020, tem contribuído de
-          forma sistemática para o fortalecimento e a disseminação das
-          investigações na área, bem como para a construção de caminhos que
-          ampliem os debates sobre o tema, por meio do estabelecimento de com
-          com pesquisadores em âmbitos nacional e internacional. O grupo será
-          estruturado a partir de seis linhas norteadoras de suas atividades:
-          Itinerários da História Intelectual: aportes teórico-metodológicos e
-          historiografia; História Intelectual em perspectiva (trans)nacional:
-          redes de sociabilidades, conexões e trânsitos; 3. História Intelectual
-          esfera pública: educação, cidadania e instituições; História
-          Intelectual e gênero: feminismos, sexualidades e interseccionalidades;
-          Intelectual e decolonialidade: modernidade, autodeterminação e
-          identidades; História Intelectual e culturas políticas: tradições,
-          representações e imaginários.
-        </Body>
+      <div className="bg-background text-text min-h-screen py-8 sm:py-12">
+        <div className="max-w-7xl mx-auto px-4 space-y-14">
+          {/* Hero Institucional */}
+          <section className="rounded-2xl border border-primary/20 bg-white p-6 sm:p-10 lg:p-12 shadow-sm">
+            <div className="max-w-4xl mx-auto text-center space-y-5">
+              <div className="inline-flex flex-wrap items-center justify-center gap-2 rounded-full bg-primary/10 px-4 py-1 text-xs font-semibold uppercase tracking-wider text-primary">
+                <span>Departamento de História · PPGH / UFMG</span>
+                <span aria-hidden="true">•</span>
+                <span>CNPq &amp; CENEX</span>
+              </div>
 
-        <Body>
-          A equipe congrega pesquisadores – profissionais, docentes e discentes
-          interessados em refletir, sob uma perspectiva interdisciplinar, acerca
-          da História Intelectual em suas múltiplas abordagens, possibilitando,
-          assim, a renovação das interpretações no campo da história das ideias
-          políticas. As pesquisas desenvolvidas pelos membros abrangem diversas
-          dimensões temáticas, conceituais e historiográficas, explorando fontes
-          de naturezas variadas – como impressos, obras literárias, biografias,
-          petições, manifestos, correspondências, ensaios, produções
-          cinematográficas e musicológicas, entre outras – com o intuito de
-          promover ampla discussão e difusão da produção acadêmica.
-        </Body>
+              <h1 className="heading-h1 text-primary leading-tight">
+                História Intelectual: Pesquisa, Extensão e Divulgação Científica
+              </h1>
 
-        <Body>
-          O grupo organiza seminários de alcance nacional e internacional,
-          editais para a apresentação de pesquisas, realiza conferências e
-          exposições, além de fomentar o intercâmbio com outros grupos de
-          congêneres, tanto no Brasil quanto no exterior. Em síntese, o grupo
-          busca consolidar-se como espaço de suporte às investigações na área,
-          como à formação de novos pesquisadores.
-        </Body>
+              <p className="text-base sm:text-lg text-gray-700 leading-relaxed text-justify sm:text-center">
+                Plataforma colaborativa interdisciplinar que reúne
+                pesquisadores, estudantes e profissionais de diversas áreas para
+                fortalecer vínculos acadêmicos nacionais e internacionais,
+                incentivar a produção científica e promover a ampla disseminação
+                do conhecimento histórico junto à sociedade.
+              </p>
 
-        <h2 className="heading-h2 text-primary text-center">
-          Grupo de história intelectual: pesquisa, extensão e divulgação
-          <br />
-          científica (CENEX/UFMG – Registro 405042)
-        </h2>
+              <p className="text-sm sm:text-base text-gray-600 leading-relaxed text-justify sm:text-center">
+                A iniciativa integra e articula dois grupos vinculados ao
+                Departamento de História e ao Programa de Pós-Graduação em
+                História da Universidade Federal de Minas Gerais: o{' '}
+                <strong className="font-semibold text-gray-800">
+                  Grupo de Pesquisa “História Intelectual: práticas, narrativas
+                  e circulação de ideias” (CNPq)
+                </strong>{' '}
+                e o{' '}
+                <strong className="font-semibold text-gray-800">
+                  Grupo “História Intelectual: pesquisa, extensão e divulgação
+                  científica” (CENEX/UFMG – Registro 405042)
+                </strong>
+                .
+              </p>
 
-        <Body>
-          As atividades do Grupo de Pesquisa “História Intelectual: narrativas,
-          práticas e circulação de ideias” foram significativamente ampliadas, o
-          que motivou a criação, em 2024, do “Grupo de História Intelectual:
-          pesquisa, extensão e divulgação científica”. Atuando na interface
-          pesquisa, extensão e divulgação científica, o grupo busca ampliar os
-          debates sobre o tema, estabelecendo conexões com pesquisadores e
-          docentes em âmbito nacional e internacional e, de forma abrangente, o
-          público externo à academia – como escolas, associações culturais e
-          movimentos sociais.
-        </Body>
+              <div className="pt-2 flex flex-wrap items-center justify-center gap-3 sm:gap-4">
+                <Link
+                  href="/selo-cronopios/acervo"
+                  className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-2.5 text-sm font-semibold text-white hover:opacity-90 transition-opacity"
+                >
+                  <FaBookOpen aria-hidden="true" />
+                  <span>Explorar Acervo Gratuito</span>
+                </Link>
 
-        <Body>
-          O grupo reúne pesquisadores, estudantes de graduação e pós-graduação
-          (inclusive egressos) da UFMG, além de participantes externos dedicados
-          temas correlatos à História Intelectual. No campo da divulgação
-          científica, promove eventos nacionais e internacionais e gerencia o{' '}
-          <Link href="/selo-cronopios" className="text-primary underline">
-            Selo Editorial Cronópios
-          </Link>
-          , comprometido com a democratização do conhecimento produzido por
-          pesquisadoras e pesquisadores da área. A proposta é publicar e-books
-          de de acesso gratuito, disponíveis para download neste site, constitui
-          n um um instrumento ágil de comunicação e de difusão de produç ões
-          acadêmicas.
-        </Body>
+                <Link
+                  href="/selo-cronopios"
+                  className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/5 px-5 py-2.5 text-sm font-semibold text-primary hover:bg-primary hover:text-white transition-colors"
+                >
+                  <span>Selo Editorial Cronópios</span>
+                </Link>
 
-        <Body>
-          Como ação de extensão, o grupo oferece cursos voltados à comunidade
-          externa, com ênfase na formação continuada de professores interessados
-          em atualizar seus saberes, abordando temas como cinema, literatura,
-          ideias políticas e manifestações intelectuais e culturais. Também são
-          organizadas oficinas e minicursos voltados à retomada das atividades
-          pesquisa, com foco em renovação historiográfica, elaboração de
-          metodologias investigativas. Além disso, propõe oficinas em escolas
-          públicas de Belo Horizonte, destinadas a docentes interessados em
-          explorar o cenário cultural da capital por meio do estudo da
-          literatura, do cinema e da imprensa e a realização e promoção do
-          podcast do grupo Intelecções e Contextus.
-        </Body>
+                <Link
+                  href="/quem-somos-nos"
+                  className="inline-flex items-center gap-2 rounded-full border border-gray-300 bg-white px-5 py-2.5 text-sm font-semibold text-gray-700 hover:border-primary hover:text-primary transition-colors"
+                >
+                  <FaUsers aria-hidden="true" />
+                  <span>Conheça os Pesquisadores</span>
+                </Link>
+              </div>
+            </div>
+          </section>
+
+          {/* Grupo de Pesquisa (UFMG/CNPq) */}
+          <section
+            aria-labelledby="heading-grupo-pesquisa"
+            className="space-y-6"
+          >
+            <div className="space-y-2">
+              <div className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-primary">
+                <FaUniversity aria-hidden="true" />
+                <span>Criado em 2020 · Diretório CNPq</span>
+              </div>
+              <h2
+                id="heading-grupo-pesquisa"
+                className="heading-h2 text-primary leading-snug"
+              >
+                Grupo de Pesquisa “História Intelectual: práticas, narrativas e
+                circulação de ideias” (UFMG/CNPq)
+              </h2>
+            </div>
+
+            <div className="rounded-2xl border border-gray-200/80 bg-white p-6 sm:p-8 shadow-sm space-y-6">
+              <div className="space-y-4 text-gray-700 leading-relaxed text-justify">
+                <p>
+                  Criado em 2020, o grupo tem contribuído de forma sistemática
+                  para o fortalecimento e a disseminação das investigações na
+                  área, bem como para a construção de caminhos que ampliem os
+                  debates sobre o tema por meio do diálogo com pesquisadores em
+                  âmbitos nacional e internacional.
+                </p>
+
+                <p>
+                  A equipe congrega profissionais, docentes e discentes
+                  interessados em refletir, sob uma perspectiva
+                  interdisciplinar, acerca da História Intelectual em suas
+                  múltiplas abordagens, renovando as interpretações no campo da
+                  história das ideias políticas. Além das pesquisas, o grupo
+                  organiza seminários nacionais e internacionais, editais para
+                  apresentação de trabalhos, conferências e exposições,
+                  consolidando-se como espaço de suporte tanto às investigações
+                  na área quanto à formação de novos pesquisadores.
+                </p>
+              </div>
+
+              {/* Fontes trabalhadas */}
+              <div className="border-t border-gray-100 pt-5 space-y-2.5">
+                <h3 className="text-xs font-semibold uppercase tracking-wider text-gray-500">
+                  Dimensões e fontes exploradas
+                </h3>
+                <div className="flex flex-wrap gap-2">
+                  {fontesPesquisadas.map((fonte) => (
+                    <span
+                      key={fonte}
+                      className="rounded-full border border-gray-200 bg-background px-3 py-1 text-xs font-medium text-gray-700"
+                    >
+                      {fonte}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              {/* Seis Linhas Norteadoras */}
+              <div className="border-t border-gray-100 pt-6 space-y-4">
+                <h3 className="text-base sm:text-lg font-bold text-gray-900">
+                  Seis linhas norteadoras de atuação
+                </h3>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {linhasPesquisa.map((linha) => (
+                    <div
+                      key={linha.numero}
+                      className="rounded-xl border border-gray-200/80 bg-background/60 p-4 sm:p-5 space-y-2"
+                    >
+                      <span className="inline-block rounded-md bg-primary/10 px-2.5 py-0.5 text-xs font-bold text-primary">
+                        Linha {linha.numero}
+                      </span>
+                      <h4 className="font-semibold text-sm sm:text-base text-gray-900 leading-snug">
+                        {linha.titulo}
+                      </h4>
+                      <p className="text-xs sm:text-sm text-gray-600 leading-relaxed">
+                        {linha.descricao}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Grupo CENEX/UFMG */}
+          <section aria-labelledby="heading-grupo-cenex" className="space-y-6">
+            <div className="space-y-2">
+              <div className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-primary">
+                <FaChalkboardTeacher aria-hidden="true" />
+                <span>Criado em 2024 · CENEX/UFMG – Registro 405042</span>
+              </div>
+              <h2
+                id="heading-grupo-cenex"
+                className="heading-h2 text-primary leading-snug"
+              >
+                Grupo de História Intelectual: pesquisa, extensão e divulgação
+                científica
+              </h2>
+            </div>
+
+            <div className="rounded-2xl border border-gray-200/80 bg-white p-6 sm:p-8 shadow-sm space-y-6">
+              <div className="space-y-4 text-gray-700 leading-relaxed text-justify">
+                <p>
+                  Com a ampliação das atividades iniciadas em 2020, foi criado
+                  em 2024 o{' '}
+                  <strong className="font-semibold text-gray-800">
+                    Grupo de História Intelectual: pesquisa, extensão e
+                    divulgação científica
+                  </strong>
+                  . Atuando na interface entre universidade e sociedade, o grupo
+                  reúne pesquisadores, estudantes de graduação e pós-graduação
+                  (inclusive egressos) da UFMG e participantes externos para
+                  dialogar com escolas, associações culturais e movimentos
+                  sociais.
+                </p>
+              </div>
+
+              {/* 3 Frentes de Ação */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">
+                <article className="rounded-xl border border-primary/20 bg-primary/[0.03] p-5 flex flex-col justify-between space-y-4">
+                  <div className="space-y-2.5">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary text-lg">
+                      <FaBookOpen aria-hidden="true" />
+                    </div>
+                    <h3 className="font-bold text-base text-gray-900">
+                      Selo Editorial Cronópios
+                    </h3>
+                    <p className="text-sm text-gray-600 leading-relaxed">
+                      Publicação de e-books acadêmicos gratuitos em acesso
+                      aberto, funcionando como instrumento ágil de difusão da
+                      produção científica da área.
+                    </p>
+                  </div>
+
+                  <Link
+                    href="/selo-cronopios"
+                    className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary hover:underline"
+                  >
+                    <span>Conhecer o Selo Editorial</span>
+                    <FaArrowRight className="text-[10px]" aria-hidden="true" />
+                  </Link>
+                </article>
+
+                <article className="rounded-xl border border-gray-200/80 bg-background/50 p-5 flex flex-col justify-between space-y-4">
+                  <div className="space-y-2.5">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary text-lg">
+                      <FaChalkboardTeacher aria-hidden="true" />
+                    </div>
+                    <h3 className="font-bold text-base text-gray-900">
+                      Formação Docente e Escolas Públicas
+                    </h3>
+                    <p className="text-sm text-gray-600 leading-relaxed">
+                      Cursos de extensão, minicursos de renovação
+                      historiográfica e oficinas em escolas públicas de Belo
+                      Horizonte articulando literatura, cinema, imprensa e
+                      ideias políticas.
+                    </p>
+                  </div>
+
+                  <Link
+                    href="/contato"
+                    className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary hover:underline"
+                  >
+                    <span>Entrar em contato</span>
+                    <FaArrowRight className="text-[10px]" aria-hidden="true" />
+                  </Link>
+                </article>
+
+                <article className="rounded-xl border border-gray-200/80 bg-background/50 p-5 flex flex-col justify-between space-y-4">
+                  <div className="space-y-2.5">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary text-lg">
+                      <FaPodcast aria-hidden="true" />
+                    </div>
+                    <h3 className="font-bold text-base text-gray-900">
+                      Podcast Intelecções e Contextus
+                    </h3>
+                    <p className="text-sm text-gray-600 leading-relaxed">
+                      Produção e divulgação de episódios dedicados ao debate
+                      público sobre história intelectual, cultura e circulação
+                      de ideias.
+                    </p>
+                  </div>
+
+                  <a
+                    href="https://www.youtube.com/@selocron%C3%B3pios"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary hover:underline"
+                  >
+                    <span>Acompanhar no YouTube</span>
+                    <FaArrowRight className="text-[10px]" aria-hidden="true" />
+                  </a>
+                </article>
+              </div>
+            </div>
+          </section>
+
+          {/* Destaques do Acervo */}
+          {ebooksRecentes.length > 0 && (
+            <section
+              aria-labelledby="heading-acervo-home"
+              className="space-y-6"
+            >
+              <div className="flex flex-wrap items-center justify-between gap-3 border-b border-gray-200 pb-3">
+                <div>
+                  <h2
+                    id="heading-acervo-home"
+                    className="heading-h2 text-primary"
+                  >
+                    Publicações Recentes do Selo Cronópios
+                  </h2>
+                  <p className="text-sm text-gray-600 mt-0.5">
+                    Obras acadêmicas em acesso aberto disponíveis para download
+                    gratuito.
+                  </p>
+                </div>
+
+                <Link
+                  href="/selo-cronopios/acervo"
+                  className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:underline"
+                >
+                  <span>Ver catálogo completo</span>
+                  <FaArrowRight className="text-xs" aria-hidden="true" />
+                </Link>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                {ebooksRecentes.map((livro) => (
+                  <Link
+                    key={livro.slug}
+                    href={`/selo-cronopios/acervo/ebooks/${livro.slug}`}
+                    className="group flex flex-col justify-between rounded-2xl border border-gray-200/80 bg-white p-5 shadow-sm hover:border-primary/40 hover:shadow-md transition-all h-full"
+                  >
+                    <div className="flex flex-col items-center text-center">
+                      <div className="relative w-36 aspect-[2/3] overflow-hidden rounded-md mb-4 bg-gray-100 border border-gray-200/60 shadow-sm">
+                        {livro.cover ? (
+                          <Image
+                            src={livro.cover}
+                            alt={`Capa do livro ${livro.title}`}
+                            fill
+                            sizes="144px"
+                            className="object-cover transition-transform duration-300 group-hover:scale-105"
+                          />
+                        ) : (
+                          <div className="flex h-full w-full items-center justify-center p-3 text-center text-xs text-gray-500">
+                            {livro.title}
+                          </div>
+                        )}
+                      </div>
+
+                      <span className="text-[11px] font-semibold uppercase tracking-wide text-primary/80 mb-1 line-clamp-1">
+                        {livro.collectionName}
+                      </span>
+
+                      <h3 className="text-sm font-bold text-gray-900 group-hover:text-primary transition-colors line-clamp-2 leading-snug">
+                        {livro.title}
+                      </h3>
+
+                      {livro.authors.length > 0 && (
+                        <p className="text-xs text-gray-500 mt-1.5 line-clamp-1">
+                          {livro.authors.join(', ')}
+                        </p>
+                      )}
+                    </div>
+
+                    <span className="mt-4 pt-3 border-t border-gray-100 text-center text-xs font-semibold text-primary group-hover:underline">
+                      Acessar obra →
+                    </span>
+                  </Link>
+                ))}
+              </div>
+            </section>
+          )}
+        </div>
       </div>
     </>
   );
