@@ -390,7 +390,7 @@ export default function Home() {
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary hover:underline"
                   >
-                    <span>Acompanhar no Sportfy</span>
+                    <span>Acompanhar no Spotify</span>
                     <FaArrowRight className="text-[10px]" aria-hidden="true" />
                   </a>
                 </article>
