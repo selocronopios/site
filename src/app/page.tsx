@@ -31,7 +31,14 @@ export const metadata: Metadata = {
     title: 'História Intelectual: Pesquisa e Extensão',
     description:
       'Plataforma colaborativa dos grupos de pesquisa e extensão em História Intelectual da UFMG e do Selo Editorial Cronópios.',
-    images: [`${siteUrl}/logo-selo.png`],
+    images: [
+      {
+        url: `${siteUrl}/logo-600.png`,
+        width: 600,
+        height: 200,
+        alt: 'Logo História Intelectual: Pesquisa e Extensão (UFMG)',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',

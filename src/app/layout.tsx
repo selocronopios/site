@@ -45,9 +45,18 @@ export const metadata: Metadata = {
     title: 'História Intelectual | Pesquisa e Extensão',
     description:
       'Pesquisa e Extensão — Catálogo editorial de acesso aberto em História Intelectual (UFMG / Selo Cronópios).',
+    images: [
+      {
+        url: '/logo-600.png',
+        width: 600,
+        height: 200,
+        alt: 'Logo História Intelectual: Pesquisa e Extensão (UFMG)',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
+    images: ['/logo-600.png'],
     title: 'História Intelectual | Pesquisa e Extensão',
     description:
       'Pesquisa e Extensão — Catálogo editorial de acesso aberto em História Intelectual (UFMG / Selo Cronópios).',
