@@ -110,9 +110,9 @@ export default function Home() {
       url: 'https://ufmg.br',
     },
     sameAs: [
-      'https://www.instagram.com/selocronopios',
-      'https://www.youtube.com/@selocron%C3%B3pios',
-      'https://www.facebook.com/people/Selo-Editorial-Cron%C3%B3pios/pfbid02o6pRAZX2bR4F4f3SvUkjSiADx8S9mAoErDNPA9pnE9sU5vTcw1Spsp6zALecxhiXl/',
+      'https://www.instagram.com/historiaintelectual/',
+      'https://www.youtube.com/@historiaintelectualufmg8540',
+      'https://www.facebook.com/historiaintelectualufmg?rdid=reo35nZ8kAy1OypG',
     ],
   };
 
@@ -187,21 +187,6 @@ export default function Home() {
               </p>
 
               <div className="pt-2 flex flex-wrap items-center justify-center gap-3 sm:gap-4">
-                <Link
-                  href="/selo-cronopios/acervo"
-                  className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-2.5 text-sm font-semibold text-white hover:opacity-90 transition-opacity"
-                >
-                  <FaBookOpen aria-hidden="true" />
-                  <span>Explorar Acervo Gratuito</span>
-                </Link>
-
-                <Link
-                  href="/selo-cronopios"
-                  className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/5 px-5 py-2.5 text-sm font-semibold text-primary hover:bg-primary hover:text-white transition-colors"
-                >
-                  <span>Selo Editorial Cronópios</span>
-                </Link>
-
                 <Link
                   href="/quem-somos-nos"
                   className="inline-flex items-center gap-2 rounded-full border border-gray-300 bg-white px-5 py-2.5 text-sm font-semibold text-gray-700 hover:border-primary hover:text-primary transition-colors"
@@ -400,12 +385,12 @@ export default function Home() {
                   </div>
 
                   <a
-                    href="https://www.youtube.com/@selocron%C3%B3pios"
+                    href="https://open.spotify.com/show/59uuouhQ7wFk0nww4JwuGf?si=GJov0w0JScG1GuPHe9L8Hw&utm_source=whatsapp&sci=spotify%3Acard-config%3A1hRRz1MOuKQGXUzwJcSJyD&nd=1&dlsi=42e8624a8ed642f6"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary hover:underline"
                   >
-                    <span>Acompanhar no YouTube</span>
+                    <span>Acompanhar no Sportfy</span>
                     <FaArrowRight className="text-[10px]" aria-hidden="true" />
                   </a>
                 </article>

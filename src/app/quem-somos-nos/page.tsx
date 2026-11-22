@@ -255,7 +255,7 @@ export default function QuemSomos() {
         }}
       />
 
-      <div className="bg-background text-text min-h-screen py-10 sm:py-12">
+      <div className="bg-background text-text min-h-screen py-10 sm:py-12 overflow-x-hidden">
         <div className="max-w-7xl mx-auto px-4 space-y-12">
           {/* Cabeçalho Institucional */}
           <header className="max-w-3xl mx-auto text-center space-y-4">
@@ -263,14 +263,14 @@ export default function QuemSomos() {
               UFMG · CNPq
             </span>
 
-            <h1 className="heading-h1 text-primary">Quem Somos</h1>
+            <h1 className="heading-h1 text-primary break-words">Quem Somos</h1>
 
-            <p className="text-lg sm:text-xl font-medium text-gray-800 leading-snug">
+            <p className="text-lg sm:text-xl font-medium text-gray-800 leading-snug break-words">
               Grupo de Pesquisa “História Intelectual: práticas, narrativas e
               circulação de ideias”
             </p>
 
-            <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
+            <p className="text-sm sm:text-base text-gray-600 leading-relaxed break-words">
               Sediado no Departamento de História da Universidade Federal de
               Minas Gerais (UFMG) e certificado pelo CNPq, o grupo reúne
               docentes, doutores, pós-graduandos e graduandos dedicados à
@@ -288,7 +288,7 @@ export default function QuemSomos() {
               <div className="flex items-center gap-3">
                 <h2
                   id="heading-coordenacao"
-                  className="heading-h2 text-text shrink-0"
+                  className="heading-h2 text-text break-words"
                 >
                   Coordenação
                 </h2>
@@ -299,7 +299,7 @@ export default function QuemSomos() {
                 {coordenacao.map((membro) => (
                   <article
                     key={membro.nome}
-                    className="rounded-2xl border border-primary/20 bg-white p-6 sm:p-7 shadow-sm flex flex-col sm:flex-row items-center sm:items-start gap-5 text-center sm:text-left h-full"
+                    className="min-w-0 rounded-2xl border border-primary/20 bg-white p-6 sm:p-7 shadow-sm flex flex-col sm:flex-row items-center sm:items-start gap-5 text-center sm:text-left h-full"
                   >
                     <Image
                       src={membro.foto}
@@ -310,8 +310,8 @@ export default function QuemSomos() {
                       className="rounded-full object-cover w-32 h-32 shrink-0 ring-2 ring-primary/20"
                     />
 
-                    <div className="flex-1 flex flex-col justify-between h-full space-y-3">
-                      <div className="space-y-1.5">
+                    <div className="w-full flex-1 min-w-0 flex flex-col justify-between h-full space-y-3">
+                      <div className="space-y-1.5 break-words">
                         <span className="inline-flex items-center rounded-full bg-primary/10 px-3 py-0.5 text-xs font-semibold text-primary">
                           {membro.cargoCoordenacao}
                         </span>
@@ -352,17 +352,17 @@ export default function QuemSomos() {
             aria-labelledby="heading-pesquisadores"
             className="space-y-6"
           >
-            <div className="flex items-center justify-between gap-3">
-              <div className="flex items-center gap-3 flex-1">
+            <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
+              <div className="flex items-center gap-3 min-w-0 flex-1">
                 <h2
                   id="heading-pesquisadores"
-                  className="heading-h2 text-text shrink-0"
+                  className="heading-h2 text-text break-words"
                 >
                   Pesquisadores e Pesquisadoras
                 </h2>
-                <div className="h-px flex-1 bg-gray-200" />
+                <div className="hidden sm:block h-px flex-1 bg-gray-200" />
               </div>
-              <span className="text-xs font-medium text-gray-500 shrink-0">
+              <span className="text-xs font-medium text-gray-500">
                 {pesquisadores.length} integrantes
               </span>
             </div>
@@ -371,9 +371,9 @@ export default function QuemSomos() {
               {pesquisadores.map((membro, index) => (
                 <article
                   key={membro.nome}
-                  className="group rounded-2xl border border-gray-200/80 bg-white p-6 shadow-sm hover:border-primary/35 hover:shadow-md transition-all flex flex-col justify-between items-center text-center h-full"
+                  className="group min-w-0 rounded-2xl border border-gray-200/80 bg-white p-6 shadow-sm hover:border-primary/35 hover:shadow-md transition-all flex flex-col justify-between items-center text-center h-full"
                 >
-                  <div className="flex flex-col items-center w-full">
+                  <div className="flex flex-col items-center w-full min-w-0 break-words">
                     {membro.foto && (
                       <Image
                         src={membro.foto}

@@ -4,16 +4,24 @@ import type { Metadata } from 'next';
 import {
   FaArrowRight,
   FaBookOpen,
+  FaEnvelope,
+  FaExternalLinkAlt,
+  FaFacebookF,
   FaFeatherAlt,
   FaFileAlt,
   FaGraduationCap,
+  FaInstagram,
   FaLayerGroup,
   FaUsers,
+  FaYoutube,
 } from 'react-icons/fa';
+import CopiarEmailButton from '@/components/CopiarEmailButton';
 import { getColecoesPrincipais, getEbooks } from '@/lib/acervo';
 
 const siteUrl =
   process.env.NEXT_PUBLIC_SITE_URL || 'https://historiaintelectualufmg.com.br';
+
+const EMAIL_SELO = 'infoselocronopios@gmail.com';
 
 export const metadata: Metadata = {
   title: 'Selo Editorial Cronópios',
@@ -96,6 +104,33 @@ const pilaresEditoriais = [
     descricao:
       'Obras avaliadas segundo critérios acadêmicos e editoriais definidos em chamadas públicas divulgadas no portal.',
     icon: FaFileAlt,
+  },
+];
+
+const redesSelo = [
+  {
+    name: 'Instagram',
+    handle: '@selocronopios',
+    href: 'https://www.instagram.com/selocronopios',
+    icon: FaInstagram,
+    badgeClass:
+      'bg-pink-50 text-pink-600 group-hover:bg-pink-600 group-hover:text-white',
+  },
+  {
+    name: 'YouTube',
+    handle: '@selocronópios',
+    href: 'https://www.youtube.com/@selocron%C3%B3pios',
+    icon: FaYoutube,
+    badgeClass:
+      'bg-red-50 text-red-600 group-hover:bg-red-600 group-hover:text-white',
+  },
+  {
+    name: 'Facebook',
+    handle: 'Selo Editorial Cronópios',
+    href: 'https://www.facebook.com/people/Selo-Editorial-Cron%C3%B3pios/pfbid02o6pRAZX2bR4F4f3SvUkjSiADx8S9mAoErDNPA9pnE9sU5vTcw1Spsp6zALecxhiXl/',
+    icon: FaFacebookF,
+    badgeClass:
+      'bg-blue-50 text-blue-600 group-hover:bg-blue-600 group-hover:text-white',
   },
 ];
 
@@ -414,6 +449,82 @@ export default function SeloCronopiosPage() {
                 </Link>
               </div>
             </aside>
+          </section>
+
+          {/* Canais e Redes do Selo */}
+          <section
+            id="contato"
+            aria-labelledby="heading-contato-selo"
+            className="scroll-mt-28 rounded-2xl border border-gray-200/80 bg-white p-6 sm:p-8 shadow-sm space-y-6"
+          >
+            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 border-b border-gray-100 pb-6">
+              <div className="space-y-1.5">
+                <span className="text-xs font-semibold uppercase tracking-wider text-primary">
+                  Atendimento Editorial
+                </span>
+                <h2
+                  id="heading-contato-selo"
+                  className="heading-h2 text-gray-900"
+                >
+                  Canais e Redes do Selo
+                </h2>
+                <p className="text-sm text-gray-600">
+                  Acompanhe os lançamentos de e-books ou entre em contato com a
+                  equipe editorial do Selo Cronópios.
+                </p>
+              </div>
+
+              <div className="flex flex-col sm:flex-row sm:items-center gap-3 shrink-0">
+                <a
+                  href={`mailto:${EMAIL_SELO}`}
+                  className="inline-flex items-center justify-center gap-2 rounded-full bg-primary px-5 py-2.5 text-xs sm:text-sm font-semibold text-white hover:opacity-90 transition-opacity"
+                >
+                  <FaEnvelope aria-hidden="true" />
+                  <span>{EMAIL_SELO}</span>
+                </a>
+
+                <CopiarEmailButton email={EMAIL_SELO} />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              {redesSelo.map((rede) => {
+                const Icone = rede.icon;
+
+                return (
+                  <a
+                    key={rede.name}
+                    href={rede.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={`${rede.name} do Selo Editorial Cronópios (${rede.handle})`}
+                    className="group rounded-xl border border-gray-200/80 bg-background/50 p-4 hover:border-primary/40 hover:bg-white hover:shadow-sm transition-all flex items-center justify-between gap-3"
+                  >
+                    <div className="flex items-center gap-3.5 min-w-0">
+                      <div
+                        className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg text-lg transition-colors ${rede.badgeClass}`}
+                      >
+                        <Icone aria-hidden="true" />
+                      </div>
+
+                      <div className="min-w-0">
+                        <p className="font-bold text-sm text-gray-900 group-hover:text-primary transition-colors">
+                          {rede.name}
+                        </p>
+                        <p className="text-xs text-gray-500 truncate">
+                          {rede.handle}
+                        </p>
+                      </div>
+                    </div>
+
+                    <FaExternalLinkAlt
+                      className="text-xs text-gray-400 group-hover:text-primary shrink-0 transition-colors"
+                      aria-hidden="true"
+                    />
+                  </a>
+                );
+              })}
+            </div>
           </section>
         </div>
       </div>
